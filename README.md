@@ -37,7 +37,7 @@ Action client
 Action server
 ## example10:
 ## example11: 
-Node to capture image from webcam and publish it on a topic.
+Captures an image from the webcam and publish it on a topic.
 ## example12: 
 Eigen matrix example
 ## example13: 
