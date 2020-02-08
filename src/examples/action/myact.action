@@ -1,0 +1,8 @@
+# Part1: Goal defination
+duration timeToWait
+---
+# Part2: Result defination
+duration timeElapsed
+---
+# Part3: Feedback defination
+duration timeRemaining

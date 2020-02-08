@@ -1,0 +1,17 @@
+<launch>
+  <node pkg="regnum_lab10" name="lab10_vrep_launch_script" type="lab10_vrep_launch_script.py" required="true" output="screen"/>
+  <node pkg="rviz" type="rviz" name="rviz" required="true" output="screen" args="-d $(find regnum_lab10)/rviz/lab10_3D_SLAM_Kinect.rviz"/>
+  <node pkg="teleop_twist_keyboard" name="teleop_twist_keyboard" type="teleop_twist_keyboard.py" launch-prefix="xterm -e" required="true">
+        <remap from="/cmd_vel" to="/cmd_vel"/>
+  </node>
+  <node pkg="rostopic" name="rostopic" type="rostopic" args="pub /startSimulation std_msgs/Bool true" />
+	<node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+		<param name="resolution" value="0.05" />
+		<!-- fixed map frame (set to 'map' if SLAM or localization running!) -->
+		<param name="frame_id" type="string" value="/odom" />
+		<!-- maximum range to integrate (speedup!) -->
+		<param name="sensor_model/max_range" value="5.0" />		
+		<!-- data source to integrate (PointCloud2) -->
+		<remap from="cloud_in" to="/pointcloud" />	
+  </node>
+</launch>

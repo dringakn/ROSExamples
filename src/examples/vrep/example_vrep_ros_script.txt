@@ -1,0 +1,64 @@
+function callback_MotorsVelocity(msg)
+    --TODO: change the function to get robot velocity and use the inverse kinematic equations
+    --      discussed in the class to calculate wheel velocities
+    Vl = msg.x
+    Vr = msg.y
+    simSetJointTargetVelocity(hLeftMotor,Vl)
+    simSetJointTargetVelocity(hRightMotor,Vr)
+    simAddStatusbarMessage(string.format("Vl:%f Vr:%f",Vl, Vr))
+end
+
+if (sim_call_type==sim_childscriptcall_initialization) then
+
+    -- Get handle to simulation entities
+    hLeftMotor = simGetObjectHandle("LeftMotor")
+    hRightMotor = simGetObjectHandle("RightMotor")
+    hFrontUS = simGetObjectHandle("FrontUS")
+    -- TODO: Create the handles of your two new ultrasonic sensors
+    
+    -- Check if the required ROS plugin is loaded (libv_repExtRos.so or libv_repExtRos.dylib):
+    local moduleName=0
+    local moduleVersion=0
+    local index=0
+    local pluginNotFound=true
+    while moduleName do
+        moduleName,moduleVersion=simGetModuleName(index)
+        if (moduleName=='Ros') then
+            pluginNotFound=false
+        end
+        index=index+1
+    end
+
+    if (pluginNotFound) then
+        -- Display an error message if the plugin was not found:
+	simAddStatusbarMessage("The RosPlugin was not found. Simulation will not run properly!")
+    else
+        -- Now enable topic publishing and streaming of the vision sensor's data
+        sensorPub=simExtRosInterface_advertise('/frontUS','std_msgs/Float32')   --TODO: change the message type name as described in the assignment 
+        motorsSub=simExtRosInterface_subscribe('/cmd_vel','geometry_msgs/Vector3','callback_MotorsVelocity')
+    end
+
+    -- Debug messages
+    simAddStatusbarMessage("Simulation Initialized")
+
+end
+
+
+if (sim_call_type==sim_childscriptcall_actuation) then
+    -- Send an updated sensor and simulation time message, and send the transform of the robot:
+    if not pluginNotFound then
+        --TODO: write the code to get the distance from your new sensors and publish the message
+        result,distance=simReadProximitySensor(hFrontUS)
+        if(distance~=nil) then
+            simExtRosInterface_publish(sensorPub,{data=distance})
+        end
+    end
+end
+
+if (sim_call_type==sim_childscriptcall_cleanup) then
+    if rosInterfacePresent then
+        simExtRosInterface_shutdownPublisher(sensorPub)
+        simExtRosInterface_shutdownSubscriber(motorsSub)
+    end
+end
+

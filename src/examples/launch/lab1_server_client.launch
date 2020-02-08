@@ -1,0 +1,5 @@
+<launch>
+    <arg name="mode" default="0"/>
+    <node pkg="regnum_lab1" type="servernode" name="my_servernode" required="true" launch-prefix="xterm -e"/>
+    <node pkg="regnum_lab1" type="clientnode" name="my_clientnode" output="screen" args="$(arg mode)"/>
+</launch>

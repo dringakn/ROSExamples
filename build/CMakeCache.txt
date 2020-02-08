@@ -299,10 +299,10 @@ cv_bridge_DIR:PATH=/opt/ros/kinetic/share/cv_bridge/cmake
 dynamic_reconfigure_DIR:PATH=/opt/ros/kinetic/share/dynamic_reconfigure/cmake
 
 //Value Computed by CMake
-fourth_proj_BINARY_DIR:STATIC=/home/workshop/new_ws/build/fourth_proj
+examples_BINARY_DIR:STATIC=/home/workshop/new_ws/build/examples
 
 //Value Computed by CMake
-fourth_proj_SOURCE_DIR:STATIC=/home/workshop/new_ws/src/fourth_proj
+examples_SOURCE_DIR:STATIC=/home/workshop/new_ws/src/examples
 
 //The directory containing a CMake configuration file for gencpp.
 gencpp_DIR:PATH=/opt/ros/kinetic/share/gencpp/cmake
@@ -404,12 +404,6 @@ random_numbers_DIR:PATH=/opt/ros/kinetic/share/random_numbers/cmake
 //The directory containing a CMake configuration file for realtime_tools.
 realtime_tools_DIR:PATH=/opt/ros/kinetic/share/realtime_tools/cmake
 
-//Value Computed by CMake
-regnum_lab9_BINARY_DIR:STATIC=/home/workshop/new_ws/build/regnum_lab9
-
-//Value Computed by CMake
-regnum_lab9_SOURCE_DIR:STATIC=/home/workshop/new_ws/src/regnum_lab9
-
 //The directory containing a CMake configuration file for rosbag.
 rosbag_DIR:PATH=/opt/ros/kinetic/share/rosbag/cmake
 
@@ -449,12 +443,6 @@ rospy_DIR:PATH=/opt/ros/kinetic/share/rospy/cmake
 //The directory containing a CMake configuration file for rostime.
 rostime_DIR:PATH=/opt/ros/kinetic/share/rostime/cmake
 
-//Value Computed by CMake
-second_proj_BINARY_DIR:STATIC=/home/workshop/new_ws/build/second_proj
-
-//Value Computed by CMake
-second_proj_SOURCE_DIR:STATIC=/home/workshop/new_ws/src/second_proj
-
 //The directory containing a CMake configuration file for sensor_msgs.
 sensor_msgs_DIR:PATH=/opt/ros/kinetic/share/sensor_msgs/cmake
 
@@ -481,12 +469,6 @@ tf2_ros_DIR:PATH=/opt/ros/kinetic/share/tf2_ros/cmake
 
 //The directory containing a CMake configuration file for tf.
 tf_DIR:PATH=/opt/ros/kinetic/share/tf/cmake
-
-//Value Computed by CMake
-third_proj_BINARY_DIR:STATIC=/home/workshop/new_ws/build/third_proj
-
-//Value Computed by CMake
-third_proj_SOURCE_DIR:STATIC=/home/workshop/new_ws/src/third_proj
 
 //The directory containing a CMake configuration file for topic_tools.
 topic_tools_DIR:PATH=/opt/ros/kinetic/share/topic_tools/cmake

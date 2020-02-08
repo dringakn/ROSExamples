@@ -1,0 +1,9 @@
+<launch>
+    <include file="$(find regnum_lab1)/launch/lab1_helloworld.launch"/>
+    <param name="info" value="complete launch says yo yo"/>
+    <include file="$(find regnum_lab1)/launch/lab1_pub_sub.launch"/>    
+    <include file="$(find regnum_lab1)/launch/lab1_server_client.launch">
+        <arg name="mode" value="0" />
+    </include>    
+    <include file="$(find regnum_lab1)/launch/lab1_custom_pub_sub.launch"/>
+</launch>

@@ -1,0 +1,9 @@
+<launch>
+	<node pkg="regnum_lab8" name="lab8_vrep_launch_script" type="lab8_vrep_launch_script.py" required="true" output="screen"/>
+    <node pkg="rviz" type="rviz" name="rviz" required="true" output="screen" args="-d $(find regnum_lab8)/rviz/lab8_rviz_display.rviz"/>
+    <node pkg="regnum_lab8" type="lab8_structure_from_motion" name="structure_from_motion" required="true" output="screen"/>
+    <node pkg="teleop_twist_keyboard" name="teleop_twist_keyboard" type="teleop_twist_keyboard.py" launch-prefix="xterm -e" required="true">
+        <remap from="/cmd_vel" to="/cmd_vel"/>
+    </node>
+  <node pkg="rostopic" name="rostopic" type="rostopic" args="pub /startSimulation std_msgs/Bool true" />
+</launch>

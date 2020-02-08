@@ -1,0 +1,8 @@
+<launch>
+  <node pkg="regnum_lab4" name="lab4_vrep_launch_script" type="lab4_vrep_launch_script.py" required="true" output="screen"/>
+    <arg name="sensor" default="x"/>
+    <node pkg="regnum_lab4" type="kalman_filter" name="wall_follower" required="true" output="screen"/>
+    <node pkg="rqt_plot" type="rqt_plot" name="rqt_plot" args="/myRobot/robotUS/$(arg sensor) /myRobot/estimateUS/$(arg sensor)" required="true"/>
+    <node pkg="rostopic" name="rostopic" type="rostopic" args="pub /startSimulation std_msgs/Bool true" />
+
+</launch>

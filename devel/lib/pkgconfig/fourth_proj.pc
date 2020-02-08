@@ -1,8 +1,0 @@
-prefix=/home/workshop/new_ws/devel
-
-Name: fourth_proj
-Description: Description of fourth_proj
-Version: 0.0.0
-Cflags: -I/home/workshop/new_ws/devel/include
-Libs: -L/home/workshop/new_ws/devel/lib 
-Requires: message_runtime

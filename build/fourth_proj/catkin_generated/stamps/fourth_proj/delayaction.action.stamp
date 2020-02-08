@@ -1,8 +1,0 @@
-#Part1: Goal defination
-int64 a
----
-#Part2: Result defination
-int64 b
----
-#Part3: Feedback defination
-int64 c
