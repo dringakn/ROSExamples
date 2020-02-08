@@ -1,5 +1,5 @@
 # ROSExamples
-ROS Examples for various basic concepts. All the examples are self explanatory except the followings.
+ROS Examples for various basic concepts. All example files names are self explanatory except the followings.
 ## example1: 
 Basic ROS C++ node structure.
 ## example2: 
