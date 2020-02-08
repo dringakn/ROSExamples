@@ -46,6 +46,7 @@ find_package(catkin REQUIRED COMPONENTS
   control_toolbox
   geometry_msgs
   nav_msgs
+  sensor_msgs
 )
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
@@ -536,5 +537,13 @@ add_executable(example_occupancy_grid_map
 )
 add_dependencies(example_occupancy_grid_map ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_occupancy_grid_map
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_laser_scan_fake
+  src/example_laser_scan_fake.cpp
+)
+add_dependencies(example_laser_scan_fake ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_laser_scan_fake
   ${catkin_LIBRARIES}
 )

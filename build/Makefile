@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_laser_scan_fake
+
+# Build rule for target.
+example_laser_scan_fake: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_laser_scan_fake
+.PHONY : example_laser_scan_fake
+
+# fast build rule for target.
+example_laser_scan_fake/fast:
+	$(MAKE) -f examples/CMakeFiles/example_laser_scan_fake.dir/build.make examples/CMakeFiles/example_laser_scan_fake.dir/build
+.PHONY : example_laser_scan_fake/fast
+
+#=============================================================================
 # Target rules for targets named example_structure_from_motion
 
 # Build rule for target.
@@ -2514,6 +2527,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_laser_scan_fake"
 	@echo "... example_structure_from_motion"
 	@echo "... example_kalman_filter_sensor_fusion"
 	@echo "... example_vrep_demo_robot_controller"

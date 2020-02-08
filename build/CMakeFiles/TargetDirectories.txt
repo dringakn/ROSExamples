@@ -29,6 +29,7 @@
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/strip.dir
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/local.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/install/strip.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_laser_scan_fake.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_structure_from_motion.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_kalman_filter_sensor_fusion.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_vrep_demo_robot_controller.dir
