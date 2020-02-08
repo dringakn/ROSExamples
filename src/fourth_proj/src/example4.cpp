@@ -1,3 +1,4 @@
+// Subscribe to the custom messages "sensor" and "command"
 #include <ros/ros.h>
 #include <fourth_proj/cmdmsg.h>
 #include <fourth_proj/sensmsg.h>

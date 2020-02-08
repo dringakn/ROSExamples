@@ -43,6 +43,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   pcl_ros
+  control_toolbox
 )
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
@@ -311,5 +312,45 @@ add_executable(example13
 )
 add_dependencies(example13 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example13
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_cmd_line_params
+  src/example_cmd_line_params.cpp
+)
+add_dependencies(example_cmd_line_params ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_cmd_line_params
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_keyboard_input
+  src/example_keyboard_input.cpp
+)
+add_dependencies(example_keyboard_input ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_keyboard_input
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_pid_control
+  src/example_pid_control.cpp
+)
+add_dependencies(example_pid_control ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_pid_control
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_random_number_generator
+  src/example_random_number_generator.cpp
+)
+add_dependencies(example_random_number_generator ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_random_number_generator
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_resampling_algorithm
+  src/example_resampling_algorithm.cpp
+)
+add_dependencies(example_resampling_algorithm ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_resampling_algorithm
   ${catkin_LIBRARIES}
 )

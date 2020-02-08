@@ -1,3 +1,11 @@
+// Client for addition request from the server node (example7).
+//           addsrv.srv
+//             float64 a
+//             float64 b
+//             ---
+//             float64 result
+//           modify add_service_files(... addsrv.srv ...) inside CMakeLists.txt
+//           of the package.
 #include <ros/ros.h>
 #include <random_numbers/random_numbers.h>
 #include <fourth_proj/addsrv.h>

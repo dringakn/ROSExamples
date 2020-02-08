@@ -1,3 +1,5 @@
+// Custom server to respond addition request from client node (example6)
+// 
 #include <ros/ros.h>
 #include <fourth_proj/addsrv.h>
 
