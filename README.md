@@ -6,7 +6,7 @@ Basic ROS C++ node structure.
 Publish a Float32 msg on "topic": sends a uniform random number [0-99] every 100 milliseconds.
 modify find_package ( ... random_numbers ...) inside CMakeLists.txt of the package.
 ## example3: 
-Publisehs two custom generate messages on "sensor" and "command" topics.
+Publisehs two custom generated messages on "sensor" and "command" topics.
 * sensmsg.msg: 
 Header header
 float64 front
