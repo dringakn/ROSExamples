@@ -44,6 +44,8 @@ find_package(catkin REQUIRED COMPONENTS
   image_transport
   pcl_ros
   control_toolbox
+  geometry_msgs
+  nav_msgs
 )
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
@@ -527,4 +529,12 @@ add_dependencies(example_structure_from_motion ${${PROJECT_NAME}_EXPORTED_TARGET
 target_link_libraries(example_structure_from_motion
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}
+)
+
+add_executable(example_occupancy_grid_map
+  src/example_occupancy_grid_map.cpp
+)
+add_dependencies(example_occupancy_grid_map ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_occupancy_grid_map
+  ${catkin_LIBRARIES}
 )
