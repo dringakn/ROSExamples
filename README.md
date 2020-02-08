@@ -3,7 +3,7 @@ ROS Examples for various basic concepts
 ## example1: 
 Basic ROS C++ node structure.
 ## example2: 
-Publish a Float32 msg on "topic: sends a uniform random number [0-99] every 100 milliseconds.
+Publish a Float32 msg on "topic": sends a uniform random number [0-99] every 100 milliseconds.
 modify find_package ( ... random_numbers ...) inside CMakeLists.txt of the package.
 ## example3: 
 Publisehs two custom generate messages on "sensor" and "command" topics.
