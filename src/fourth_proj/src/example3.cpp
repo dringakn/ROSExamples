@@ -1,0 +1,28 @@
+#include <ros/ros.h>
+#include <fourth_proj/cmdmsg.h>
+#include <fourth_proj/sensmsg.h>
+
+int main(int argc, char** argv){
+    ros::init(argc, argv, "example3");
+    ros::NodeHandle nh;
+    ros::Rate rate(1);    
+    ros::Publisher pub1 = nh.advertise<fourth_proj::sensmsg>("sensor", 1000);
+    ros::Publisher pub2 = nh.advertise<fourth_proj::cmdmsg>("command", 1000);
+    
+    while (ros::ok())
+    {
+        fourth_proj::sensmsg s;
+        fourth_proj::cmdmsg c;
+        s.front = 1;
+        s.left = 3;
+        s.right = 4;
+        pub1.publish(s);
+        c.vl = 2;
+        c.vr = 4;
+        pub2.publish(c);
+        ros::spinOnce();
+        rate.sleep();
+    }
+    
+    return 0;
+}

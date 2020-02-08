@@ -1,0 +1,8 @@
+prefix=/home/workshop/new_ws/devel
+
+Name: regnum_lab9
+Description: Description of regnum_lab9
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/workshop/new_ws/devel/lib 
+Requires: 

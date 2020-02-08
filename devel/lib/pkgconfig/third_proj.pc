@@ -1,0 +1,8 @@
+prefix=/home/workshop/new_ws/devel
+
+Name: third_proj
+Description: Description of third_proj
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/workshop/new_ws/devel/lib 
+Requires: 

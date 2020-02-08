@@ -1,0 +1,8 @@
+prefix=/home/workshop/new_ws/devel
+
+Name: second_proj
+Description: Description of second_proj
+Version: 0.0.0
+Cflags: 
+Libs: -L/home/workshop/new_ws/devel/lib 
+Requires: 
