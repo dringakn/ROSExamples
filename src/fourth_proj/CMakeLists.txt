@@ -354,3 +354,76 @@ add_dependencies(example_resampling_algorithm ${${PROJECT_NAME}_EXPORTED_TARGETS
 target_link_libraries(example_resampling_algorithm
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_robot_navigation_command
+  src/example_robot_navigation_command.cpp
+)
+add_dependencies(example_robot_navigation_command ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_robot_navigation_command
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_opencv_feature_detection
+  src/example_opencv_feature_detection.cpp
+)
+add_dependencies(example_opencv_feature_detection ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_opencv_feature_detection
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+add_executable(example_pcl2_point_cloud
+  src/example_pcl2_point_cloud.cpp
+)
+add_dependencies(example_pcl2_point_cloud ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_pcl2_point_cloud
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_timer_callback
+  src/example_timer_callback.cpp
+)
+add_dependencies(example_timer_callback ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_timer_callback
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_rviz_visulization_marker
+  src/example_rviz_visulization_marker.cpp
+)
+add_dependencies(example_rviz_visulization_marker ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_rviz_visulization_marker
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_sinewave_generator
+  src/example_sinewave_generator.cpp
+)
+add_dependencies(example_sinewave_generator ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_sinewave_generator
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_tf
+  src/example_tf.cpp
+)
+add_dependencies(example_tf ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_tf
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_vrep_two_wheels_balancing_robot
+  src/example_vrep_two_wheels_balancing_robot.cpp
+)
+add_dependencies(example_vrep_two_wheels_balancing_robot ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_vrep_two_wheels_balancing_robot
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_turtlesim_messages_services
+  src/example_turtlesim_messages_services.cpp
+)
+add_dependencies(example_turtlesim_messages_services ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_turtlesim_messages_services
+  ${catkin_LIBRARIES}
+)

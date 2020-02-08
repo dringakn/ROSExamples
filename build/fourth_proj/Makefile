@@ -166,6 +166,96 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/rule:
+	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/rule
+.PHONY : fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/rule
+
+# Convenience name for target.
+example_vrep_two_wheels_balancing_robot: fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/rule
+
+.PHONY : example_vrep_two_wheels_balancing_robot
+
+# fast build rule for target.
+example_vrep_two_wheels_balancing_robot/fast:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/build.make fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/build
+.PHONY : example_vrep_two_wheels_balancing_robot/fast
+
+# Convenience name for target.
+fourth_proj/CMakeFiles/example_tf.dir/rule:
+	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_tf.dir/rule
+.PHONY : fourth_proj/CMakeFiles/example_tf.dir/rule
+
+# Convenience name for target.
+example_tf: fourth_proj/CMakeFiles/example_tf.dir/rule
+
+.PHONY : example_tf
+
+# fast build rule for target.
+example_tf/fast:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_tf.dir/build.make fourth_proj/CMakeFiles/example_tf.dir/build
+.PHONY : example_tf/fast
+
+# Convenience name for target.
+fourth_proj/CMakeFiles/example_sinewave_generator.dir/rule:
+	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_sinewave_generator.dir/rule
+.PHONY : fourth_proj/CMakeFiles/example_sinewave_generator.dir/rule
+
+# Convenience name for target.
+example_sinewave_generator: fourth_proj/CMakeFiles/example_sinewave_generator.dir/rule
+
+.PHONY : example_sinewave_generator
+
+# fast build rule for target.
+example_sinewave_generator/fast:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_sinewave_generator.dir/build.make fourth_proj/CMakeFiles/example_sinewave_generator.dir/build
+.PHONY : example_sinewave_generator/fast
+
+# Convenience name for target.
+fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/rule:
+	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/rule
+.PHONY : fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/rule
+
+# Convenience name for target.
+example_rviz_visulization_marker: fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/rule
+
+.PHONY : example_rviz_visulization_marker
+
+# fast build rule for target.
+example_rviz_visulization_marker/fast:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/build.make fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/build
+.PHONY : example_rviz_visulization_marker/fast
+
+# Convenience name for target.
+fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/rule:
+	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/rule
+.PHONY : fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/rule
+
+# Convenience name for target.
+example_opencv_feature_detection: fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/rule
+
+.PHONY : example_opencv_feature_detection
+
+# fast build rule for target.
+example_opencv_feature_detection/fast:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/build.make fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/build
+.PHONY : example_opencv_feature_detection/fast
+
+# Convenience name for target.
+fourth_proj/CMakeFiles/example_robot_navigation_command.dir/rule:
+	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_robot_navigation_command.dir/rule
+.PHONY : fourth_proj/CMakeFiles/example_robot_navigation_command.dir/rule
+
+# Convenience name for target.
+example_robot_navigation_command: fourth_proj/CMakeFiles/example_robot_navigation_command.dir/rule
+
+.PHONY : example_robot_navigation_command
+
+# fast build rule for target.
+example_robot_navigation_command/fast:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_robot_navigation_command.dir/build.make fourth_proj/CMakeFiles/example_robot_navigation_command.dir/build
+.PHONY : example_robot_navigation_command/fast
+
+# Convenience name for target.
 fourth_proj/CMakeFiles/example_resampling_algorithm.dir/rule:
 	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_resampling_algorithm.dir/rule
 .PHONY : fourth_proj/CMakeFiles/example_resampling_algorithm.dir/rule
@@ -1066,6 +1156,21 @@ tf2_msgs_generate_messages_py/fast:
 .PHONY : tf2_msgs_generate_messages_py/fast
 
 # Convenience name for target.
+fourth_proj/CMakeFiles/example_timer_callback.dir/rule:
+	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_timer_callback.dir/rule
+.PHONY : fourth_proj/CMakeFiles/example_timer_callback.dir/rule
+
+# Convenience name for target.
+example_timer_callback: fourth_proj/CMakeFiles/example_timer_callback.dir/rule
+
+.PHONY : example_timer_callback
+
+# fast build rule for target.
+example_timer_callback/fast:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_timer_callback.dir/build.make fourth_proj/CMakeFiles/example_timer_callback.dir/build
+.PHONY : example_timer_callback/fast
+
+# Convenience name for target.
 fourth_proj/CMakeFiles/actionlib_generate_messages_py.dir/rule:
 	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/actionlib_generate_messages_py.dir/rule
 .PHONY : fourth_proj/CMakeFiles/actionlib_generate_messages_py.dir/rule
@@ -1454,6 +1559,21 @@ bond_generate_messages_cpp: fourth_proj/CMakeFiles/bond_generate_messages_cpp.di
 bond_generate_messages_cpp/fast:
 	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/bond_generate_messages_cpp.dir/build.make fourth_proj/CMakeFiles/bond_generate_messages_cpp.dir/build
 .PHONY : bond_generate_messages_cpp/fast
+
+# Convenience name for target.
+fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/rule:
+	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/rule
+.PHONY : fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/rule
+
+# Convenience name for target.
+example_pcl2_point_cloud: fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/rule
+
+.PHONY : example_pcl2_point_cloud
+
+# fast build rule for target.
+example_pcl2_point_cloud/fast:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/build.make fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/build
+.PHONY : example_pcl2_point_cloud/fast
 
 # Convenience name for target.
 fourth_proj/CMakeFiles/bond_generate_messages_lisp.dir/rule:
@@ -1919,6 +2039,21 @@ tf_generate_messages_eus: fourth_proj/CMakeFiles/tf_generate_messages_eus.dir/ru
 tf_generate_messages_eus/fast:
 	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/tf_generate_messages_eus.dir/build.make fourth_proj/CMakeFiles/tf_generate_messages_eus.dir/build
 .PHONY : tf_generate_messages_eus/fast
+
+# Convenience name for target.
+fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/rule:
+	cd /home/workshop/new_ws/build && $(MAKE) -f CMakeFiles/Makefile2 fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/rule
+.PHONY : fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/rule
+
+# Convenience name for target.
+example_turtlesim_messages_services: fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/rule
+
+.PHONY : example_turtlesim_messages_services
+
+# fast build rule for target.
+example_turtlesim_messages_services/fast:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/build.make fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/build
+.PHONY : example_turtlesim_messages_services/fast
 
 # Convenience name for target.
 fourth_proj/CMakeFiles/example_cmd_line_params.dir/rule:
@@ -2580,6 +2715,60 @@ src/example_keyboard_input.cpp.s:
 	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_keyboard_input.dir/build.make fourth_proj/CMakeFiles/example_keyboard_input.dir/src/example_keyboard_input.cpp.s
 .PHONY : src/example_keyboard_input.cpp.s
 
+src/example_opencv_feature_detection.o: src/example_opencv_feature_detection.cpp.o
+
+.PHONY : src/example_opencv_feature_detection.o
+
+# target to build an object file
+src/example_opencv_feature_detection.cpp.o:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/build.make fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/src/example_opencv_feature_detection.cpp.o
+.PHONY : src/example_opencv_feature_detection.cpp.o
+
+src/example_opencv_feature_detection.i: src/example_opencv_feature_detection.cpp.i
+
+.PHONY : src/example_opencv_feature_detection.i
+
+# target to preprocess a source file
+src/example_opencv_feature_detection.cpp.i:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/build.make fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/src/example_opencv_feature_detection.cpp.i
+.PHONY : src/example_opencv_feature_detection.cpp.i
+
+src/example_opencv_feature_detection.s: src/example_opencv_feature_detection.cpp.s
+
+.PHONY : src/example_opencv_feature_detection.s
+
+# target to generate assembly for a file
+src/example_opencv_feature_detection.cpp.s:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/build.make fourth_proj/CMakeFiles/example_opencv_feature_detection.dir/src/example_opencv_feature_detection.cpp.s
+.PHONY : src/example_opencv_feature_detection.cpp.s
+
+src/example_pcl2_point_cloud.o: src/example_pcl2_point_cloud.cpp.o
+
+.PHONY : src/example_pcl2_point_cloud.o
+
+# target to build an object file
+src/example_pcl2_point_cloud.cpp.o:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/build.make fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/src/example_pcl2_point_cloud.cpp.o
+.PHONY : src/example_pcl2_point_cloud.cpp.o
+
+src/example_pcl2_point_cloud.i: src/example_pcl2_point_cloud.cpp.i
+
+.PHONY : src/example_pcl2_point_cloud.i
+
+# target to preprocess a source file
+src/example_pcl2_point_cloud.cpp.i:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/build.make fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/src/example_pcl2_point_cloud.cpp.i
+.PHONY : src/example_pcl2_point_cloud.cpp.i
+
+src/example_pcl2_point_cloud.s: src/example_pcl2_point_cloud.cpp.s
+
+.PHONY : src/example_pcl2_point_cloud.s
+
+# target to generate assembly for a file
+src/example_pcl2_point_cloud.cpp.s:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/build.make fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir/src/example_pcl2_point_cloud.cpp.s
+.PHONY : src/example_pcl2_point_cloud.cpp.s
+
 src/example_pid_control.o: src/example_pid_control.cpp.o
 
 .PHONY : src/example_pid_control.o
@@ -2661,6 +2850,195 @@ src/example_resampling_algorithm.cpp.s:
 	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_resampling_algorithm.dir/build.make fourth_proj/CMakeFiles/example_resampling_algorithm.dir/src/example_resampling_algorithm.cpp.s
 .PHONY : src/example_resampling_algorithm.cpp.s
 
+src/example_robot_navigation_command.o: src/example_robot_navigation_command.cpp.o
+
+.PHONY : src/example_robot_navigation_command.o
+
+# target to build an object file
+src/example_robot_navigation_command.cpp.o:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_robot_navigation_command.dir/build.make fourth_proj/CMakeFiles/example_robot_navigation_command.dir/src/example_robot_navigation_command.cpp.o
+.PHONY : src/example_robot_navigation_command.cpp.o
+
+src/example_robot_navigation_command.i: src/example_robot_navigation_command.cpp.i
+
+.PHONY : src/example_robot_navigation_command.i
+
+# target to preprocess a source file
+src/example_robot_navigation_command.cpp.i:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_robot_navigation_command.dir/build.make fourth_proj/CMakeFiles/example_robot_navigation_command.dir/src/example_robot_navigation_command.cpp.i
+.PHONY : src/example_robot_navigation_command.cpp.i
+
+src/example_robot_navigation_command.s: src/example_robot_navigation_command.cpp.s
+
+.PHONY : src/example_robot_navigation_command.s
+
+# target to generate assembly for a file
+src/example_robot_navigation_command.cpp.s:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_robot_navigation_command.dir/build.make fourth_proj/CMakeFiles/example_robot_navigation_command.dir/src/example_robot_navigation_command.cpp.s
+.PHONY : src/example_robot_navigation_command.cpp.s
+
+src/example_rviz_visulization_marker.o: src/example_rviz_visulization_marker.cpp.o
+
+.PHONY : src/example_rviz_visulization_marker.o
+
+# target to build an object file
+src/example_rviz_visulization_marker.cpp.o:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/build.make fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/src/example_rviz_visulization_marker.cpp.o
+.PHONY : src/example_rviz_visulization_marker.cpp.o
+
+src/example_rviz_visulization_marker.i: src/example_rviz_visulization_marker.cpp.i
+
+.PHONY : src/example_rviz_visulization_marker.i
+
+# target to preprocess a source file
+src/example_rviz_visulization_marker.cpp.i:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/build.make fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/src/example_rviz_visulization_marker.cpp.i
+.PHONY : src/example_rviz_visulization_marker.cpp.i
+
+src/example_rviz_visulization_marker.s: src/example_rviz_visulization_marker.cpp.s
+
+.PHONY : src/example_rviz_visulization_marker.s
+
+# target to generate assembly for a file
+src/example_rviz_visulization_marker.cpp.s:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/build.make fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir/src/example_rviz_visulization_marker.cpp.s
+.PHONY : src/example_rviz_visulization_marker.cpp.s
+
+src/example_sinewave_generator.o: src/example_sinewave_generator.cpp.o
+
+.PHONY : src/example_sinewave_generator.o
+
+# target to build an object file
+src/example_sinewave_generator.cpp.o:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_sinewave_generator.dir/build.make fourth_proj/CMakeFiles/example_sinewave_generator.dir/src/example_sinewave_generator.cpp.o
+.PHONY : src/example_sinewave_generator.cpp.o
+
+src/example_sinewave_generator.i: src/example_sinewave_generator.cpp.i
+
+.PHONY : src/example_sinewave_generator.i
+
+# target to preprocess a source file
+src/example_sinewave_generator.cpp.i:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_sinewave_generator.dir/build.make fourth_proj/CMakeFiles/example_sinewave_generator.dir/src/example_sinewave_generator.cpp.i
+.PHONY : src/example_sinewave_generator.cpp.i
+
+src/example_sinewave_generator.s: src/example_sinewave_generator.cpp.s
+
+.PHONY : src/example_sinewave_generator.s
+
+# target to generate assembly for a file
+src/example_sinewave_generator.cpp.s:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_sinewave_generator.dir/build.make fourth_proj/CMakeFiles/example_sinewave_generator.dir/src/example_sinewave_generator.cpp.s
+.PHONY : src/example_sinewave_generator.cpp.s
+
+src/example_tf.o: src/example_tf.cpp.o
+
+.PHONY : src/example_tf.o
+
+# target to build an object file
+src/example_tf.cpp.o:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_tf.dir/build.make fourth_proj/CMakeFiles/example_tf.dir/src/example_tf.cpp.o
+.PHONY : src/example_tf.cpp.o
+
+src/example_tf.i: src/example_tf.cpp.i
+
+.PHONY : src/example_tf.i
+
+# target to preprocess a source file
+src/example_tf.cpp.i:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_tf.dir/build.make fourth_proj/CMakeFiles/example_tf.dir/src/example_tf.cpp.i
+.PHONY : src/example_tf.cpp.i
+
+src/example_tf.s: src/example_tf.cpp.s
+
+.PHONY : src/example_tf.s
+
+# target to generate assembly for a file
+src/example_tf.cpp.s:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_tf.dir/build.make fourth_proj/CMakeFiles/example_tf.dir/src/example_tf.cpp.s
+.PHONY : src/example_tf.cpp.s
+
+src/example_timer_callback.o: src/example_timer_callback.cpp.o
+
+.PHONY : src/example_timer_callback.o
+
+# target to build an object file
+src/example_timer_callback.cpp.o:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_timer_callback.dir/build.make fourth_proj/CMakeFiles/example_timer_callback.dir/src/example_timer_callback.cpp.o
+.PHONY : src/example_timer_callback.cpp.o
+
+src/example_timer_callback.i: src/example_timer_callback.cpp.i
+
+.PHONY : src/example_timer_callback.i
+
+# target to preprocess a source file
+src/example_timer_callback.cpp.i:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_timer_callback.dir/build.make fourth_proj/CMakeFiles/example_timer_callback.dir/src/example_timer_callback.cpp.i
+.PHONY : src/example_timer_callback.cpp.i
+
+src/example_timer_callback.s: src/example_timer_callback.cpp.s
+
+.PHONY : src/example_timer_callback.s
+
+# target to generate assembly for a file
+src/example_timer_callback.cpp.s:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_timer_callback.dir/build.make fourth_proj/CMakeFiles/example_timer_callback.dir/src/example_timer_callback.cpp.s
+.PHONY : src/example_timer_callback.cpp.s
+
+src/example_turtlesim_messages_services.o: src/example_turtlesim_messages_services.cpp.o
+
+.PHONY : src/example_turtlesim_messages_services.o
+
+# target to build an object file
+src/example_turtlesim_messages_services.cpp.o:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/build.make fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/src/example_turtlesim_messages_services.cpp.o
+.PHONY : src/example_turtlesim_messages_services.cpp.o
+
+src/example_turtlesim_messages_services.i: src/example_turtlesim_messages_services.cpp.i
+
+.PHONY : src/example_turtlesim_messages_services.i
+
+# target to preprocess a source file
+src/example_turtlesim_messages_services.cpp.i:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/build.make fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/src/example_turtlesim_messages_services.cpp.i
+.PHONY : src/example_turtlesim_messages_services.cpp.i
+
+src/example_turtlesim_messages_services.s: src/example_turtlesim_messages_services.cpp.s
+
+.PHONY : src/example_turtlesim_messages_services.s
+
+# target to generate assembly for a file
+src/example_turtlesim_messages_services.cpp.s:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/build.make fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir/src/example_turtlesim_messages_services.cpp.s
+.PHONY : src/example_turtlesim_messages_services.cpp.s
+
+src/example_vrep_two_wheels_balancing_robot.o: src/example_vrep_two_wheels_balancing_robot.cpp.o
+
+.PHONY : src/example_vrep_two_wheels_balancing_robot.o
+
+# target to build an object file
+src/example_vrep_two_wheels_balancing_robot.cpp.o:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/build.make fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/src/example_vrep_two_wheels_balancing_robot.cpp.o
+.PHONY : src/example_vrep_two_wheels_balancing_robot.cpp.o
+
+src/example_vrep_two_wheels_balancing_robot.i: src/example_vrep_two_wheels_balancing_robot.cpp.i
+
+.PHONY : src/example_vrep_two_wheels_balancing_robot.i
+
+# target to preprocess a source file
+src/example_vrep_two_wheels_balancing_robot.cpp.i:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/build.make fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/src/example_vrep_two_wheels_balancing_robot.cpp.i
+.PHONY : src/example_vrep_two_wheels_balancing_robot.cpp.i
+
+src/example_vrep_two_wheels_balancing_robot.s: src/example_vrep_two_wheels_balancing_robot.cpp.s
+
+.PHONY : src/example_vrep_two_wheels_balancing_robot.s
+
+# target to generate assembly for a file
+src/example_vrep_two_wheels_balancing_robot.cpp.s:
+	cd /home/workshop/new_ws/build && $(MAKE) -f fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/build.make fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir/src/example_vrep_two_wheels_balancing_robot.cpp.s
+.PHONY : src/example_vrep_two_wheels_balancing_robot.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -2669,6 +3047,12 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... install/strip"
+	@echo "... example_vrep_two_wheels_balancing_robot"
+	@echo "... example_tf"
+	@echo "... example_sinewave_generator"
+	@echo "... example_rviz_visulization_marker"
+	@echo "... example_opencv_feature_detection"
+	@echo "... example_robot_navigation_command"
 	@echo "... example_resampling_algorithm"
 	@echo "... example10"
 	@echo "... example9"
@@ -2732,6 +3116,7 @@ help:
 	@echo "... control_toolbox_generate_messages_nodejs"
 	@echo "... topic_tools_generate_messages_py"
 	@echo "... tf2_msgs_generate_messages_py"
+	@echo "... example_timer_callback"
 	@echo "... actionlib_generate_messages_py"
 	@echo "... dynamic_reconfigure_generate_messages_py"
 	@echo "... std_msgs_generate_messages_eus"
@@ -2759,6 +3144,7 @@ help:
 	@echo "... control_toolbox_generate_messages_cpp"
 	@echo "... nodelet_generate_messages_nodejs"
 	@echo "... bond_generate_messages_cpp"
+	@echo "... example_pcl2_point_cloud"
 	@echo "... bond_generate_messages_lisp"
 	@echo "... install"
 	@echo "... nodelet_generate_messages_eus"
@@ -2791,6 +3177,7 @@ help:
 	@echo "... sensor_msgs_generate_messages_lisp"
 	@echo "... topic_tools_generate_messages_nodejs"
 	@echo "... tf_generate_messages_eus"
+	@echo "... example_turtlesim_messages_services"
 	@echo "... example_cmd_line_params"
 	@echo "... tf_generate_messages_py"
 	@echo "... tf2_msgs_generate_messages_cpp"
@@ -2853,6 +3240,12 @@ help:
 	@echo "... src/example_keyboard_input.o"
 	@echo "... src/example_keyboard_input.i"
 	@echo "... src/example_keyboard_input.s"
+	@echo "... src/example_opencv_feature_detection.o"
+	@echo "... src/example_opencv_feature_detection.i"
+	@echo "... src/example_opencv_feature_detection.s"
+	@echo "... src/example_pcl2_point_cloud.o"
+	@echo "... src/example_pcl2_point_cloud.i"
+	@echo "... src/example_pcl2_point_cloud.s"
 	@echo "... src/example_pid_control.o"
 	@echo "... src/example_pid_control.i"
 	@echo "... src/example_pid_control.s"
@@ -2862,6 +3255,27 @@ help:
 	@echo "... src/example_resampling_algorithm.o"
 	@echo "... src/example_resampling_algorithm.i"
 	@echo "... src/example_resampling_algorithm.s"
+	@echo "... src/example_robot_navigation_command.o"
+	@echo "... src/example_robot_navigation_command.i"
+	@echo "... src/example_robot_navigation_command.s"
+	@echo "... src/example_rviz_visulization_marker.o"
+	@echo "... src/example_rviz_visulization_marker.i"
+	@echo "... src/example_rviz_visulization_marker.s"
+	@echo "... src/example_sinewave_generator.o"
+	@echo "... src/example_sinewave_generator.i"
+	@echo "... src/example_sinewave_generator.s"
+	@echo "... src/example_tf.o"
+	@echo "... src/example_tf.i"
+	@echo "... src/example_tf.s"
+	@echo "... src/example_timer_callback.o"
+	@echo "... src/example_timer_callback.i"
+	@echo "... src/example_timer_callback.s"
+	@echo "... src/example_turtlesim_messages_services.o"
+	@echo "... src/example_turtlesim_messages_services.i"
+	@echo "... src/example_turtlesim_messages_services.s"
+	@echo "... src/example_vrep_two_wheels_balancing_robot.o"
+	@echo "... src/example_vrep_two_wheels_balancing_robot.i"
+	@echo "... src/example_vrep_two_wheels_balancing_robot.s"
 .PHONY : help
 
 

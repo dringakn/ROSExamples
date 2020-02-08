@@ -30,6 +30,12 @@
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/local.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/rebuild_cache.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/install/strip.dir
+/home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_vrep_two_wheels_balancing_robot.dir
+/home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_tf.dir
+/home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_sinewave_generator.dir
+/home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_rviz_visulization_marker.dir
+/home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_opencv_feature_detection.dir
+/home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_robot_navigation_command.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_resampling_algorithm.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/example10.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/example9.dir
@@ -93,6 +99,7 @@
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/control_toolbox_generate_messages_nodejs.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/topic_tools_generate_messages_py.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/tf2_msgs_generate_messages_py.dir
+/home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_timer_callback.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/actionlib_generate_messages_py.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/std_msgs_generate_messages_eus.dir
@@ -120,6 +127,7 @@
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/control_toolbox_generate_messages_cpp.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/nodelet_generate_messages_nodejs.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/bond_generate_messages_cpp.dir
+/home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_pcl2_point_cloud.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/bond_generate_messages_lisp.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/install.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/nodelet_generate_messages_eus.dir
@@ -152,6 +160,7 @@
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/sensor_msgs_generate_messages_lisp.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/topic_tools_generate_messages_nodejs.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/tf_generate_messages_eus.dir
+/home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_turtlesim_messages_services.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/example_cmd_line_params.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/tf_generate_messages_py.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/tf2_msgs_generate_messages_cpp.dir
