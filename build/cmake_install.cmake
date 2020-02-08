@@ -127,7 +127,6 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/workshop/new_ws/build/gtest/cmake_install.cmake")
   include("/home/workshop/new_ws/build/fourth_proj/cmake_install.cmake")
-  include("/home/workshop/new_ws/build/regnum_lab9/cmake_install.cmake")
 
 endif()
 

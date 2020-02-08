@@ -18,14 +18,11 @@ set(CMAKE_MAKEFILE_DEPENDS
   "fourth_proj/catkin_generated/ordered_paths.cmake"
   "fourth_proj/catkin_generated/package.cmake"
   "fourth_proj/cmake/fourth_proj-genmsg.cmake"
-  "regnum_lab9/catkin_generated/package.cmake"
   "/home/workshop/new_ws/devel/share/fourth_proj/cmake/fourth_proj-msg-paths.cmake"
   "/home/workshop/new_ws/src/CMakeLists.txt"
   "/home/workshop/new_ws/src/fourth_proj/CMakeLists.txt"
   "/home/workshop/new_ws/src/fourth_proj/action/delayaction.action"
   "/home/workshop/new_ws/src/fourth_proj/package.xml"
-  "/home/workshop/new_ws/src/regnum_lab9/CMakeLists.txt"
-  "/home/workshop/new_ws/src/regnum_lab9/package.xml"
   "/opt/ros/kinetic/share/OpenCV-3.3.1-dev/OpenCVConfig-version.cmake"
   "/opt/ros/kinetic/share/OpenCV-3.3.1-dev/OpenCVConfig.cmake"
   "/opt/ros/kinetic/share/OpenCV-3.3.1-dev/OpenCVModules-release.cmake"
@@ -292,7 +289,6 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "gtest/CMakeFiles/CMakeDirectoryInformation.cmake"
   "gtest/gtest/CMakeFiles/CMakeDirectoryInformation.cmake"
   "fourth_proj/CMakeFiles/CMakeDirectoryInformation.cmake"
-  "regnum_lab9/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:

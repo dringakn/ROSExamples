@@ -148,10 +148,3 @@
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/_fourth_proj_generate_messages_check_deps_delayactionActionFeedback.dir
 /home/workshop/new_ws/build/fourth_proj/CMakeFiles/fourth_proj_generate_messages_eus.dir
-/home/workshop/new_ws/build/regnum_lab9/CMakeFiles/list_install_components.dir
-/home/workshop/new_ws/build/regnum_lab9/CMakeFiles/install.dir
-/home/workshop/new_ws/build/regnum_lab9/CMakeFiles/rebuild_cache.dir
-/home/workshop/new_ws/build/regnum_lab9/CMakeFiles/install/strip.dir
-/home/workshop/new_ws/build/regnum_lab9/CMakeFiles/install/local.dir
-/home/workshop/new_ws/build/regnum_lab9/CMakeFiles/test.dir
-/home/workshop/new_ws/build/regnum_lab9/CMakeFiles/edit_cache.dir
