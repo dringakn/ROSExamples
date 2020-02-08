@@ -1,3 +1,5 @@
+// Create a topic which publishes a uniform random number [0-99] every
+// 100 milliseconds
 #include <ros/ros.h>
 #include <std_msgs/Float32.h>
 #include <random_numbers/random_numbers.h>
