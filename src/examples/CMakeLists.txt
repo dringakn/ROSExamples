@@ -555,3 +555,19 @@ add_dependencies(example_occupancy_grid_map_service_request ${${PROJECT_NAME}_EX
 target_link_libraries(example_occupancy_grid_map_service_request
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_occupancy_grid_map_sample
+  src/example_occupancy_grid_map_sample.cpp
+)
+add_dependencies(example_occupancy_grid_map_sample ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_occupancy_grid_map_sample
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_tf_map_world
+  src/example_tf_map_world.cpp
+)
+add_dependencies(example_tf_map_world ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_tf_map_world
+  ${catkin_LIBRARIES}
+)

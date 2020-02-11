@@ -8,11 +8,11 @@ ProjectRootRelative=./
 
 [CMake][CMake Build Directory 0]
 Build Directory Path=file:///home/workshop/new_ws/build/
-Build Type=Debug
+Build Type=
 CMake Binary=file:///usr/bin/cmake
 Environment Profile=
 Extra Arguments=
-Install Directory=
+Install Directory=file:///home/workshop/new_ws/install
 
 [Defines And Includes][Compiler]
 Name=GCC
