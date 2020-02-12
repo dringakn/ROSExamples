@@ -29,7 +29,7 @@ public:
   bool operator<(const point &rhs) const { return cost < rhs.cost; }
 };
 
-class Dijkstra {
+class AStar {
 private:
   geometry_msgs::PointStamped start;
   geometry_msgs::PointStamped goal;
@@ -37,8 +37,8 @@ private:
   nav_msgs::Path path;
 
 public:
-  Dijkstra();
-  virtual ~Dijkstra();
+  AStar();
+  virtual ~AStar();
   void setStartPoint(geometry_msgs::PointStamped &);
   void setGoalPoint(geometry_msgs::PointStamped &);
   void setMap(const nav_msgs::OccupancyGrid::ConstPtr &);

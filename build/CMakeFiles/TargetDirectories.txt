@@ -68,6 +68,7 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/example_tf_map_world.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_mysrv.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_myactFeedback.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_path_planning_astar.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_addsrv.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_delayactionActionGoal.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_myactActionResult.dir

@@ -27,9 +27,9 @@
 
 */
 
-#include "examples/Dijkstra.h"
+#include "examples/AStar.h"
 
-Dijkstra g;
+AStar g;
 ros::Publisher path_pub;
 
 bool frame2map(const tf::TransformListener &li, geometry_msgs::PointStamped &pt,
@@ -37,8 +37,8 @@ bool frame2map(const tf::TransformListener &li, geometry_msgs::PointStamped &pt,
   // target frame, source frame
   if (li.canTransform("map", pt.header.frame_id, ros::Time(0))) {
     li.transformPoint("map", pt, pt_m);
-    std::cout << pt_m.header.frame_id << ": " << pt_m.point.x << "," << pt_m.point.y
-              << "," << pt_m.point.z << std::endl;
+    std::cout << pt_m.header.frame_id << ": " << pt_m.point.x << ","
+              << pt_m.point.y << "," << pt_m.point.z << std::endl;
     return true;
   } else {
     ROS_INFO("Transform is not available");
@@ -81,7 +81,7 @@ void goalpose_cb(const geometry_msgs::PoseStamped::ConstPtr &msg,
 }
 
 int main(int argc, char *argv[]) {
-  ros::init(argc, argv, "dijkstra");
+  ros::init(argc, argv, "astar");
   ros::NodeHandle nh;
   tf::TransformListener li(ros::Duration(10));
 

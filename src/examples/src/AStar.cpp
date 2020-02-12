@@ -3,31 +3,31 @@
  *    Email: dringakn@gmail.com
  **/
 
-#include "examples/Dijkstra.h"
+#include "examples/AStar.h"
 
-Dijkstra::Dijkstra() {}
+AStar::AStar() {}
 
-Dijkstra::~Dijkstra() {}
+AStar::~AStar() {}
 
-void Dijkstra::setStartPoint(geometry_msgs::PointStamped &s) {
+void AStar::setStartPoint(geometry_msgs::PointStamped &s) {
   start.header = s.header;
   start.point.x = floor(s.point.x / map->info.resolution);
   start.point.y = floor(s.point.y / map->info.resolution);
   start.point.z = floor(s.point.z / map->info.resolution);
 }
 
-void Dijkstra::setGoalPoint(geometry_msgs::PointStamped &g) {
+void AStar::setGoalPoint(geometry_msgs::PointStamped &g) {
   goal.header = g.header;
   goal.point.x = floor(g.point.x / map->info.resolution);
   goal.point.y = floor(g.point.y / map->info.resolution);
   goal.point.z = floor(g.point.z / map->info.resolution);
 }
 
-void Dijkstra::setMap(const nav_msgs::OccupancyGrid::ConstPtr &m) { map = m; }
+void AStar::setMap(const nav_msgs::OccupancyGrid::ConstPtr &m) { map = m; }
 
-nav_msgs::Path Dijkstra::getPath() { return path; }
+nav_msgs::Path AStar::getPath() { return path; }
 
-int Dijkstra::shortestPath() {
+int AStar::shortestPath() {
   int width = map->info.width;
   int height = map->info.height;
   float resolution = map->info.resolution;
@@ -72,8 +72,10 @@ int Dijkstra::shortestPath() {
         // Add the cell to the queue if new cost is smaller than prior cost
         int pidx = pt.x + pt.y * height;
         // Weighted cost in all direction, Diagonal are most costlier
-        // float ncost = pt.cost + abs(r) + abs(c);
-        float ncost = pt.cost + sqrt(r * r + c * c);
+        // The difference between Dijkstra and AStar is only the second term.
+        // float ncost = pt.cost + sqrt(r * r + c * c) ;
+        float ncost = pt.cost + sqrt(r * r + c * c) +
+                      sqrt(pow(x - goal.point.x, 2) + pow(y - goal.point.y, 2));
         if (ncost < cost[nidx]) {
           // Update the cell cost, save it's parent, and add it to the queue
           cost[nidx] = ncost;

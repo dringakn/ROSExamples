@@ -581,3 +581,13 @@ add_dependencies(example_path_planning_dijkstra ${${PROJECT_NAME}_EXPORTED_TARGE
 target_link_libraries(example_path_planning_dijkstra
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_path_planning_astar
+  include/examples/AStar.h
+  src/AStar.cpp
+  src/example_path_planning_astar.cpp
+)
+add_dependencies(example_path_planning_astar ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_path_planning_astar
+  ${catkin_LIBRARIES}
+)

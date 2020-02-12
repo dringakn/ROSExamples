@@ -764,6 +764,19 @@ _examples_generate_messages_check_deps_myactFeedback/fast:
 .PHONY : _examples_generate_messages_check_deps_myactFeedback/fast
 
 #=============================================================================
+# Target rules for targets named example_path_planning_astar
+
+# Build rule for target.
+example_path_planning_astar: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_path_planning_astar
+.PHONY : example_path_planning_astar
+
+# fast build rule for target.
+example_path_planning_astar/fast:
+	$(MAKE) -f examples/CMakeFiles/example_path_planning_astar.dir/build.make examples/CMakeFiles/example_path_planning_astar.dir/build
+.PHONY : example_path_planning_astar/fast
+
+#=============================================================================
 # Target rules for targets named _examples_generate_messages_check_deps_addsrv
 
 # Build rule for target.
@@ -2616,6 +2629,7 @@ help:
 	@echo "... example_tf_map_world"
 	@echo "... _examples_generate_messages_check_deps_mysrv"
 	@echo "... _examples_generate_messages_check_deps_myactFeedback"
+	@echo "... example_path_planning_astar"
 	@echo "... _examples_generate_messages_check_deps_addsrv"
 	@echo "... _examples_generate_messages_check_deps_delayactionActionGoal"
 	@echo "... _examples_generate_messages_check_deps_myactActionResult"
