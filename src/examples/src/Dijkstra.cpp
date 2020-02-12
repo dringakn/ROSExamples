@@ -88,7 +88,7 @@ float Dijkstra::shortestPath() {
   if (cost[gidx] < INF) {
     path.header.seq = path.header.seq + 1;
     path.header.stamp = ros::Time();
-    path.header.frame_id = "map";
+    path.header.frame_id = map->header.frame_id;
     path.poses.clear(); // reset previous poses
     int idx = gidx;
     while (idx != -1) {
