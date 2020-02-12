@@ -16,6 +16,7 @@ ROS Examples for various basic concepts. All example files names are self explan
 ## example_opencv_optical_flow:
 ## example_particle_filter:
 ## example_path_planning_dijkstra:
+## example_path_planning_astar:
 ## example_pcl2_point_cloud:
 ## example_pid_control:
 ## example_random_number_generator:
