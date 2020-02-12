@@ -571,3 +571,13 @@ add_dependencies(example_tf_map_world ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 target_link_libraries(example_tf_map_world
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_path_planning_dijkstra
+  include/examples/Dijkstra.h
+  src/Dijkstra.cpp
+  src/example_path_planning_dijkstra.cpp
+)
+add_dependencies(example_path_planning_dijkstra ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_path_planning_dijkstra
+  ${catkin_LIBRARIES}
+)

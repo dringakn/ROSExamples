@@ -27,7 +27,7 @@
 
 nav_msgs::MapMetaData map_info;
 
-bool map_cb(const nav_msgs::OccupancyGrid::ConstPtr &msg) {
+void map_cb(const nav_msgs::OccupancyGrid::ConstPtr &msg) {
   map_info = msg->info;
   ROS_INFO("Map: %d x %d @ %0.3f m/px", map_info.width, map_info.height,
            map_info.resolution);

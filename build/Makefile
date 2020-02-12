@@ -1258,6 +1258,19 @@ nodelet_generate_messages_lisp/fast:
 .PHONY : nodelet_generate_messages_lisp/fast
 
 #=============================================================================
+# Target rules for targets named example_path_planning_dijkstra
+
+# Build rule for target.
+example_path_planning_dijkstra: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_path_planning_dijkstra
+.PHONY : example_path_planning_dijkstra
+
+# fast build rule for target.
+example_path_planning_dijkstra/fast:
+	$(MAKE) -f examples/CMakeFiles/example_path_planning_dijkstra.dir/build.make examples/CMakeFiles/example_path_planning_dijkstra.dir/build
+.PHONY : example_path_planning_dijkstra/fast
+
+#=============================================================================
 # Target rules for targets named bond_generate_messages_py
 
 # Build rule for target.
@@ -2641,6 +2654,7 @@ help:
 	@echo "... rosgraph_msgs_generate_messages_nodejs"
 	@echo "... example_keyboard_input"
 	@echo "... nodelet_generate_messages_lisp"
+	@echo "... example_path_planning_dijkstra"
 	@echo "... bond_generate_messages_py"
 	@echo "... std_srvs_generate_messages_lisp"
 	@echo "... std_msgs_generate_messages_lisp"

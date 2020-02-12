@@ -392,6 +392,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "examples/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/DependInfo.cmake"
   "examples/CMakeFiles/example_keyboard_input.dir/DependInfo.cmake"
   "examples/CMakeFiles/nodelet_generate_messages_lisp.dir/DependInfo.cmake"
+  "examples/CMakeFiles/example_path_planning_dijkstra.dir/DependInfo.cmake"
   "examples/CMakeFiles/bond_generate_messages_py.dir/DependInfo.cmake"
   "examples/CMakeFiles/std_srvs_generate_messages_lisp.dir/DependInfo.cmake"
   "examples/CMakeFiles/std_msgs_generate_messages_lisp.dir/DependInfo.cmake"
