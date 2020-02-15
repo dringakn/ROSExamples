@@ -204,6 +204,7 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/control_msgs_generate_messages_eus.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/geometry_msgs_generate_messages_cpp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_msgs_generate_messages_lisp.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_linear_least_square.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/trajectory_msgs_generate_messages_lisp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/dynamic_reconfigure_generate_messages_nodejs.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_msgs_generate_messages_nodejs.dir

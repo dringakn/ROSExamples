@@ -591,3 +591,11 @@ add_dependencies(example_path_planning_astar ${${PROJECT_NAME}_EXPORTED_TARGETS}
 target_link_libraries(example_path_planning_astar
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_linear_least_square
+  src/example_linear_least_square.cpp
+)
+add_dependencies(example_linear_least_square ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_linear_least_square
+  ${catkin_LIBRARIES}
+)

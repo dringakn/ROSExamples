@@ -2480,6 +2480,19 @@ control_msgs_generate_messages_lisp/fast:
 .PHONY : control_msgs_generate_messages_lisp/fast
 
 #=============================================================================
+# Target rules for targets named example_linear_least_square
+
+# Build rule for target.
+example_linear_least_square: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_linear_least_square
+.PHONY : example_linear_least_square
+
+# fast build rule for target.
+example_linear_least_square/fast:
+	$(MAKE) -f examples/CMakeFiles/example_linear_least_square.dir/build.make examples/CMakeFiles/example_linear_least_square.dir/build
+.PHONY : example_linear_least_square/fast
+
+#=============================================================================
 # Target rules for targets named trajectory_msgs_generate_messages_lisp
 
 # Build rule for target.
@@ -2761,6 +2774,7 @@ help:
 	@echo "... control_msgs_generate_messages_eus"
 	@echo "... geometry_msgs_generate_messages_cpp"
 	@echo "... control_msgs_generate_messages_lisp"
+	@echo "... example_linear_least_square"
 	@echo "... trajectory_msgs_generate_messages_lisp"
 	@echo "... dynamic_reconfigure_generate_messages_nodejs"
 	@echo "... control_msgs_generate_messages_nodejs"

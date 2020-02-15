@@ -3,7 +3,9 @@
  *    Email: dringakn@gmail.com
  **/
 
-//  Size can be 2,3,4 for fixed size square matrices or X for dynamic size
+// REFERENCE: https://eigen.tuxfamily.org/dox/GettingStarted.html
+//            https://eigen.tuxfamily.org/dox/group__TutorialMatrixClass.html
+// Size can be 2,3,4 for fixed size square matrices or X for dynamic size
 
 #include <eigen3/Eigen/Dense>
 #include <ros/ros.h>
