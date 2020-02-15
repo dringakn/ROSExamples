@@ -63,6 +63,7 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_myactAction.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_delayactionResult.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_occupancy_grid_map_sample.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_eigen_basics.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_myactResult.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_mymsg.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_tf_map_world.dir
@@ -199,7 +200,6 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/control_toolbox_generate_messages_eus.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_action_client.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_toolbox_generate_messages_lisp.dir
-/home/workshop/new_ws/build/examples/CMakeFiles/example12.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_msgs_generate_messages_cpp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_msgs_generate_messages_eus.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/geometry_msgs_generate_messages_cpp.dir

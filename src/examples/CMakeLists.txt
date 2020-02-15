@@ -305,11 +305,11 @@ target_link_libraries(example11
   ${OpenCV_LIBRARIES}
 )
 
-add_executable(example12
-  src/example12.cpp
+add_executable(example_eigen_basics
+  src/example_eigen_basics.cpp
 )
-add_dependencies(example12 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(example12
+add_dependencies(example_eigen_basics ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_eigen_basics
   ${catkin_LIBRARIES}
 )
 
