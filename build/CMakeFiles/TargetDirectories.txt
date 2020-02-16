@@ -29,6 +29,7 @@
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/strip.dir
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/local.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/install/strip.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_least_square_accelerometer_error_parameters_estimation.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_laser_scan_fake.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_structure_from_motion.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_kalman_filter_sensor_fusion.dir
@@ -191,6 +192,7 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/topic_tools_generate_messages_lisp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/sensor_msgs_generate_messages_lisp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/topic_tools_generate_messages_nodejs.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_ransac_line_feature_estimate.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/tf_generate_messages_eus.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_turtlesim_messages_services.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_cmd_line_params.dir

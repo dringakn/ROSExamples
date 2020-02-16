@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_least_square_accelerometer_error_parameters_estimation
+
+# Build rule for target.
+example_least_square_accelerometer_error_parameters_estimation: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_least_square_accelerometer_error_parameters_estimation
+.PHONY : example_least_square_accelerometer_error_parameters_estimation
+
+# fast build rule for target.
+example_least_square_accelerometer_error_parameters_estimation/fast:
+	$(MAKE) -f examples/CMakeFiles/example_least_square_accelerometer_error_parameters_estimation.dir/build.make examples/CMakeFiles/example_least_square_accelerometer_error_parameters_estimation.dir/build
+.PHONY : example_least_square_accelerometer_error_parameters_estimation/fast
+
+#=============================================================================
 # Target rules for targets named example_laser_scan_fake
 
 # Build rule for target.
@@ -2311,6 +2324,19 @@ topic_tools_generate_messages_nodejs/fast:
 .PHONY : topic_tools_generate_messages_nodejs/fast
 
 #=============================================================================
+# Target rules for targets named example_ransac_line_feature_estimate
+
+# Build rule for target.
+example_ransac_line_feature_estimate: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_ransac_line_feature_estimate
+.PHONY : example_ransac_line_feature_estimate
+
+# fast build rule for target.
+example_ransac_line_feature_estimate/fast:
+	$(MAKE) -f examples/CMakeFiles/example_ransac_line_feature_estimate.dir/build.make examples/CMakeFiles/example_ransac_line_feature_estimate.dir/build
+.PHONY : example_ransac_line_feature_estimate/fast
+
+#=============================================================================
 # Target rules for targets named tf_generate_messages_eus
 
 # Build rule for target.
@@ -2605,6 +2631,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_least_square_accelerometer_error_parameters_estimation"
 	@echo "... example_laser_scan_fake"
 	@echo "... example_structure_from_motion"
 	@echo "... example_kalman_filter_sensor_fusion"
@@ -2761,6 +2788,7 @@ help:
 	@echo "... topic_tools_generate_messages_lisp"
 	@echo "... sensor_msgs_generate_messages_lisp"
 	@echo "... topic_tools_generate_messages_nodejs"
+	@echo "... example_ransac_line_feature_estimate"
 	@echo "... tf_generate_messages_eus"
 	@echo "... example_turtlesim_messages_services"
 	@echo "... example_cmd_line_params"

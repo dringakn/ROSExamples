@@ -599,3 +599,19 @@ add_dependencies(example_linear_least_square ${${PROJECT_NAME}_EXPORTED_TARGETS}
 target_link_libraries(example_linear_least_square
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_least_square_accelerometer_error_parameters_estimation
+  src/example_least_square_accelerometer_error_parameters_estimation.cpp
+)
+add_dependencies(example_least_square_accelerometer_error_parameters_estimation ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_least_square_accelerometer_error_parameters_estimation
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_ransac_line_feature_estimate
+  src/example_ransac_line_feature_estimate.cpp
+)
+add_dependencies(example_ransac_line_feature_estimate ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_ransac_line_feature_estimate
+  ${catkin_LIBRARIES}
+)
