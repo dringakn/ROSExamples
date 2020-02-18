@@ -37,6 +37,14 @@ int main(int argc, char **argv) {
   tf::Transform t;
   tf::StampedTransform st;
 
+  // tf::Transform has '*' overloaded operator for the transformation of
+  // vector3, quaternion and transformation object.
+  // tf::Vector3 v(p.x, p.y, p.z);
+  // v = t2 * v;
+  // p.x = v.x();
+  // p.y = v.y();
+  // p.z = v.z();
+
   ros::Timer timer = nh.createTimer(
       ros::Duration(2), boost::bind(&timerCallback, boost::ref(li)), false);
 

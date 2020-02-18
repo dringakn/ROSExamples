@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(examples)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-add_compile_options(-std=c++11)
+add_compile_options(-std=c++17)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -613,5 +613,13 @@ add_executable(example_ransac_line_feature_estimate
 )
 add_dependencies(example_ransac_line_feature_estimate ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_ransac_line_feature_estimate
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_eigen_transformations
+  src/example_eigen_transformations.cpp
+)
+add_dependencies(example_eigen_transformations ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_eigen_transformations
   ${catkin_LIBRARIES}
 )

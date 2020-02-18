@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_eigen_transformations
+
+# Build rule for target.
+example_eigen_transformations: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_eigen_transformations
+.PHONY : example_eigen_transformations
+
+# fast build rule for target.
+example_eigen_transformations/fast:
+	$(MAKE) -f examples/CMakeFiles/example_eigen_transformations.dir/build.make examples/CMakeFiles/example_eigen_transformations.dir/build
+.PHONY : example_eigen_transformations/fast
+
+#=============================================================================
 # Target rules for targets named example_least_square_accelerometer_error_parameters_estimation
 
 # Build rule for target.
@@ -2631,6 +2644,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_eigen_transformations"
 	@echo "... example_least_square_accelerometer_error_parameters_estimation"
 	@echo "... example_laser_scan_fake"
 	@echo "... example_structure_from_motion"
