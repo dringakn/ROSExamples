@@ -631,3 +631,11 @@ add_dependencies(example_iterative_closest_points_algorithm ${${PROJECT_NAME}_EX
 target_link_libraries(example_iterative_closest_points_algorithm
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_eigen_basics2
+  src/example_eigen_basics2.cpp
+)
+add_dependencies(example_eigen_basics2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_eigen_basics2
+  ${catkin_LIBRARIES}
+)

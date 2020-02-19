@@ -29,6 +29,7 @@
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/strip.dir
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/local.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/install/strip.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_eigen_basics2.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_eigen_transformations.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_least_square_accelerometer_error_parameters_estimation.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_laser_scan_fake.dir
