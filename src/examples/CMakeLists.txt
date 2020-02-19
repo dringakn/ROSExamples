@@ -623,3 +623,11 @@ add_dependencies(example_eigen_transformations ${${PROJECT_NAME}_EXPORTED_TARGET
 target_link_libraries(example_eigen_transformations
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_iterative_closest_points_algorithm
+  src/example_iterative_closest_points_algorithm.cpp
+)
+add_dependencies(example_iterative_closest_points_algorithm ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_iterative_closest_points_algorithm
+  ${catkin_LIBRARIES}
+)

@@ -204,6 +204,7 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/example_action_client.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_toolbox_generate_messages_lisp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_msgs_generate_messages_cpp.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_iterative_closest_points_algorithm.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_msgs_generate_messages_eus.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/geometry_msgs_generate_messages_cpp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_msgs_generate_messages_lisp.dir

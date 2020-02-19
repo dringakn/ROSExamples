@@ -2480,6 +2480,19 @@ control_msgs_generate_messages_cpp/fast:
 .PHONY : control_msgs_generate_messages_cpp/fast
 
 #=============================================================================
+# Target rules for targets named example_iterative_closest_points_algorithm
+
+# Build rule for target.
+example_iterative_closest_points_algorithm: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_iterative_closest_points_algorithm
+.PHONY : example_iterative_closest_points_algorithm
+
+# fast build rule for target.
+example_iterative_closest_points_algorithm/fast:
+	$(MAKE) -f examples/CMakeFiles/example_iterative_closest_points_algorithm.dir/build.make examples/CMakeFiles/example_iterative_closest_points_algorithm.dir/build
+.PHONY : example_iterative_closest_points_algorithm/fast
+
+#=============================================================================
 # Target rules for targets named control_msgs_generate_messages_eus
 
 # Build rule for target.
@@ -2813,6 +2826,7 @@ help:
 	@echo "... example_action_client"
 	@echo "... control_toolbox_generate_messages_lisp"
 	@echo "... control_msgs_generate_messages_cpp"
+	@echo "... example_iterative_closest_points_algorithm"
 	@echo "... control_msgs_generate_messages_eus"
 	@echo "... geometry_msgs_generate_messages_cpp"
 	@echo "... control_msgs_generate_messages_lisp"
