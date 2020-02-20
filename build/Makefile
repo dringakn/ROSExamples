@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_numerical_integration
+
+# Build rule for target.
+example_numerical_integration: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_numerical_integration
+.PHONY : example_numerical_integration
+
+# fast build rule for target.
+example_numerical_integration/fast:
+	$(MAKE) -f examples/CMakeFiles/example_numerical_integration.dir/build.make examples/CMakeFiles/example_numerical_integration.dir/build
+.PHONY : example_numerical_integration/fast
+
+#=============================================================================
 # Target rules for targets named example_eigen_basics2
 
 # Build rule for target.
@@ -2670,6 +2683,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_numerical_integration"
 	@echo "... example_eigen_basics2"
 	@echo "... example_eigen_transformations"
 	@echo "... example_least_square_accelerometer_error_parameters_estimation"

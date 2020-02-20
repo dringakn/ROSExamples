@@ -639,3 +639,11 @@ add_dependencies(example_eigen_basics2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${cat
 target_link_libraries(example_eigen_basics2
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_numerical_integration
+  src/example_numerical_integration.cpp
+)
+add_dependencies(example_numerical_integration ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_numerical_integration
+  ${catkin_LIBRARIES}
+)
