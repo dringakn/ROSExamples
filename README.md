@@ -1,14 +1,23 @@
 # ROSExamples
 ROS Examples for various basic concepts. All example files names are self explanatory except the exampleXX.
+## AStar:
+## Dijkstra:
 ## example_action_client:
 ## example_action_server:
 ## example_cmd_line_params:
 ## example_custom_message_publisher:
 ## example_custom_message_subscriber:
+## example_eigen_basics:
+## example_eigen_basics2:
+## example_eigen_transformations:
+## example_iterative_closest_points_algorithm:
 ## example_kalman_filter_sensor_fusion:
 ## example_kalman_filter_state_estimation:
 ## example_keyboard_input:
 ## example_laser_scan_fake:
+## example_least_square_accelerometer_error_parameters_estimation:
+## example_linear_least_square:
+## example_numerical_integration:
 ## example_occupancy_grid_map:
 ## example_occupancy_grid_map_sample:
 ## example_occupancy_grid_map_service_request:
@@ -20,6 +29,7 @@ ROS Examples for various basic concepts. All example files names are self explan
 ## example_pcl2_point_cloud:
 ## example_pid_control:
 ## example_random_number_generator:
+## example_ransac_line_feature_estimate:
 ## example_resampling_algorithm:
 ## example_robot_navigation_command:
 ## example_rviz_visulization_marker:
