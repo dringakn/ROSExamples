@@ -64,7 +64,7 @@ using namespace std;
 using namespace Eigen;
 
 // Spring-Mass damper system
-VectorXd model(const VectorXd &x) {
+VectorXd model1(const VectorXd &x) {
 	const double k = 4, b = 1, m = 4, F = 1;
 	/*
 		|dx| = |0		1	|   |x| + |0  |
@@ -181,74 +181,104 @@ VectorXd model3(const VectorXd &x) {
 	return dx;
 }
 
+// Function pointer for the system system model
+typedef VectorXd(*modelFun)(const VectorXd&);
+
+VectorXd euler(modelFun system, VectorXd &x, double t, double h){
+    x = x + h * system(x);
+    return x;
+}
+
+VectorXd RK2(modelFun system, VectorXd &x, double t, double h){
+    VectorXd k1 = h * system(x);
+    VectorXd k2 = h * system(x + k1 / 2.);
+    x = x + k2;
+    return x;
+}
+
+VectorXd RK4(modelFun system, VectorXd &x, double t, double h){
+    VectorXd k1 = h * system(x);
+    VectorXd k2 = h * system(x + k1 / 2.);
+    VectorXd k3 = h * system(x + k2 / 2.);
+    VectorXd k4 = h * system(x + k3);
+    x = x + 1 / 6.0 * (k1 + 2. * k2 + 2. * k3 + k4);
+    return x;
+}
+
+VectorXd RKFehlberg(modelFun system, VectorXd &x, double &t, double &h, 
+                    double tolerance = 1e-6){
+	const double h_min = 0.0001, h_max = 0.5000;
+	const double s_min = 0.1, s_max = 4;
+    VectorXd k1 = h * system(x);
+    VectorXd k2 = h * system(x + k1 / 4.);
+    VectorXd k3 = h * system(x + k1 * 3. / 32. + k2 * 9. / 32.);
+    VectorXd k4 = h * system(x + k1 * 1932. / 2197. - k2 * 7200. / 2197. + k3 * 7296. / 2197.);
+    VectorXd k5 = h * system(x + k1 * 439. / 216. - k2 * 8. + k3 * 3680. / 513. - k4 * 845. / 4104.);
+    VectorXd k6 = h * system(x - k1 * 8. / 27. + k2 * 2. - k3 * 3544. / 2565. + k4 * 1859. / 4104. - k5 * 11. / 40.);
+    double error = fabs((k1 / 360. - k3 * 128. / 4275. - k4 * 2197. / 75240. + k5 / 50. + k6 * 2. / 55.).minCoeff()) / h;
+    double s = pow(0.5 * tolerance / error, 0.25);
+    if (s < s_min) s = s_min;
+    if (s > s_max) s = s_max;
+    if (error < tolerance) {
+        x = x + k1 * 25. / 216. + k3 * 1408. / 2565. + k4 * 2197. / 4104. - k5 / 5.;
+        t += h;
+    }
+    h *= s;
+    if (h < h_min) h = h_min;
+    if (h > h_max) h = h_max;
+    return x;
+}
+
 int main() {
 	double h = 0.1, t = 0, t_end = 10;
 	cout.precision(3);// Show three places after the decimal
 	cout.setf(ios::fixed | ios::showpos);// Set fixed point format and '+'
 
-	VectorXd x = Vector2d::Zero();
+	VectorXd x = Vector3d::Zero();
 	cout << "Euler Numerical Integration:" << endl;
-	cout << "t" << setw(30) << "(x[0],x[1])" << endl;
+	// cout << "t" << setw(30) << "(x[0],x[1])" << endl;
+	cout << "t" << setw(15) << "h" << setw(30) << "(x[0],x[1],x[2])" << endl;
 	while (t < t_end) {
-		x = x + h * model2(x);
-		cout << t << setw(15) << "(" << x(0) << "," << x(1) << ")" << endl;
+        x = euler(model3, x, t, h);
 		t += h;
-	}
-
-	x = Vector2d::Zero();
-	t = 0;
-	cout << "2nd Order Runge-Kutta Numerical Integration:" << endl;
-	cout << "t" << setw(30) << "(x[0],x[1])" << endl;
-	while (t < t_end) {
-		VectorXd k1 = h * model2(x);
-		VectorXd k2 = h * model2(x + k1 / 2.);
-		x = x + k2;
-		cout << t << setw(15) << "(" << x(0) << "," << x(1) << ")" << endl;
-		t += h;
-	}
-
-	x = Vector2d::Zero();
-	t = 0;
-	cout << "4th Order Runge-Kutta Numerical Integration:" << endl;
-	cout << "t" << setw(30) << "(x[0],x[1])" << endl;
-	while (t < t_end) {
-		VectorXd k1 = h * model2(x);
-		VectorXd k2 = h * model2(x + k1 / 2.);
-		VectorXd k3 = h * model2(x + k2 / 2.);
-		VectorXd k4 = h * model2(x + k3);
-		x = x + 1 / 6.0 * (k1 + 2. * k2 + 2. * k3 + k4);
-		cout << t << setw(15) << "(" << x(0) << "," << x(1) << ")" << endl;
-		t += h;
+	    //cout << t << setw(15) << "(" << x(0) << "," << x(1) << ")" << endl;
+        cout << t << setw(15) << h << setw(15) << "(" << x(0) << "," << x(1) << "," << x(2) << ")" << endl;
 	}
 
 	x = Vector3d::Zero();
 	t = 0;
-	double tolerance = 1e-6;
-	double h_min = 0.0001, h_max = 0.5000;
-	double s_min = 0.1, s_max = 4;
-
-	cout << "Runge-Kutta-Fehlberg Numerical Integration:" << endl;
+	cout << "2nd Order Runge-Kutta Numerical Integration:" << endl;
+	// cout << "t" << setw(30) << "(x[0],x[1])" << endl;
 	cout << "t" << setw(15) << "h" << setw(30) << "(x[0],x[1],x[2])" << endl;
 	while (t < t_end) {
-		VectorXd k1 = h * model3(x);
-		VectorXd k2 = h * model3(x + k1 / 4.);
-		VectorXd k3 = h * model3(x + k1 * 3. / 32. + k2 * 9. / 32.);
-		VectorXd k4 = h * model3(x + k1 * 1932. / 2197. - k2 * 7200. / 2197. + k3 * 7296. / 2197.);
-		VectorXd k5 = h * model3(x + k1 * 439. / 216. - k2 * 8. + k3 * 3680. / 513. - k4 * 845. / 4104.);
-		VectorXd k6 = h * model3(x - k1 * 8. / 27. + k2 * 2. - k3 * 3544. / 2565. + k4 * 1859. / 4104. - k5 * 11. / 40.);
-		double error = fabs((k1 / 360. - k3 * 128. / 4275. - k4 * 2197. / 75240. + k5 / 50. + k6 * 2. / 55.).minCoeff()) / h;
-		double s = pow(0.5 * tolerance / error, 0.25);
-		if (s < s_min)s = s_min;
-		if (s > s_max)s = s_max;
-		if (error < tolerance) {
-			x = x + k1 * 25. / 216. + k3 * 1408. / 2565. + k4 * 2197. / 4104. - k5 / 5.;
-			cout << t << setw(15) << h << setw(15) << "(" << x(0) << "," << x(1) << "," << x(2) << ")" << endl;
-			t += h;
-		}
-		h *= s;
-		if (h < h_min)h = h_min;
-		if (h > h_max)h = h_max;
-		if (h > (t_end - t))h = t_end - t;// last step
+        x = RK2(model3, x, t, h);
+		t += h;
+	    //cout << t << setw(15) << "(" << x(0) << "," << x(1) << ")" << endl;
+        cout << t << setw(15) << h << setw(15) << "(" << x(0) << "," << x(1) << "," << x(2) << ")" << endl;
+	}
+
+	x = Vector3d::Zero();
+	t = 0;
+	cout << "4th Order Runge-Kutta Numerical Integration:" << endl;
+	// cout << "t" << setw(30) << "(x[0],x[1])" << endl;
+	cout << "t" << setw(15) << "h" << setw(30) << "(x[0],x[1],x[2])" << endl;
+	while (t < t_end) {
+        x = RK4(model3, x, t, h);
+    	t += h;
+	    //cout << t << setw(15) << "(" << x(0) << "," << x(1) << ")" << endl;
+        cout << t << setw(15) << h << setw(15) << "(" << x(0) << "," << x(1) << "," << x(2) << ")" << endl;
+	}
+
+	x = Vector3d::Zero();
+	t = 0;
+	cout << "Runge-Kutta-Fehlberg Numerical Integration (Adaptive step-size):" << endl;
+	cout << "t" << setw(15) << "h" << setw(30) << "(x[0],x[1],x[2])" << endl;
+	while (t < t_end) {
+        x = RKFehlberg(model3, x, t, h);
+        //cout << t << setw(15) << h << setw(15) << "(" << x(0) << "," << x(1) << ")" << endl;
+        cout << t << setw(15) << h << setw(15) << "(" << x(0) << "," << x(1) << "," << x(2) << ")" << endl;
+        if (h > (t_end - t)) 
+            h = t_end - t;// last step
 	}
 
 	return 0;
