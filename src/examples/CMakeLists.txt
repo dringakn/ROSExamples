@@ -647,3 +647,11 @@ add_dependencies(example_numerical_integration ${${PROJECT_NAME}_EXPORTED_TARGET
 target_link_libraries(example_numerical_integration
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_ray_tracing_3d
+  src/example_ray_tracing_3d.cpp
+)
+add_dependencies(example_ray_tracing_3d ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_ray_tracing_3d
+  ${catkin_LIBRARIES}
+)

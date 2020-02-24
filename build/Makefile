@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_ray_tracing_3d
+
+# Build rule for target.
+example_ray_tracing_3d: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_ray_tracing_3d
+.PHONY : example_ray_tracing_3d
+
+# fast build rule for target.
+example_ray_tracing_3d/fast:
+	$(MAKE) -f examples/CMakeFiles/example_ray_tracing_3d.dir/build.make examples/CMakeFiles/example_ray_tracing_3d.dir/build
+.PHONY : example_ray_tracing_3d/fast
+
+#=============================================================================
 # Target rules for targets named example_numerical_integration
 
 # Build rule for target.
@@ -2683,6 +2696,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_ray_tracing_3d"
 	@echo "... example_numerical_integration"
 	@echo "... example_eigen_basics2"
 	@echo "... example_eigen_transformations"
