@@ -29,6 +29,7 @@
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/strip.dir
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/local.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/install/strip.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_state_estimation_recursive_mean_covariance.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_ray_tracing_3d.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_numerical_integration.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_eigen_basics2.dir

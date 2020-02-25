@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_state_estimation_recursive_mean_covariance
+
+# Build rule for target.
+example_state_estimation_recursive_mean_covariance: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_state_estimation_recursive_mean_covariance
+.PHONY : example_state_estimation_recursive_mean_covariance
+
+# fast build rule for target.
+example_state_estimation_recursive_mean_covariance/fast:
+	$(MAKE) -f examples/CMakeFiles/example_state_estimation_recursive_mean_covariance.dir/build.make examples/CMakeFiles/example_state_estimation_recursive_mean_covariance.dir/build
+.PHONY : example_state_estimation_recursive_mean_covariance/fast
+
+#=============================================================================
 # Target rules for targets named example_ray_tracing_3d
 
 # Build rule for target.
@@ -2696,6 +2709,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_state_estimation_recursive_mean_covariance"
 	@echo "... example_ray_tracing_3d"
 	@echo "... example_numerical_integration"
 	@echo "... example_eigen_basics2"

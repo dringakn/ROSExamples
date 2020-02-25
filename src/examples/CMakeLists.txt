@@ -655,3 +655,11 @@ add_dependencies(example_ray_tracing_3d ${${PROJECT_NAME}_EXPORTED_TARGETS} ${ca
 target_link_libraries(example_ray_tracing_3d
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_state_estimation_recursive_mean_covariance
+  src/example_state_estimation_recursive_mean_covariance.cpp
+)
+add_dependencies(example_state_estimation_recursive_mean_covariance ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_state_estimation_recursive_mean_covariance
+  ${catkin_LIBRARIES}
+)
