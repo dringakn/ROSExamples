@@ -283,19 +283,6 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
-# Target rules for targets named example_state_estimation_recursive_mean_covariance
-
-# Build rule for target.
-example_state_estimation_recursive_mean_covariance: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 example_state_estimation_recursive_mean_covariance
-.PHONY : example_state_estimation_recursive_mean_covariance
-
-# fast build rule for target.
-example_state_estimation_recursive_mean_covariance/fast:
-	$(MAKE) -f examples/CMakeFiles/example_state_estimation_recursive_mean_covariance.dir/build.make examples/CMakeFiles/example_state_estimation_recursive_mean_covariance.dir/build
-.PHONY : example_state_estimation_recursive_mean_covariance/fast
-
-#=============================================================================
 # Target rules for targets named example_ray_tracing_3d
 
 # Build rule for target.
@@ -2064,6 +2051,19 @@ nodelet_generate_messages_nodejs/fast:
 .PHONY : nodelet_generate_messages_nodejs/fast
 
 #=============================================================================
+# Target rules for targets named example_state_estimation_recursive_mean_covariance_inverse
+
+# Build rule for target.
+example_state_estimation_recursive_mean_covariance_inverse: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_state_estimation_recursive_mean_covariance_inverse
+.PHONY : example_state_estimation_recursive_mean_covariance_inverse
+
+# fast build rule for target.
+example_state_estimation_recursive_mean_covariance_inverse/fast:
+	$(MAKE) -f examples/CMakeFiles/example_state_estimation_recursive_mean_covariance_inverse.dir/build.make examples/CMakeFiles/example_state_estimation_recursive_mean_covariance_inverse.dir/build
+.PHONY : example_state_estimation_recursive_mean_covariance_inverse/fast
+
+#=============================================================================
 # Target rules for targets named bond_generate_messages_cpp
 
 # Build rule for target.
@@ -2709,7 +2709,6 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
-	@echo "... example_state_estimation_recursive_mean_covariance"
 	@echo "... example_ray_tracing_3d"
 	@echo "... example_numerical_integration"
 	@echo "... example_eigen_basics2"
@@ -2846,6 +2845,7 @@ help:
 	@echo "... geometry_msgs_generate_messages_lisp"
 	@echo "... control_toolbox_generate_messages_cpp"
 	@echo "... nodelet_generate_messages_nodejs"
+	@echo "... example_state_estimation_recursive_mean_covariance_inverse"
 	@echo "... bond_generate_messages_cpp"
 	@echo "... example_pcl2_point_cloud"
 	@echo "... bond_generate_messages_lisp"

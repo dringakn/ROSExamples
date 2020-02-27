@@ -12,10 +12,33 @@
     .
     .
     [an] = |[sum(x^n)sum(x^(n+1) sum(x^(n+n))]|   [sum(x^n*y)]
+
+    Example:
+      Least square for a 2D line parameters in slop-intercept form
+      y = m*x + c
+      |m| = |sum(x^2) sum(x)|^-1  |sum(x*y)|
+      |c| = |sum(x)   n     |     |sum(y)  |
+
+      OR
+
+      y = m*x + c  can be written in matrix form as follows
+
+      => |y1| = |x1 1| |m|
+         |y2| = |x2 1| |c|
+             ...
+         |yn| = |xn 1|
+
+     => y = A * x
+     Where y = [y1 y2 ... yn]^T
+           x = [m c]^T
+           A = [x1 1;x2 1;...;xn 1]
+        A' * y = A'*A * x
+        (A'*A)^-1 * A' * y = x
+        Where 
+        (A'*A)^-1 * A' = A^-1, is called the Moore-Penrose Pseudo Inverse
+
     Notes:
-
     Array is used Instead of Vector because it support element operations.
-
     include_directory (... include ${Eigen_INCLUDE_DIRS} ...)
 
 */
@@ -36,11 +59,13 @@ int main(int argc, char *argv[]) {
 
   std::default_random_engine rng;
   std::normal_distribution<double> dist(0, 0.01);
-  auto grng = [&](double) { return dist(rng); };
+  auto grng = [&](double) { return dist(rng); };  // Lambda function
 
+  // Vectors are stored as array for element-wise operations
   Array x = Array::LinSpaced(n, 1, n);
   Array y = 3.0 * x.pow(2.0) + 2.0 * x + Array::Constant(n, 1, 1) +
             Array::NullaryExpr(n, 1, grng);
+
   Matrix A = Matrix::Zero(3, 3);
   Vector b = Vector::Zero(3, 1);
 
@@ -82,9 +107,18 @@ int main(int argc, char *argv[]) {
 
   cout << "A:" << endl << A << endl;
   cout << "b:" << endl << b << endl;
-  cout << "Sol1: [a0,a1,a2]" << endl << sol1 << endl;
-  cout << "Sol2: [a0,a1,a2]" << endl << sol2 << endl;
-  cout << "Sol3: [a0,a1,a2]" << endl << sol3 << endl;
+  cout << "Actual: [a0,a1,a2]" << endl << "1,2,3" << endl;
+  cout << "Sol1: [a0,a1,a2]" << endl << sol1.transpose() << endl;
+  cout << "Sol2: [a0,a1,a2]" << endl << sol2.transpose() << endl;
+  cout << "Sol3: [a0,a1,a2]" << endl << sol3.transpose() << endl;
 
+  A.resize(n,2);
+  b.resize(n,1);
+  A.col(0) = x;
+  A.col(1) = Vector::Constant(1);
+  b = y;
+  cout << "A:" << endl << A << endl;
+  cout << "b:" << endl << b << endl;
+  //cout << "Sol: [a0,a1,a2]" << endl << (A.transpose()*A).inverse()*A.transpose()*b << endl;
   return 0;
 }

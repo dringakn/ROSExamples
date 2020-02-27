@@ -29,7 +29,6 @@
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/strip.dir
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/local.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/install/strip.dir
-/home/workshop/new_ws/build/examples/CMakeFiles/example_state_estimation_recursive_mean_covariance.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_ray_tracing_3d.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_numerical_integration.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_eigen_basics2.dir
@@ -171,6 +170,7 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/geometry_msgs_generate_messages_lisp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_toolbox_generate_messages_cpp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/nodelet_generate_messages_nodejs.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_state_estimation_recursive_mean_covariance_inverse.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/bond_generate_messages_cpp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_pcl2_point_cloud.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/bond_generate_messages_lisp.dir
