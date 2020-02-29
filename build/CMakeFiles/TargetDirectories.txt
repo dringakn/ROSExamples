@@ -65,6 +65,7 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/examples_genlisp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/examples_generate_messages_eus.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/examples_generate_messages_cpp.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_non_linear_least_squares_gauss_newton.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_myactAction.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_delayactionResult.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_occupancy_grid_map_sample.dir

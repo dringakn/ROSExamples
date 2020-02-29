@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
   ros::init(argc, argv, "example_linear_least_square");
   ros::NodeHandle nh;
 	cout.precision(5);
-	//cout.setf(ios::fixed || ios::showpos);
+	cout.setf(ios::fixed | ios::showpos);
 
   int n = (argc > 1) ? atof(argv[1]) : 6;
 

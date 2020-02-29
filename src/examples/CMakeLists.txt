@@ -663,3 +663,19 @@ add_dependencies(example_state_estimation_recursive_mean_covariance_inverse ${${
 target_link_libraries(example_state_estimation_recursive_mean_covariance_inverse
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_non_linear_least_squares_gauss_newton
+  src/example_non_linear_least_squares_gauss_newton.cpp
+)
+add_dependencies(example_non_linear_least_squares_gauss_newton ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_non_linear_least_squares_gauss_newton
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_eigen_auto_differentiations
+  src/example_eigen_auto_differentiations.cpp
+)
+add_dependencies(example_eigen_auto_differentiations ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_eigen_auto_differentiations
+  ${catkin_LIBRARIES}
+)
