@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_eigen_auto_differentiations
+
+# Build rule for target.
+example_eigen_auto_differentiations: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_eigen_auto_differentiations
+.PHONY : example_eigen_auto_differentiations
+
+# fast build rule for target.
+example_eigen_auto_differentiations/fast:
+	$(MAKE) -f examples/CMakeFiles/example_eigen_auto_differentiations.dir/build.make examples/CMakeFiles/example_eigen_auto_differentiations.dir/build
+.PHONY : example_eigen_auto_differentiations/fast
+
+#=============================================================================
 # Target rules for targets named example_ray_tracing_3d
 
 # Build rule for target.
@@ -2722,6 +2735,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_eigen_auto_differentiations"
 	@echo "... example_ray_tracing_3d"
 	@echo "... example_numerical_integration"
 	@echo "... example_eigen_basics2"
