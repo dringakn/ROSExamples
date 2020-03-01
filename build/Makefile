@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_gradient_descent_minimization
+
+# Build rule for target.
+example_gradient_descent_minimization: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_gradient_descent_minimization
+.PHONY : example_gradient_descent_minimization
+
+# fast build rule for target.
+example_gradient_descent_minimization/fast:
+	$(MAKE) -f examples/CMakeFiles/example_gradient_descent_minimization.dir/build.make examples/CMakeFiles/example_gradient_descent_minimization.dir/build
+.PHONY : example_gradient_descent_minimization/fast
+
+#=============================================================================
 # Target rules for targets named example_eigen_auto_differentiations
 
 # Build rule for target.
@@ -2748,6 +2761,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_gradient_descent_minimization"
 	@echo "... example_eigen_auto_differentiations"
 	@echo "... example_ray_tracing_3d"
 	@echo "... example_numerical_integration"

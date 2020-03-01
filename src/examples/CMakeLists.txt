@@ -687,3 +687,11 @@ add_dependencies(example_eigen_auto_differentiation_jacobian ${${PROJECT_NAME}_E
 target_link_libraries(example_eigen_auto_differentiation_jacobian
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_gradient_descent_minimization
+  src/example_gradient_descent_minimization.cpp
+)
+add_dependencies(example_gradient_descent_minimization ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_gradient_descent_minimization
+  ${catkin_LIBRARIES}
+)
