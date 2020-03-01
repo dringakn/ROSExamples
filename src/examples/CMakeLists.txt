@@ -679,3 +679,11 @@ add_dependencies(example_eigen_auto_differentiations ${${PROJECT_NAME}_EXPORTED_
 target_link_libraries(example_eigen_auto_differentiations
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_eigen_auto_differentiation_jacobian
+  src/example_eigen_auto_differentiation_jacobian.cpp
+)
+add_dependencies(example_eigen_auto_differentiation_jacobian ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_eigen_auto_differentiation_jacobian
+  ${catkin_LIBRARIES}
+)
