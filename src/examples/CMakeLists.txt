@@ -695,3 +695,11 @@ add_dependencies(example_gradient_descent_minimization ${${PROJECT_NAME}_EXPORTE
 target_link_libraries(example_gradient_descent_minimization
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_root_finding_methods
+  src/example_root_finding_methods.cpp
+)
+add_dependencies(example_root_finding_methods ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_root_finding_methods
+  ${catkin_LIBRARIES}
+)

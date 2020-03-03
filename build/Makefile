@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_root_finding_methods
+
+# Build rule for target.
+example_root_finding_methods: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_root_finding_methods
+.PHONY : example_root_finding_methods
+
+# fast build rule for target.
+example_root_finding_methods/fast:
+	$(MAKE) -f examples/CMakeFiles/example_root_finding_methods.dir/build.make examples/CMakeFiles/example_root_finding_methods.dir/build
+.PHONY : example_root_finding_methods/fast
+
+#=============================================================================
 # Target rules for targets named example_gradient_descent_minimization
 
 # Build rule for target.
@@ -2761,6 +2774,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_root_finding_methods"
 	@echo "... example_gradient_descent_minimization"
 	@echo "... example_eigen_auto_differentiations"
 	@echo "... example_ray_tracing_3d"
