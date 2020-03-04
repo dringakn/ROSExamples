@@ -317,6 +317,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "gtest/CMakeFiles/gmock_main.dir/DependInfo.cmake"
   "gtest/gtest/CMakeFiles/gtest.dir/DependInfo.cmake"
   "gtest/gtest/CMakeFiles/gtest_main.dir/DependInfo.cmake"
+  "examples/CMakeFiles/example_non_linear_least_saqures_newton.dir/DependInfo.cmake"
   "examples/CMakeFiles/example_root_finding_methods.dir/DependInfo.cmake"
   "examples/CMakeFiles/example_gradient_descent_minimization.dir/DependInfo.cmake"
   "examples/CMakeFiles/example_eigen_auto_differentiations.dir/DependInfo.cmake"

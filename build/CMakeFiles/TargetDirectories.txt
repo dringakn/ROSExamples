@@ -29,6 +29,7 @@
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/strip.dir
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/local.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/install/strip.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_non_linear_least_saqures_newton.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_root_finding_methods.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_gradient_descent_minimization.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_eigen_auto_differentiations.dir

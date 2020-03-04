@@ -703,3 +703,11 @@ add_dependencies(example_root_finding_methods ${${PROJECT_NAME}_EXPORTED_TARGETS
 target_link_libraries(example_root_finding_methods
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_non_linear_least_saqures_newton
+  src/example_non_linear_least_saqures_newton.cpp
+)
+add_dependencies(example_non_linear_least_saqures_newton ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_non_linear_least_saqures_newton
+  ${catkin_LIBRARIES}
+)

@@ -283,6 +283,19 @@ gtest_main/fast:
 .PHONY : gtest_main/fast
 
 #=============================================================================
+# Target rules for targets named example_non_linear_least_saqures_newton
+
+# Build rule for target.
+example_non_linear_least_saqures_newton: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_non_linear_least_saqures_newton
+.PHONY : example_non_linear_least_saqures_newton
+
+# fast build rule for target.
+example_non_linear_least_saqures_newton/fast:
+	$(MAKE) -f examples/CMakeFiles/example_non_linear_least_saqures_newton.dir/build.make examples/CMakeFiles/example_non_linear_least_saqures_newton.dir/build
+.PHONY : example_non_linear_least_saqures_newton/fast
+
+#=============================================================================
 # Target rules for targets named example_root_finding_methods
 
 # Build rule for target.
@@ -2774,6 +2787,7 @@ help:
 	@echo "... gmock_main"
 	@echo "... gtest"
 	@echo "... gtest_main"
+	@echo "... example_non_linear_least_saqures_newton"
 	@echo "... example_root_finding_methods"
 	@echo "... example_gradient_descent_minimization"
 	@echo "... example_eigen_auto_differentiations"
