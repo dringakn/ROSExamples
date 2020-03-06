@@ -719,3 +719,11 @@ add_dependencies(example_eigen_lavenberg_marquardt ${${PROJECT_NAME}_EXPORTED_TA
 target_link_libraries(example_eigen_lavenberg_marquardt
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_eigen_numerical_differentiation
+  src/example_eigen_numerical_differentiation.cpp
+)
+add_dependencies(example_eigen_numerical_differentiation ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_eigen_numerical_differentiation
+  ${catkin_LIBRARIES}
+)
