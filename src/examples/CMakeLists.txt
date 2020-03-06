@@ -711,3 +711,11 @@ add_dependencies(example_non_linear_least_saqures_newton ${${PROJECT_NAME}_EXPOR
 target_link_libraries(example_non_linear_least_saqures_newton
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_eigen_lavenberg_marquardt
+  src/example_eigen_lavenberg_marquardt.cpp
+)
+add_dependencies(example_eigen_lavenberg_marquardt ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_eigen_lavenberg_marquardt
+  ${catkin_LIBRARIES}
+)
