@@ -29,6 +29,7 @@
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/strip.dir
 /home/workshop/new_ws/build/gtest/gtest/CMakeFiles/install/local.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/list_install_components.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/rebuild_cache.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/nav_msgs_generate_messages_cpp.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/trajectory_msgs_generate_messages_nodejs.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/control_msgs_generate_messages_nodejs.dir
@@ -208,7 +209,6 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/example_service_client.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_service_server.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_custom_message_subscriber.dir
-/home/workshop/new_ws/build/examples/CMakeFiles/rebuild_cache.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/sensor_msgs_generate_messages_nodejs.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_opencv_feature_detection.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_kalman_filter_sensor_fusion.dir
@@ -227,4 +227,5 @@
 /home/workshop/new_ws/build/examples/CMakeFiles/example_root_finding_methods.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/_examples_generate_messages_check_deps_myactAction.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/example_non_linear_least_saqures_newton.dir
+/home/workshop/new_ws/build/examples/CMakeFiles/example_node_class.dir
 /home/workshop/new_ws/build/examples/CMakeFiles/install/strip.dir

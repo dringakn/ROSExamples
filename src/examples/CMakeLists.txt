@@ -727,3 +727,13 @@ add_dependencies(example_eigen_numerical_differentiation ${${PROJECT_NAME}_EXPOR
 target_link_libraries(example_eigen_numerical_differentiation
   ${catkin_LIBRARIES}
 )
+
+add_executable(example_node_class
+  include/examples/MyNodeClass.h
+  src/MyNodeClass.cpp
+  src/example_node_class.cpp
+)
+add_dependencies(example_node_class ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_node_class
+  ${catkin_LIBRARIES}
+)

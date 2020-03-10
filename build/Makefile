@@ -2791,6 +2791,19 @@ example_non_linear_least_saqures_newton/fast:
 	$(MAKE) -f examples/CMakeFiles/example_non_linear_least_saqures_newton.dir/build.make examples/CMakeFiles/example_non_linear_least_saqures_newton.dir/build
 .PHONY : example_non_linear_least_saqures_newton/fast
 
+#=============================================================================
+# Target rules for targets named example_node_class
+
+# Build rule for target.
+example_node_class: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 example_node_class
+.PHONY : example_node_class
+
+# fast build rule for target.
+example_node_class/fast:
+	$(MAKE) -f examples/CMakeFiles/example_node_class.dir/build.make examples/CMakeFiles/example_node_class.dir/build
+.PHONY : example_node_class/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -3006,6 +3019,7 @@ help:
 	@echo "... example_root_finding_methods"
 	@echo "... _examples_generate_messages_check_deps_myactAction"
 	@echo "... example_non_linear_least_saqures_newton"
+	@echo "... example_node_class"
 .PHONY : help
 
 

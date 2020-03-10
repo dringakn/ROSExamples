@@ -510,4 +510,5 @@ set(CMAKE_DEPEND_INFO_FILES
   "examples/CMakeFiles/example_root_finding_methods.dir/DependInfo.cmake"
   "examples/CMakeFiles/_examples_generate_messages_check_deps_myactAction.dir/DependInfo.cmake"
   "examples/CMakeFiles/example_non_linear_least_saqures_newton.dir/DependInfo.cmake"
+  "examples/CMakeFiles/example_node_class.dir/DependInfo.cmake"
   )
