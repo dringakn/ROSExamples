@@ -43,11 +43,16 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   pcl_ros
+  # pcl_msgs
+  # pcl_conversions
   control_toolbox
   geometry_msgs
   nav_msgs
   sensor_msgs
 )
+
+find_package(PCL 1.7 REQUIRED)
+
 ##   * add "message_runtime" and every package in MSG_DEP_SET to
 ##     catkin_package(CATKIN_DEPENDS ...)
 ##   * uncomment the add_*_files sections below as needed
@@ -127,6 +132,8 @@ catkin_package(
 include_directories(
   include ${catkin_INCLUDE_DIRS}
   include ${OpenCV_INCLUDE_DIRS}
+  include ${Eigen_INCLUDE_DIRS}
+  include ${PCL_INCLUDE_DIRS}
 # ${catkin_INCLUDE_DIRS}
 )
 
@@ -735,5 +742,21 @@ add_executable(example_node_class
 )
 add_dependencies(example_node_class ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_node_class
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_pcl_ros_callback
+  src/example_pcl_ros_callback.cpp
+)
+add_dependencies(example_pcl_ros_callback ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_pcl_ros_callback
+  ${catkin_LIBRARIES}
+)
+
+add_executable(example_pcl_icp
+  src/example_pcl_icp.cpp
+)
+add_dependencies(example_pcl_icp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_pcl_icp
   ${catkin_LIBRARIES}
 )

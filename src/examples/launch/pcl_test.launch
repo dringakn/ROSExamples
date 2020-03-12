@@ -1,0 +1,8 @@
+<launch>
+	<arg name="bagfile" default="/home/workshop/tango1.bag"/>
+	<node pkg="examples" type="example_pcl_ros_callback" name="example_pcl" required="true" output="screen" args="0.05" launch-prefix=""/>
+    <!-- Press spacebar on the command prompt to pause-->
+    <node pkg="rosbag" type="play" name="player" required="false" output="screen" args="--clock --loop $(arg bagfile)" launch-prefix=""/>
+	<node pkg="rviz" type="rviz" name="rviz" required="true" output="screen" args="" launch-prefix=""/>
+	<!--<node pkg="rviz" type="rviz" name="rviz" required="true" output="screen" args="-d $(find tango)/rviz/rviz_display.rviz" launch-prefix=""/>-->
+</launch>
