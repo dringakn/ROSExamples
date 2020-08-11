@@ -1,3 +1,8 @@
+# IDE Related
+.kdev4/
+.vscode/
+
+# Catkin Related
 devel/
 logs/
 build/
