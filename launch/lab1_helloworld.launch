@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="ros_examples" type="helloworld" name="helloworld" output="screen"/>
+    <param name="info" value="launch says yo yo"/>
+</launch>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>ros_examples</name>
+  <version>1.0.0</version>
+  <description>ROS examples for various basic concepts</description>
+  <author email="dringakn@gmail.com">Dr. -Ing. Ahmad Kamal Nasir</author>
+  <maintainer email="dringakn@gmail.com">Dr. -Ing. Ahmad Kamal Nasir</maintainer>
+  <url type="website">http://web.lums.edu.pk/~akn</url>
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>message_generation</build_depend>
+  <build_export_depend>message_generation</build_export_depend>
+  <exec_depend>message_runtime</exec_depend>
+
+  <export>
+
+  </export>
+
+</package>

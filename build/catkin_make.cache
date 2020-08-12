@@ -1,2 +1,0 @@
-examples
--DCATKIN_DEVEL_PREFIX=/home/workshop/new_ws/devel -DCMAKE_INSTALL_PREFIX=/home/workshop/new_ws/install -G Unix Makefiles

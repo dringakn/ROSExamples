@@ -1,0 +1,5 @@
+<launch>
+    <arg name="mode" default="0"/>
+    <node pkg="ros_examples" type="servernode" name="my_servernode" required="true" launch-prefix="xterm -e"/>
+    <node pkg="ros_examples" type="clientnode" name="my_clientnode" output="screen" args="$(arg mode)"/>
+</launch>

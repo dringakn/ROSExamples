@@ -1,4 +1,0 @@
-<launch>
-    <node pkg="regnum_lab1" type="helloworld" name="helloworld" output="screen"/>
-    <param name="info" value="launch says yo yo"/>
-</launch>

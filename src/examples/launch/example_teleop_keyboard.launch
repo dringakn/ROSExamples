@@ -1,7 +1,0 @@
-<launch>
-    <param name="linVel_Scale" value="1"/>
-    <param name="angVel_Scale" value="1"/>
-    <param name="acc" value="1"/>
-    <node pkg="examples" type="example_keyboard_input" name="example_teleop_keyboard" required="true" launch-prefix="xterm -e"/>
-    <node pkg="rostopic" type="rostopic" name="rostopic" args="echo /cmd_vel" output="screen"/>
-</launch>

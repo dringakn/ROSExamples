@@ -1,8 +1,0 @@
-<launch>
-    <node pkg="regnum_lab1" type="txnode" name="my_txnode" required="true" launch-prefix="xterm -e">
-        <remap from="message" to="my_message"/>
-    </node>
-    <node pkg="regnum_lab1" type="rxnode" name="my_rxnode" output="screen">
-        <remap from="message" to="my_message"/>
-    </node>
-</launch>

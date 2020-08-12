@@ -1,0 +1,69 @@
+<launch>
+
+  <!--- Run V-REP -->
+  <node pkg="ros_examples" name="lab11_vrep_launch_script" type="lab11_vrep_launch_script.py" required="true" output="screen"/>
+
+  <!-- Run the map server -->
+  <node pkg="map_server" name="ros_map_server" type="map_server" args="$(find regnum_lab11)/map/mymap.yaml" required="true" output="screen"/>
+
+  <!--- Run ROS RVIZ -->
+  <node pkg="rviz" type="rviz" name="RViz" required="true" output="screen" args="-d $(find regnum_lab11)/rviz/lab11_rviz_display.rviz"/>
+
+  <!--- Run Keyboard Teleoperation -->
+  <node pkg="teleop_twist_keyboard" name="teleop_twist_keyboard" type="teleop_twist_keyboard.py" launch-prefix="xterm -e" required="true">
+    <remap from="/cmd_vel" to="/cmd_vel"/>
+  </node>
+
+  <!--- Run AMCL -->
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
+    <!-- Publish scans from best pose at a max of 10 Hz -->
+    <param name="base_frame_id" value="/base_link"/>
+    <param name="global_frame_id" value="/map"/>
+    <param name="odom_frame_id" value="/odom"/>
+    <param name="use_map_topic" value="true"/>
+    <param name="odom_model_type" value="diff"/>
+    <param name="initial_pose_x" value="1"/>
+    <param name="initial_pose_y" value="2.25"/>
+    <param name="initial_pose_a" value="3.14152"/>
+    <param name="transform_tolerance" value="0.1" />
+    <param name="gui_publish_rate" value="10.0"/>
+    <param name="laser_max_beams" value="30"/>
+    <param name="min_particles" value="500"/>
+    <param name="max_particles" value="2500"/>
+    <param name="kld_err" value="0.01"/>
+    <param name="kld_z" value="0.99"/>
+    <param name="odom_alpha1" value="0.005"/>
+    <param name="odom_alpha2" value="0.005"/>
+    <!-- translation std dev, m -->
+    <param name="odom_alpha3" value="0.01"/>
+    <param name="odom_alpha4" value="0.005"/>
+    <param name="odom_alpha5" value="0.003"/>
+    <param name="laser_z_hit" value="0.95"/>
+    <param name="laser_z_short" value="0.05"/>
+    <param name="laser_z_max" value="0.05"/>
+    <param name="laser_z_rand" value="0.05"/>
+    <param name="laser_sigma_hit" value="0.05"/>
+    <param name="laser_lambda_short" value="0.1"/>
+    <param name="laser_lambda_short" value="0.1"/>
+    <!--<param name="laser_model_type" value="likelihood_field"/> -->
+    <param name="laser_model_type" value="beam"/>
+    <param name="laser_likelihood_max_dist" value="0.02"/>
+    <param name="update_min_d" value="0.01"/>
+    <param name="update_min_a" value="0.01"/>
+    <param name="resample_interval" value="1"/>
+    <param name="recovery_alpha_slow" value="0.01"/>
+    <param name="recovery_alpha_fast" value="0.2"/>
+  </node>
+
+  <!--- Run navigation stack with local and global cost map parameters -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find regnum_lab11)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find regnum_lab11)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find regnum_lab11)/param/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find regnum_lab11)/param/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find regnum_lab11)/param/base_local_planner_params.yaml" command="load" />
+    <!-- remap from="/cmd_vel" to="/Test_Robot/cmd_vel"/ -->
+  </node>
+
+  <node pkg="rostopic" name="rostopic" type="rostopic" args="pub /startSimulation std_msgs/Bool true" />
+</launch>

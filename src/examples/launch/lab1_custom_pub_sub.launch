@@ -1,8 +1,0 @@
-<launch>
-    <node pkg="regnum_lab1" type="custommsgpub" name="my_custom_msg_pub_node" required="true" launch-prefix="xterm -e">
-        <remap from="mymessage" to="my_custom_message"/>
-    </node>
-    <node pkg="regnum_lab1" type="custommsgsub" name="my_custom_msg_sub_node" output="screen">
-        <remap from="mymessage" to="my_custom_message"/>
-    </node>
-</launch>

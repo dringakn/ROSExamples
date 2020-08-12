@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="ros_examples" type="txnode" name="my_txnode" required="true" launch-prefix="xterm -e">
+        <remap from="message" to="my_message"/>
+    </node>
+    <node pkg="ros_examples" type="rxnode" name="my_rxnode" output="screen">
+        <remap from="message" to="my_message"/>
+    </node>
+</launch>

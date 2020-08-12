@@ -1,0 +1,9 @@
+<launch>
+  <node pkg="ros_examples" name="lab2_vrep_launch_script" type="lab2_vrep_launch_script.py" required="true" output="screen"/>
+  <include file="$(find teleop_twist_joy)/launch/teleop.launch">
+    <arg name="joy_dev" default="/dev/input/js0" />
+    <arg name="joy_config" default="xd3" />
+  </include>
+  <node pkg="teleop_twist_keyboard" name="teleop_twist_keyboard" type="teleop_twist_keyboard.py" launch-prefix="xterm -e"/>
+  <node pkg="rostopic" name="rostopic" type="rostopic" args="pub /startSimulation std_msgs/Bool true" />
+</launch>
