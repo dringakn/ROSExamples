@@ -5,8 +5,8 @@ project(ros_examples)
 add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED)
-find_package(OpenCV)
-find_package(PCL 1.8 REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(PCL REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs

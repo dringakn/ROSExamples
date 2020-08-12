@@ -7,16 +7,18 @@
 // rosrun map_server map_server map.yaml
 // rosrun example example_occupancy_grid_map_service_request static_map grid.txt
 
-#include <fstream>                  // Text file
-#include <nav_msgs/GetMap.h>        // Service
-#include <nav_msgs/OccupancyGrid.h> // Occupancy grid map
-#include <ros/ros.h>                // ROS
-#include <vector>                   // vector container
+#include <nav_msgs/GetMap.h>         // Service
+#include <nav_msgs/OccupancyGrid.h>  // Occupancy grid map
+#include <ros/ros.h>                 // ROS
+
+#include <fstream>  // Text file
+#include <vector>   // vector container
 
 using namespace std;
 
-int resolution, width, height;
-vector<vector<bool>> grid; // store occupancy map (0=free, 1=occupied)
+int width, height;
+double resolution;
+vector<vector<bool>> grid;  // store occupancy map (0=free, 1=occupied)
 
 bool requestMap(ros::NodeHandle &, const char *);
 void readMap(const nav_msgs::OccupancyGrid &);
@@ -39,7 +41,7 @@ int main(int argc, char *argv[]) {
 
 bool requestMap(ros::NodeHandle &nh, const char *topicName) {
   while (!ros::service::waitForService(
-      topicName, 3000)) // Number of millisecons to wait, -1 for infinite
+      topicName, 3000))  // Number of millisecons to wait, -1 for infinite
     ROS_INFO("Waiting for the map service (%s) to become available", topicName);
   ros::ServiceClient mapClient = nh.serviceClient<nav_msgs::GetMap>(topicName);
   nav_msgs::GetMap::Request req;
