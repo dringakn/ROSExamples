@@ -1,4 +1,6 @@
-#include <ros/ros.h>
+// #include <ros/ros.h>
+
+#include <bits/stdc++.h>  // C++ Headers
 
 #include <chrono>  // Time profiling
 #include <random>  // Random Number Generator (RNG)
@@ -9,6 +11,7 @@ using namespace std;
 struct Node {
   datatype data;
   Node *left, *right;
+  Node() : left(nullptr), right(nullptr), data(0) {}
 };
 
 Node* createNode(datatype& data) {
@@ -40,9 +43,22 @@ bool search(Node* n, datatype& key) {
   }
 }
 
-void searchNN(Node* n, datatype& key, double& norm, Node* res) {
+Node* searchNN(Node* n, datatype& key, double& dist, Node* res = nullptr) {
   if (n == nullptr) {
-    return;
+    return res;
+  } else if (n->data == key) {
+    res = n;
+    return res;
+  }
+  double norm = abs(n->data - key);
+  if (norm < dist) {
+    dist = norm;
+    res = n;
+  }
+  if (key < n->data) {
+    return searchNN(n->left, key, dist, res);
+  } else {
+    return searchNN(n->right, key, dist, res);
   }
 }
 
@@ -106,7 +122,7 @@ int main(int argc, char* argv[]) {
 
   std::random_device device();  // Random number device
   std::mt19937 rng(0);          // RNG, 0, time(0), device
-  std::uniform_int_distribution<int> dist(-1000, 1000);     // Distributation
+  std::uniform_int_distribution<int> distUni(-100, 100);    // Distributation
   vector<datatype> data = {11, 13, -10, -99, 99, 50, -52};  // Data
   Node* tree = nullptr;                                     // Binary Tree
   auto start = chrono::high_resolution_clock::now();  // Time profiling variable
@@ -118,11 +134,20 @@ int main(int argc, char* argv[]) {
   start = chrono::high_resolution_clock::now();
   data.resize(20);
   for (int i = 0; i < data.size(); i++) {
-    data[i] = dist(rng);
+    data[i] = distUni(rng);
     tree = insert(tree, data[i]);
     cout << data[i] << " ";
   }
   stop = chrono::high_resolution_clock::now();
+  cout << endl;
+  chrono::duration_cast<chrono::microseconds>(stop - start);
+  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+
+  cout << "Sort List: ";
+  start = chrono::high_resolution_clock::now();
+  sort(data.begin(), data.end());
+  stop = chrono::high_resolution_clock::now();
+  for (auto d : data) std::cout << d << ' ';
   cout << endl;
   chrono::duration_cast<chrono::microseconds>(stop - start);
   cout << "Elapsed time: " << duration.count() << " uSec" << endl;
@@ -162,7 +187,7 @@ int main(int argc, char* argv[]) {
   cout << "Elapsed time: " << duration.count() << " uSec" << endl;
 
   // Search for the key
-  datatype key = (argc > 1) ? atoi(argv[1]) : 10;
+  datatype key = (argc > 1) ? atoi(argv[1]) : 50;
   start = chrono::high_resolution_clock::now();
   cout << "Search: " << key << ", result=" << search(tree, key) << endl;
   stop = chrono::high_resolution_clock::now();
@@ -180,6 +205,15 @@ int main(int argc, char* argv[]) {
   start = chrono::high_resolution_clock::now();
   cout << "Max: " << findMax(tree)->data << endl;
   stop = chrono::high_resolution_clock::now();
+  chrono::duration_cast<chrono::microseconds>(stop - start);
+  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+
+  // Search for Nearest key
+  start = chrono::high_resolution_clock::now();
+  double dist = INT_MAX;  // minimum distance
+  Node* res = searchNN(tree, key, dist);
+  stop = chrono::high_resolution_clock::now();
+  cout << "SearchNN: " << key << "\t" << res->data << endl;
   chrono::duration_cast<chrono::microseconds>(stop - start);
   cout << "Elapsed time: " << duration.count() << " uSec" << endl;
 
