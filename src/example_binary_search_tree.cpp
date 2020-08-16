@@ -134,10 +134,9 @@ int main(int argc, char* argv[]) {
 
   std::random_device device();  // Random number device
   std::mt19937 rng(0);          // RNG, 0, time(0), device
-  std::uniform_int_distribution<int> distUni(-1e6, 1e6);    // Distributation
-  vector<datatype> data = {11, 13, -10, -99, 99, 50, -52};  // Data
-  data.resize(1e6);
-  Node* tree = nullptr;                               // Binary Tree
+  std::uniform_int_distribution<int> distUni(-1e6, 1e6);  // Distributation
+  vector<datatype> data(1e6);                             // Data
+  Node* tree = nullptr;                                   // Binary Tree
   auto start = chrono::high_resolution_clock::now();  // Time profiling variable
   auto stop = chrono::high_resolution_clock::now();   // Time profiling variable
 
