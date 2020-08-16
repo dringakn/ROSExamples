@@ -5,7 +5,7 @@
 
 // rosrun map_server map_server map.yaml
 // or
-// rosrun examples example_occupancy_grid_map 10 10 0.5
+// rosrun ros_examples example_occupancy_grid_map 10 10 0.5
 
 // Above node publishes a latched map topic and a static_map service.
 // We can write a node which can subscribe to the "map" topic or call
