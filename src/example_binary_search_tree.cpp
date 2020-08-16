@@ -116,97 +116,116 @@ void postOrder(Node* n) {
   cout << n->data << " ";  // Parent
 }
 
+datatype linearSearchNN(vector<datatype>& L, datatype& key) {
+  datatype tempMax = INT_MAX, dist, result = tempMax;
+  for (int i = 0; i < L.size(); i++) {
+    dist = abs(L[i] - key);
+    if (dist < tempMax) {
+      tempMax = dist;
+      result = L[i];
+    }
+  }
+  return result;
+}
+
 int main(int argc, char* argv[]) {
   //   ros::init(argc, argv, "example_binary_search_tree");
   //   ros::NodeHandle nh;
 
   std::random_device device();  // Random number device
   std::mt19937 rng(0);          // RNG, 0, time(0), device
-  std::uniform_int_distribution<int> distUni(-100, 100);    // Distributation
+  std::uniform_int_distribution<int> distUni(-1e6, 1e6);    // Distributation
   vector<datatype> data = {11, 13, -10, -99, 99, 50, -52};  // Data
-  Node* tree = nullptr;                                     // Binary Tree
+  data.resize(1e6);
+  Node* tree = nullptr;                               // Binary Tree
   auto start = chrono::high_resolution_clock::now();  // Time profiling variable
   auto stop = chrono::high_resolution_clock::now();   // Time profiling variable
-  auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
   // Populate tree
-  cout << "List: ";
+  cout << "Create Tree: ";
   start = chrono::high_resolution_clock::now();
-  data.resize(20);
   for (int i = 0; i < data.size(); i++) {
     data[i] = distUni(rng);
     tree = insert(tree, data[i]);
-    cout << data[i] << " ";
   }
   stop = chrono::high_resolution_clock::now();
   cout << endl;
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   cout << "Sort List: ";
   start = chrono::high_resolution_clock::now();
   sort(data.begin(), data.end());
   stop = chrono::high_resolution_clock::now();
-  for (auto d : data) std::cout << d << ' ';
-  cout << endl;
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  //   for (auto d : data) std::cout << d << ' ';
+  //   cout << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   // Pre-order traversal (DFS)
   cout << "Pre-order: ";
   start = chrono::high_resolution_clock::now();
-  preOrder(tree);
+  //   preOrder(tree);
   stop = chrono::high_resolution_clock::now();
   cout << endl;
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   // In-order traversal (DFS)
   cout << "In-order: ";
   start = chrono::high_resolution_clock::now();
-  inOrder(tree);
+  //   inOrder(tree);
   stop = chrono::high_resolution_clock::now();
   cout << endl;
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   // Post-order traversal (DFS)
   cout << "Post-order: ";
   start = chrono::high_resolution_clock::now();
-  postOrder(tree);
+  //   postOrder(tree);
   stop = chrono::high_resolution_clock::now();
   cout << endl;
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   // Tree height
   start = chrono::high_resolution_clock::now();
   cout << "Tree Height: " << treeHeight(tree) << endl;
   stop = chrono::high_resolution_clock::now();
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   // Search for the key
   datatype key = (argc > 1) ? atoi(argv[1]) : 50;
   start = chrono::high_resolution_clock::now();
   cout << "Search: " << key << ", result=" << search(tree, key) << endl;
   stop = chrono::high_resolution_clock::now();
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   // Search for the min key
   start = chrono::high_resolution_clock::now();
   cout << "Min: " << findMin(tree)->data << endl;
   stop = chrono::high_resolution_clock::now();
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   // Search for the max key
   start = chrono::high_resolution_clock::now();
   cout << "Max: " << findMax(tree)->data << endl;
   stop = chrono::high_resolution_clock::now();
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   // Search for Nearest key
   start = chrono::high_resolution_clock::now();
@@ -214,8 +233,18 @@ int main(int argc, char* argv[]) {
   Node* res = searchNN(tree, key, dist);
   stop = chrono::high_resolution_clock::now();
   cout << "SearchNN: " << key << "\t" << res->data << endl;
-  chrono::duration_cast<chrono::microseconds>(stop - start);
-  cout << "Elapsed time: " << duration.count() << " uSec" << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
+
+  // Linear search for Nearest key
+  start = chrono::high_resolution_clock::now();
+  datatype res1 = linearSearchNN(data, key);
+  stop = chrono::high_resolution_clock::now();
+  cout << "LinearSearchNN: " << key << "\t" << res1 << endl;
+  cout << "Elapsed time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
 
   return 0;
 }
