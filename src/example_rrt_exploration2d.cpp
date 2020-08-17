@@ -10,8 +10,7 @@
 #include <visualization_msgs/Marker.h>        // RViz Marker
 
 using namespace std;
-typedef pcl::PointXY Point2D;
-typedef pcl::PointXYZ Point3D;
+typedef pcl::PointXYZI Point3D;
 
 bool mapRecieved = false;                    // OGM recieved
 nav_msgs::OccupancyGrid mapData;             // OGM
@@ -72,19 +71,19 @@ int main(int argc, char* argv[]) {
   ROS_INFO("Map received.");
   ros::spinOnce();
 
-  // Create KDTree
+  // Create KDTree from OGM
   pcl::KdTreeFLANN<Point3D> kdtree;
   pcl::PointCloud<Point3D>::Ptr cloud(new pcl::PointCloud<Point3D>());
-  cloud->width = mapData.info.width;
   cloud->height = mapData.info.height;
+  cloud->width = mapData.info.width;
   cloud->is_dense = true;
-  // cloud->points.resize(cloud->width * cloud->height);
-  for (int i = 0; i < mapData.info.width; i++) {
-    for (int j = 0; j < mapData.info.height; j++) {
-      Point3D pt;
-      //   pt.x = mapData.data[i * mapData.info.width + j];
-      pt.x = i * mapData.info.resolution;
-      pt.y = j * mapData.info.resolution;
+  Point3D pt;
+  pt.z = 0;  // Same z for the OGM
+  for (int y = 0; y < mapData.info.height; y++) {
+    for (int x = 0; x < mapData.info.width; x++) {
+      pt.x = x * mapData.info.resolution;
+      pt.y = y * mapData.info.resolution;
+      pt.intensity = mapData.data[y * mapData.info.width + x];
       cloud->points.push_back(pt);
     }
   }
@@ -111,6 +110,8 @@ int main(int argc, char* argv[]) {
 
   // Start processing
   while (ros::ok()) {
+    if (viewer.wasStopped(50))  // Check if the window is closed
+      ros::shutdown();          // close ros
     ros::spinOnce();
     rate.sleep();
   }
