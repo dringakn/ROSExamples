@@ -25,6 +25,16 @@ struct Point {
   }
   // Not equal operator
   bool operator!=(const Point& rhs) const { return !(*this == rhs); }
+  // Addition operator
+  Point operator+(const Point& rhs) const {
+    return Point(this->x + rhs.x, this->y + rhs.y);
+  }
+  // Subtraction operator
+  Point operator-(const Point& rhs) const {
+    return Point(this->x - rhs.x, this->y - rhs.y);
+  }
+  // Second norm (Euclidean distance) of the point
+  double norm2() { return sqrt(pow(x, 2) + pow(y, 2)); }
 };
 
 /**
@@ -91,25 +101,37 @@ bool search(Node* n, Point& key, int depth = 0) {
   }
 }
 
-// // TODO:
-// Node* searchNN(Node* n, Point& key, double& dist, Node* res = nullptr) {
-//   if (n == nullptr) {
-//     return res;
-//   } else if (n->data == key) {
-//     res = n;
-//     return res;
-//   }
-//   double norm = sqrt(pow(n->data.x - key.x, 2) + pow(n->data.y - key.y, 2));
-//   if (norm < dist) {
-//     dist = norm;
-//     res = n;
-//   }
-//   if (key < n->data) {
-//     return searchNN(n->left, key, dist, res);
-//   } else {
-//     return searchNN(n->right, key, dist, res);
-//   }
-// }
+/**
+ * @brief Find the nearest neighbouring point in the KDTree.
+ *
+ * @param n The root node.
+ * @param key The point to be searched.
+ * @param dist The distance threshold for searching.
+ * @param res Ignore it! For internal book-keeping, same as return value.
+ * @param depth Ignore it!.
+ * @return Node* The nearest node to the specified key.
+ */
+Node* searchNN(Node* n, Point& key, double& dist, Node* res = nullptr,
+               int depth = 0) {
+  if (n == nullptr) {
+    return res;
+  } else if (n->data == key) {
+    res = n;
+    return res;
+  } else {
+    double norm = (n->data - key).norm2();
+    if (norm < dist) {
+      dist = norm;
+      res = n;
+    }
+    int cd = depth % K;
+    if (key[cd] < n->data[cd]) {
+      return searchNN(n->left, key, dist, res, depth + 1);
+    } else {
+      return searchNN(n->right, key, dist, res, depth + 1);
+    }
+  }
+}
 
 /**
  * @brief Height of the KD-Tree
@@ -223,6 +245,26 @@ bool linearSearch(vector<Point>& L, Point& key) {
 }
 
 /**
+ * @brief Find the nearest neighbour of the specified point.
+ *
+ * @param L Vector of points.
+ * @param key Point to be searched.
+ * @return Point Closeset point in term of Euclidean distance.
+ */
+Point linearSearchNN(vector<Point>& L, Point& key) {
+  Point res;
+  double dist, min = DBL_MAX;
+  for (auto&& l : L) {
+    dist = (l - key).norm2();
+    if (dist < min) {
+      res = l;
+      min = dist;
+    }
+  }
+  return res;
+}
+
+/**
  * @brief Linearly search the minimum and maximum along all dimensions of the
  * vector list.
  *
@@ -252,28 +294,32 @@ int main(int argc, char* argv[]) {
   //   ros::init(argc, argv, "example_kdtree_search");
   //   ros::NodeHandle nh;
   std::mt19937 rng(0);
-  std::uniform_int_distribution<int> distUni(-1e6, 1e6);
+  std::uniform_int_distribution<int> distUni((argc > 2) ? atoi(argv[2]) : -10,
+                                             (argc > 3) ? atoi(argv[3]) : 10);
   auto start = chrono::high_resolution_clock::now();
   auto stop = chrono::high_resolution_clock::now();
-  Point a(2, 4), b(-10, 100), c(-1, -1), d(3, 4), e(9, 4), f(6, 7);
-  vector<Point> data(2e6);
+  Point a(3, 4), b(0, 0), c(-1, -1), d(3, 4), e(9, 4), f(6, 7), g(0, 0);
+  vector<Point> data((argc > 1) ? atoi(argv[1]) : 10);
   Node* tree = nullptr;
   start = chrono::high_resolution_clock::now();
   for (auto&& d : data) {
     d.x = distUni(rng);
     d.y = distUni(rng);
     tree = insert(tree, d);
-    // cout << d;
+    cout << d;
   }
   stop = chrono::high_resolution_clock::now();
   cout << "Creation Elapsed Time: "
        << chrono::duration_cast<chrono::microseconds>(stop - start).count()
        << " uSec" << endl;
 
-  //   cout << a << b;
-  //   cout << a[0] << '\t' << a[1] << endl;
-  //   cout << "a == b :" << (a == b) << endl;
-  //   cout << "a != b :" << (a != b) << endl;
+  cout << "a :" << a << "b :" << b;
+  cout << "Indexing a:" << a[0] << '\t' << a[1] << endl;
+  cout << "a == b :" << (a == b) << endl;
+  cout << "a != b :" << (a != b) << endl;
+  cout << "a + b :" << (a + b);
+  cout << "a - b :" << (a - b);
+  cout << "||a - b|| :" << (a - b).norm2() << endl;
 
   Point key = data.back();
   start = chrono::high_resolution_clock::now();
@@ -315,6 +361,25 @@ int main(int argc, char* argv[]) {
   Point min, max;
   linearMinsMaxs(data, min, max);
   cout << "Linear Find Mins Maxs: " << endl << min << max;
+  stop = chrono::high_resolution_clock::now();
+  cout << "Elapsed Time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
+
+  start = chrono::high_resolution_clock::now();
+  key.x = distUni(rng);
+  key.y = distUni(rng);
+  Point res = linearSearchNN(data, key);
+  cout << "LinearSearchNN: " << key << res << (res - key).norm2() << endl;
+  stop = chrono::high_resolution_clock::now();
+  cout << "Elapsed Time: "
+       << chrono::duration_cast<chrono::microseconds>(stop - start).count()
+       << " uSec" << endl;
+
+  start = chrono::high_resolution_clock::now();
+  double dist = DBL_MAX;
+  res = searchNN(tree, key, dist)->data;
+  cout << "SearchNN: " << res << (res - key).norm2() << endl;
   stop = chrono::high_resolution_clock::now();
   cout << "Elapsed Time: "
        << chrono::duration_cast<chrono::microseconds>(stop - start).count()
