@@ -6,7 +6,7 @@ add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(PCL 1.8 REQUIRED)
+find_package(PCL REQUIRED COMPONENTS visualization common io filters segmentation)
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
@@ -26,12 +26,15 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 include_directories(
-  include ${catkin_INCLUDE_DIRS}
-  include ${OpenCV_INCLUDE_DIRS}
-  include ${Eigen_INCLUDE_DIRS}
-  include ${PCL_INCLUDE_DIRS}
-# ${catkin_INCLUDE_DIRS}
+  include 
+  ${catkin_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  ${Eigen_INCLUDE_DIRS}
+  ${PCL_INCLUDE_DIRS}
 )
+
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
 ## Generate messages in the 'msg' folder
 add_message_files(FILES
@@ -347,4 +350,8 @@ target_link_libraries(example_point_in_triangle ${catkin_LIBRARIES})
 add_executable(example_pcl_kdtree src/example_pcl_kdtree.cpp)
 add_dependencies(example_pcl_kdtree ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_pcl_kdtree ${catkin_LIBRARIES} )
+
+add_executable(example_rrt_exploration2d src/example_rrt_exploration2d.cpp)
+add_dependencies(example_rrt_exploration2d ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_rrt_exploration2d ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 
