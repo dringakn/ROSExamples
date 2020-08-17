@@ -6,7 +6,7 @@ add_compile_options(-std=c++17)
 
 find_package(catkin REQUIRED)
 find_package(OpenCV REQUIRED)
-find_package(PCL REQUIRED)
+find_package(PCL 1.8 REQUIRED)
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
@@ -17,12 +17,20 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   image_transport
   pcl_ros
-  # pcl_msgs
-  # pcl_conversions
+  pcl_msgs
+  pcl_conversions
   control_toolbox
   geometry_msgs
   nav_msgs
   sensor_msgs
+)
+
+include_directories(
+  include ${catkin_INCLUDE_DIRS}
+  include ${OpenCV_INCLUDE_DIRS}
+  include ${Eigen_INCLUDE_DIRS}
+  include ${PCL_INCLUDE_DIRS}
+# ${catkin_INCLUDE_DIRS}
 )
 
 ## Generate messages in the 'msg' folder
@@ -57,14 +65,6 @@ catkin_package(
 #  LIBRARIES ros_examples
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
-)
-
-include_directories(
-  include ${catkin_INCLUDE_DIRS}
-  include ${OpenCV_INCLUDE_DIRS}
-  include ${Eigen_INCLUDE_DIRS}
-  include ${PCL_INCLUDE_DIRS}
-# ${catkin_INCLUDE_DIRS}
 )
 
 add_executable(example1  src/example1.cpp)
@@ -343,3 +343,8 @@ target_link_libraries(example_kdtree_search ${catkin_LIBRARIES})
 add_executable(example_point_in_triangle src/example_point_in_triangle.cpp)
 add_dependencies(example_point_in_triangle ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_point_in_triangle ${catkin_LIBRARIES})
+
+add_executable(example_pcl_kdtree src/example_pcl_kdtree.cpp)
+add_dependencies(example_pcl_kdtree ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_pcl_kdtree ${catkin_LIBRARIES} )
+
