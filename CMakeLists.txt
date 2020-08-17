@@ -33,9 +33,6 @@ include_directories(
   ${PCL_INCLUDE_DIRS}
 )
 
-link_directories(${PCL_LIBRARY_DIRS})
-add_definitions(${PCL_DEFINITIONS})
-
 ## Generate messages in the 'msg' folder
 add_message_files(FILES
   mymsg.msg
@@ -355,3 +352,6 @@ add_executable(example_rrt_exploration2d src/example_rrt_exploration2d.cpp)
 add_dependencies(example_rrt_exploration2d ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_rrt_exploration2d ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 
+add_executable(example_pcl_cloud_viewer src/example_pcl_cloud_viewer.cpp)
+add_dependencies(example_pcl_cloud_viewer ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_pcl_cloud_viewer ${PCL_LIBRARIES} ${catkin_LIBRARIES})
