@@ -608,3 +608,7 @@ target_link_libraries(example_pcl_icp
 add_executable(example_binary_search_tree src/example_binary_search_tree.cpp)
 add_dependencies(example_binary_search_tree ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_binary_search_tree ${catkin_LIBRARIES})
+
+add_executable(example_kdtree_search src/example_kdtree_search.cpp)
+add_dependencies(example_kdtree_search ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_kdtree_search ${catkin_LIBRARIES})
