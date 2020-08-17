@@ -1,7 +1,8 @@
-#include <bits/stdc++.h>
-#include <pcl/kdtree/kdtree_flann.h>
-#include <pcl/point_cloud.h>
-#include <ros/ros.h>
+#include <bits/stdc++.h>              // Standard C++
+#include <pcl/common/distances.h>     // Distances
+#include <pcl/kdtree/kdtree_flann.h>  // KDTree
+#include <pcl/point_cloud.h>          //PCL
+#include <ros/ros.h>                  // ROS
 
 using namespace std;
 typedef pcl::PointXYZ Point3D;
@@ -9,9 +10,9 @@ typedef pcl::PointXYZ Point3D;
 void linearSearchNN(pcl::PointCloud<Point3D>::Ptr cloud, Point3D& key) {
   double dist, min = DBL_MAX;
   Point3D res;
+
   for (auto&& pt : cloud->points) {
-    dist = sqrt(pow(key.x - pt.x, 2) + pow(key.y - pt.y, 2) +
-                pow(key.z - pt.z, 2));
+    dist = pcl::euclideanDistance(key, pt);
     if (dist < min) {
       min = dist;
       res = pt;
