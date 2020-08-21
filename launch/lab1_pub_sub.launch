@@ -1,4 +1,11 @@
 <launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+    -->
+
     <node pkg="ros_examples" type="txnode" name="my_txnode" required="true" launch-prefix="xterm -e">
         <remap from="message" to="my_message"/>
     </node>

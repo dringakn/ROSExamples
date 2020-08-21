@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <launch>
 
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Load an OGM as pointcloud and find frontiers.
+    -->
+
     <!-- launch-prefix="xterm -e gdb -ex run args" -->
     <node pkg="ros_examples" type="example_pcl_frontiers_exploration" name="example_pcl_frontiers_exploration" output="screen" required="true">
         <param name="radius" value="0.1"/>

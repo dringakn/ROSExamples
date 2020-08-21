@@ -1,4 +1,11 @@
 <launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+    -->
+
     <node pkg="ros_examples" name="lab6_vrep_launch_script" type="lab6_vrep_launch_script.py" required="true" output="screen"/>
     <node pkg="ros_examples" type="kalman_filter_sensor_fusion" name="sensor_fusion" required="true" output="screen"/>
     <node pkg="teleop_twist_keyboard" name="teleop_twist_keyboard" type="teleop_twist_keyboard.py" launch-prefix="xterm -e" required="true">

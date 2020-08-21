@@ -1,4 +1,11 @@
 <launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+    -->
+
     <node pkg="ros_examples" type="custommsgpub" name="my_custom_msg_pub_node" required="true" launch-prefix="xterm -e">
         <remap from="mymessage" to="my_custom_message"/>
     </node>

@@ -1,4 +1,11 @@
 <launch>
+
+  <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+    -->
+
   <node pkg="ros_examples" name="lab9_vrep_launch_script" type="lab9_vrep_launch_script.py" required="true" output="screen"/>
 
   <node pkg="gmapping" type="slam_gmapping" name="gmapping" required="true" output="screen">

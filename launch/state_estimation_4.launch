@@ -1,4 +1,11 @@
 <launch>
+
+  <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+    -->
+
   <node pkg="ros_examples" name="lab4_vrep_launch_script" type="lab4_vrep_launch_script.py" required="true" output="screen"/>
   <arg name="sensor" default="x"/>
   <node pkg="ros_examples" type="kalman_filter" name="wall_follower" required="true" output="screen"/>

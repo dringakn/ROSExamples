@@ -55,6 +55,12 @@
     <param name="recovery_alpha_fast" value="0.2"/>
   </node>
 
+  <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+    -->
+
   <!--- Run navigation stack with local and global cost map parameters -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
     <rosparam file="$(find regnum_lab11)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />

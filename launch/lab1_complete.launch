@@ -1,4 +1,10 @@
 <launch>
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+    -->
+
     <include file="$(find ros_examples)/launch/lab1_helloworld.launch"/>
     <param name="info" value="complete launch says yo yo"/>
     <include file="$(find ros_examples)/launch/lab1_pub_sub.launch"/>

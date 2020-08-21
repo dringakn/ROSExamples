@@ -1,4 +1,11 @@
 <launch>
+
+  <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+    -->
+
   <node pkg="ros_examples" name="lab8_vrep_launch_script" type="lab8_vrep_launch_script.py" required="true" output="screen"/>
   <node pkg="rviz" type="rviz" name="rviz" required="true" output="screen" args="-d $(find ros_examples)/rviz/lab8_rviz_display.rviz"/>
   <node pkg="ros_examples" type="lab8_structure_from_motion" name="structure_from_motion" required="true" output="screen"/>

@@ -1,5 +1,11 @@
 <launch>
 
+	<!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Generate two different sinewaves and plot them.
+    -->
+
 	<arg name="stdev" default="0.01"/>
 	<param name="stdev" value="$(arg stdev)"/>
 

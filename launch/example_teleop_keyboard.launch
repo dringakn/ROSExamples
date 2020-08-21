@@ -1,4 +1,11 @@
 <launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Launch the custom teleop node.
+    -->
+
     <param name="linVel_Scale" value="1"/>
     <param name="angVel_Scale" value="1"/>
     <param name="acc" value="1"/>
