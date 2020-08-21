@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="ros_examples" type="example_octomap_load" name="example_octomap_load" output="screen"/>
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_octomap.rviz" required="true"/>
+
+</launch>
