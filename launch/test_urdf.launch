@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: URDF Test launch file
+    -->
+
+    <arg name="use_sim_time" default="true"/>
+
+    <!-- Robot model for rviz -->
+    <arg name="model" default="$(dirname)/../urdf/test_snippets_mesh.urdf.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+
+    <!-- Launch RViz -->
+    <arg name="rviz_config" value="$(dirname)/../rviz/vis.rviz"/>
+    <include file="$(dirname)/rviz.launch">
+        <arg name="rviz_config" value="$(arg rviz_config)"/>
+    </include>
+
+    <!-- Robot transform publisher -->
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
+
+    <!-- Robot joint state values -->
+    <!-- Used in-case of no simulation/hardware -->
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher">
+        <param name="use_gui" value="false"/>
+        <param name="rate" value="10"/>
+    </node>
+
+    <!-- Launch gazebo simulation and spawn model -->
+    <arg name="world_name" value="$(dirname)/../world/turtlebot_playground.world"/>
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="recording" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+    <node pkg="gazebo_ros" type="spawn_model" name="spawn_model" output="screen" args="-urdf -param robot_description -model my_robot -x 0 -y 0 -z 0.5 ">
+
+    </node>
+    <!-- Keyboard -->
+    <include file="$(dirname)/keyboard.launch" />
+
+</launch>

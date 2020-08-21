@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Joystick launch file.
+    -->
+
+    <!-- Joystick driver -->
+    <!-- sudo chmod a+rw /dev/input/js0 -->
+    <node pkg="joy" type="joy_node" name="joy_node">
+        <param name="dev" value="/dev/input/js0"/>
+        <!-- Uncomment if remappin is used -->
+        <!-- <remap from="joy" to="/joy_orig"/> -->
+        <param name="deadzone" value="0.05"/>
+        <!-- Auto repeat rate in Hz, 0 to disable -->
+        <param name="autorepeat_rate" value="10"/>
+        <param name="coalesce_interval" value="0.001"/>
+        <param name="sticky_buttons" value="false"/>
+        <param name="default_trig_val" value="false"/>
+    </node>
+
+    <!-- Remap joystick axes/buttons -->
+    <!-- <node pkg="joy" type="joy_remap.py" name="joy_remap" output="screen">
+        <remap from="joy_in" to="/joy_orig" />
+        <remap from="joy_out" to="/joy" />
+        <rosparam command="load" file="$(find vehicle_simulator)/launch/joyremap.yaml"/>
+    </node> -->
+
+    <!-- Send navigation commands -->
+    <node pkg="teleop_twist_joy" type="teleop_node" name="teleop_node">
+        <remap from="joy" to="/joy"/>
+        <remap from="cmd_vel" to="/cmd_vel"/>
+        <param name="enable_button" value="0"/>
+        <param name="enable_turbo_button" value="1"/>
+        <param name="axis_linear" value="1"/>
+        <param name="axis_angular" value="0"/>
+        <param name="scale_angular" value="1"/>
+        <param name="scale_linear" value="1"/>
+        <param name="scale_linear_turbo" value="2"/>
+    </node>
+
+    <!-- Debugging -->
+    <!-- <node pkg="rostopic" type="rostopic" name="rostopic_joy_orig" args="echo -c /joy_orig" output="screen" launch-prefix="xterm -e" required="true"/> -->
+    <!-- <node pkg="rostopic" type="rostopic" name="rostopic_joy" args="echo -c /joy" output="screen" launch-prefix="xterm -e" required="true"/> -->
+
+</launch>

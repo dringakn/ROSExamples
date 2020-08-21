@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Keyboard tele-operation launch file.
+    -->
+
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" required="true" launch-prefix="xterm -e">
+        <!-- <remap from="/cmd_vel" to="/husky_velocity_controller/cmd_vel"/> -->
+    </node>
+
+</launch>

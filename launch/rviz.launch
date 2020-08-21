@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: RViz launch file.
+    -->
+
+    <arg name="rviz_config" default="$(dirname)/../rviz/vis.rviz"/>
+    <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(arg rviz_config)" output="screen"/>
+
+</launch>
