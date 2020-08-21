@@ -355,3 +355,8 @@ target_link_libraries(example_rrt_exploration2d ${PCL_LIBRARIES} ${catkin_LIBRAR
 add_executable(example_pcl_cloud_viewer src/example_pcl_cloud_viewer.cpp)
 add_dependencies(example_pcl_cloud_viewer ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_pcl_cloud_viewer ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+
+add_executable(example_pcl_frontiers_exploration src/example_pcl_frontiers_exploration.cpp)
+add_dependencies(example_pcl_frontiers_exploration ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_pcl_frontiers_exploration ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+
