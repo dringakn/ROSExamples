@@ -22,8 +22,8 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   nav_msgs
   sensor_msgs
-  # octomap_ros
-  # octomap_msgs
+  octomap_ros
+  octomap_msgs
   pcl_ros
   # pcl_msgs
 )
