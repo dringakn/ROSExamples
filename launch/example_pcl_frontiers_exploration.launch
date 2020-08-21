@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- launch-prefix="xterm -e gdb -ex run args" -->
+    <node pkg="ros_examples" type="example_pcl_frontiers_exploration" name="example_pcl_frontiers_exploration" output="screen" required="true">
+        <param name="radius" value="0.1"/>
+        <param name="entropy" value="0.25"/>
+        <param name="marker_size" value="0.1"/>
+        <param name="rate_hz" value="10"/>
+        <param name="map_topic" value="/map"/>
+        <remap from="clicked_point" to="/clicked_point"/>
+        <remap from="rrt" to="rrt"/>
+        <remap from="frontier" to="frontier"/>
+    </node>
+
+    <node pkg="map_server" type="map_server" name="map_server" args="$(dirname)/../map/sample_map.yaml" output="screen">
+        <remap from="map" to="/map"/>
+        <param name="frame_id" value="map"/>
+    </node>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_rrt_exploration2d.rviz" required="true"/>
+
+</launch>

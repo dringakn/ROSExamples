@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.0.2)
 
-project(ros_examples)
+project(ros_examples) # Package name
 
-add_compile_options(-std=c++17)
+add_compile_options(-std=c++17) # C++ Compiler Standards
 
-find_package(catkin REQUIRED)
-find_package(OpenCV REQUIRED)
-find_package(PCL REQUIRED COMPONENTS visualization common io filters segmentation)
+find_package(catkin REQUIRED) # ROS build system
+find_package(OpenCV REQUIRED) # Open CV
+find_package(PCL REQUIRED) # PCL
+find_package(octomap REQUIRED) # OctoMap
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
@@ -16,13 +17,15 @@ find_package(catkin REQUIRED COMPONENTS
   random_numbers
   cv_bridge
   image_transport
-  pcl_ros
-  pcl_msgs
   pcl_conversions
   control_toolbox
   geometry_msgs
   nav_msgs
   sensor_msgs
+  # octomap_ros
+  # octomap_msgs
+  pcl_ros
+  # pcl_msgs
 )
 
 include_directories(
@@ -31,6 +34,7 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
   ${Eigen_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
+  ${OCTOMAP_INCLUDE_DIRS}
 )
 
 ## Generate messages in the 'msg' folder
@@ -360,3 +364,10 @@ add_executable(example_pcl_frontiers_exploration src/example_pcl_frontiers_explo
 add_dependencies(example_pcl_frontiers_exploration ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_pcl_frontiers_exploration ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 
+add_executable(example_octomap_load src/example_octomap_load.cpp)
+add_dependencies(example_octomap_load ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_octomap_load ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+
+add_executable(example_octomap_create src/example_octomap_create.cpp)
+add_dependencies(example_octomap_create ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_octomap_create ${OCTOMAP_LIBRARIES} ${PCL_LIBRARIES} ${catkin_LIBRARIES})
