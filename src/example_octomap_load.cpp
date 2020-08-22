@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
     file = std::string(argv[1]);
   } else {
     file =
-        std::string("/home/office/cmu_ws/src/ros_examples/map/sample_map.bt");
+        std::string("/home/office/cmu_ws/src/ros_examples/map/sample_map2.bt");
   }
 
   // Create octree
@@ -24,12 +24,13 @@ int main(int argc, char* argv[]) {
 
   // Create octree message publisher
   ros::Publisher pub;
-  pub = nh.advertise<octomap_msgs::Octomap>("/octomap", 1, true);
+  pub = nh.advertise<octomap_msgs::Octomap>((argc > 2) ? argv[2] : "/octomap",
+                                            1, true);
 
   // Create octree ROS message
   octomap_msgs::Octomap msg;
   octomap_msgs::binaryMapToMsg(ot, msg);
-  msg.header.frame_id = "map";
+  msg.header.frame_id = (argc > 3) ? argv[3] : "map";
   msg.header.stamp = ros::Time(0);
   pub.publish(msg);
 
