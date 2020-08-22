@@ -6,6 +6,27 @@
         Email: dringakn@gmail.com
         Desciption: 3D Mapping using a Gazebo simulated Robot.
     -->
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_octomap.rviz" required="true"/>
+
+    <!-- Octomapping -->
+    <include file="$(dirname)/octomap.launch">
+        <arg name="cloud_in" value="/velodyne_points"/>
+    </include>
+
+    <!-- RViz -->
+    <include file="$(dirname)/rviz.launch">
+        <arg name="rviz_config" value="$(dirname)/../rviz/example_octomap.rviz"/>
+    </include>
+
+    <!-- Keyboard -->
+    <include file="$(dirname)/keyboard.launch">
+        <arg name="topic" value="/cmd_vel"/>
+    </include>
+
+    <!-- Gazebo -->
+    <include file="$(dirname)/gazebo.launch">
+        <arg name="use_sim_time" value="true"/>
+        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
+    </include>
 
 </launch>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Description: To Generate the URDF file, use the following command
+                     xacro test_snippets.urdf.xacro -o test_snippets.urdf
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="Test_Robot">
+
+
+    <!-- Include my custom URDF snippets for visual/inertia/links/joints tags -->
+    <xacro:include filename="./snippets.urdf.xacro"/>
+
+    <!-- Create links: w:x-axis, l:y-axis, h:z-axis -->
+    <link name="base_link"/>
+    <xacro:shape_link name="chassis" type="box" m="1" w="0.4" l="0.2" h="0.05" rgba="0 0 1 ${alpha}" color="Blue"/>
+    <xacro:shape_link name="left_wheel" type="cylinder" m="0.5" r="0.1" h="0.05" rgba="0 1 0 1" color="Green"/>
+    <xacro:shape_link name="right_wheel" type="cylinder" m="0.5" r="0.1" h="0.05" rgba="0 1 0 1" color="Green"/>
+    <xacro:shape_link name="front_castor" type="sphere" m="0.1" r="0.05" rgba="1 0 0 1" color="Red"/>
+    <!-- Create Joints: -->
+    <xacro:shape_joint type="fixed" parent="base_link" child="chassis" xyz="0.1 0 0"/>
+    <xacro:shape_joint type="continuous" parent="chassis" child="left_wheel" axis="0 0 -1" xyz="-0.1 0.125 0" rpy="1.57 0 0"/>
+    <xacro:shape_joint type="continuous" parent="chassis" child="right_wheel" axis="0 0 -1" xyz="-0.1 -0.125 0" rpy="1.57 0 0"/>
+    <xacro:shape_joint type="fixed" parent="chassis" child="front_castor" xyz="0.15 0 -0.05"/>
+    <xacro:castor_friction name="front_castor" mu1="0" mu2="0" kp="1e9" kd="0" fdir="0 0 0"/>
+    <!-- Add Sensors -->
+    <xacro:robot_drive_diff chassis="base_link" left="joint_chassis_left_wheel" right="joint_chassis_right_wheel" l="0.25" d="0.1" cmdtopic="cmd_vel" odomtopic="odom"/>
+    <xacro:sensor_imu_ros name="imu" parent="chassis" topic="/imu" rate="20" noise="0" xyz="0 0 0.05" visulize="false"/>
+    <xacro:sensor_rgb_camera name="front_camera" parent="imu" width="640" height="480" fps="10" xyz="0.15 0 0.15"/>
+    <xacro:sensor_lidar_3d name="velodyne_lidar" parent="front_camera" topic="/velodyne_points" rate="20" noise="0" minRange="0.1" maxRange="100" samples="360" xyz="0 0 0.15" visulize="false"/>
+    <!-- <xacro:sensor_stereo_camera name="stereo_camera" parent="chassis" width="640" height="480" fps="10" xyz="0.15 0 0.05"/> -->
+    <!-- <xacro:sensor_depth_camera name="kinect_camera" parent="chassis" width="640" height="480" fps="10" xyz="0.15 0 0.05"/> -->
+    <!-- <xacro:sensor_video link="box1" width="160" height="120" topic="image"/> -->
+    <!-- 
+    <xacro:shape_link name="box1" type="box" m="1" w="1" l="1" h="1" rgba="0 0 1 ${alpha}" xyz="2 2 1" color="Blue"/>
+    <xacro:shape_joint type="floating" parent="base_link" child="box1" xyz="2 2 -1"/> 
+    -->
+
+</robot>
