@@ -60,9 +60,10 @@ int main(int argc, char* argv[]) {
     ROS_INFO("Quering Octree failed.");
 
   // Set properties
-  Point3D tempMax(50, 50, 50);
+  const int limit = 20;
+  Point3D tempMax(limit, limit, limit);
   ot.setBBXMax(tempMax);
-  Point3D tempMin(-50, -50, -50);
+  Point3D tempMin(-limit, -limit, -limit);
   ot.setBBXMin(tempMin);
 
   // Octree stats
@@ -78,6 +79,7 @@ int main(int argc, char* argv[]) {
   cout << "Clamping Threshold Max:" << clampThreshMax << endl;
   double clampThreshMin = ot.getClampingThresMin();
   cout << "Clamping Threshold Min:" << clampThreshMin << endl;
+  // Limit: |MetricMax-MetricMin|
   double x, y, z;
   ot.getMetricMax(x, y, z);
   cout << "Metric Max:" << x << ',' << y << ',' << z << endl;
