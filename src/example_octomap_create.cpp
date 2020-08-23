@@ -252,10 +252,34 @@ int main(int argc, char* argv[]) {
   ot.insertPointCloud(scan, v1, -1, false, true);
   ot.writeBinary("/tmp/sampleOcTree.bt");
 
-  // scan.crop(lower, upper);     // crop
-  // scan.minDist(thresh);         // remove any point closer then thresh
-  // 0,0,0
-  // scan.subSampleRandom(n, scan);  // random subsample
+  // sample scan
+  octomap::Pointcloud scan2;
+  scan.subSampleRandom(3, scan2);  // random subsample
+  ROS_INFO("scan.subSampleRandom(3, scan2): ");
+  for (auto&& pt : scan2) cout << pt << endl;
+  ROS_INFO("scan2.minDist(9): ");  // remove any point lesser then thresh
+  scan2.minDist(9);
+  for (auto&& pt : scan2) cout << pt << endl;
+
+  // I think, ScanGraph is used to optimize pose graphs.
+  // TODO: ScanGraph Example.
+  // octomap::ScanEdge
+  // octomap::ScanGraph
+  // octomap::ScanNode
+  /**
+   * Reads in a ScanGraph from a "plain" ASCII file of the form
+   * NODE x y z R P Y
+   * x y z
+   * x y z
+   * x y z
+   * NODE x y z R P Y
+   * x y z
+   *
+   * Lines starting with the NODE keyword contain the 6D pose of a scan node,
+   * all 3D point following until the next NODE keyword (or end of file) are
+   * inserted into that scan node as pointcloud in its local coordinate frame
+   *
+   */
 
   // Visulize the ot, create Octomap publisher
   ros::Publisher pub = nh.advertise<octomap_msgs::Octomap>("/octomap", 1);
