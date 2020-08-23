@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
   std::uniform_int_distribution<int> distUni(-minmax, minmax);
 
   // Create the ot
-  //   octomap::OcTree ot(resolution);
+  // octomap::OcTree ot(resolution);
   octomap::ColorOcTree ot(resolution);
   bool occupied = true;
   ROS_INFO("Creating random ot...");
@@ -159,11 +159,103 @@ int main(int argc, char* argv[]) {
   // ot.insertPointCloudRays(scan, origin, -1, false);
   // ot.insertRay(origin, end, -1, false);
 
+  // On a prebuilt map, use castRay() for localization, i.e. to check from a
+  // certain position how likely is to observe a obstacle.
+  // ot.castRay(origin, directon, end, ignore, maxrange);
+
+  // We could use the castRay to determine if there is something in between two
+  // nodes. Check if the specified node is occupied:
+  // ot.isNodeOccupied(ot.search(x,y,z)), watch for NULL, considering the
+  // threshold parameters.
+  // A node is collapsible if all children exist, don't have children of their
+  // own and have the same occupancy value
+  /**
+   * expandNode(...)
+   * Expands a node (reverse of pruning): All children are created and
+   * their occupancy probability is set to the node's value.
+   *
+   * You need to verify that this is indeed a pruned node (i.e. not a
+   * leaf at the lowest level)
+   *
+   */
+  // getUnknownLeafCenters(...) return centers of leafs that do NOT exist (but
+  // could) in a given bounding box
+
+  // Search node using point3d, key or xyz. Returns a node or null
+
+  // computeRayXXXX(...), returns all the node traversed by the ray.
+  // computeRayKeys(...) is faster compared to the computeRay(...)
+  // Returns false, if one of the coordinate is out of range.
+
+  // coordToKey(...) converts a coordinate to a Key
+
+  // OccupancyOcTree is for 3d OccupancyMapping
+
+  // Maximum tree depth is 16 -> with res of 0.01 values have to be +/-327.68m
+
   // To access leafnode coordinates and it's logodd values (probability)
-  ROS_INFO("Accessing leaf nodes Centers -> LogOdds:");
-  for (auto it = ot.begin_leafs(); it != ot.end_leafs(); ++it) {
-    cout << it.getCoordinate() << " -> " << it->getValue() << endl;
+  // For multi-resolution queries use maxdepth parameters
+  ROS_INFO("Accessing leaf nodes Centers[depth] -> LogOdds:");
+  for (auto it = ot.begin_leafs(1); it != ot.end_leafs(); ++it) {
+    cout << it.getCoordinate() << '[' << it.getDepth() << ']' << " -> "
+         << it->getValue() << endl;
   }
+
+  // Create a Pose6d (Vector3, Quaternion).
+  ROS_INFO("Creating Vector, Quaternion, Pose6D");
+  octomath::Vector3 v1(0, 0, 0), v2(5, 5, 5);
+  cout << v1 << "\t" << v2 << endl;
+  octomath::Quaternion q1(0, 0, 0), q2(M_PI_4, 0, 0);  // Tait-bryian, 1-2-3
+  cout << q1 << "\t" << q2 << endl;
+  octomath::Pose6D p1(v1, q1);
+  octomath::Pose6D p2(5, 5, 5, M_PI_4, 0, 0);
+  cout << p1 << "\t" << p2 << endl;
+  cout << "p1.distance(p2): " << p1.distance(p2) << endl;
+  cout << "v1.dot(v2): " << v1.dot(v2) << endl;
+  cout << "v1.cross(v2): " << v1.cross(v2) << endl;
+  cout << "v1.norm(): " << v1.norm() << endl;
+  cout << "Angle to v2: " << v1.angleTo(v2) << endl;
+  cout << "v1.distXY(v2): " << v1.distanceXY(v2) << endl;
+  cout << "q1.toEuler(): " << q1.toEuler() << endl;
+  vector<double> mat;
+  q1.toRotMatrix(mat);
+  cout << "q1.toRotMatrix(): " << mat.size() << endl;
+
+  // Create a pointcloud. A colleciton of 3D points.
+  octomap::Pointcloud scan;
+  scan.push_back(5, 5, 5);
+  scan.push_back(5, -5, 5);
+  scan.push_back(-5, -5, 5);
+  scan.push_back(-5, 5, 5);
+  scan.push_back(5, 5, -5);
+  scan.push_back(5, -5, -5);
+  scan.push_back(-5, -5, -5);
+  scan.push_back(-5, 5, -5);
+  ROS_INFO("Pointcloud");
+  for (auto&& pt : scan) cout << pt << endl;
+  ROS_INFO("Transform Pointcloud p2");
+  scan.transform(p2);
+  for (auto&& pt : scan) cout << pt << endl;
+  ROS_INFO("Transform Pointcloud p2^-1");
+  scan.transform(p2.inv());
+  for (auto&& pt : scan) cout << pt << endl;
+  // scan.rotate(r,p,y);
+  // scan.transformAbsolute(pose); // absolute transform
+  scan.calcBBX(bbxMin, bbxMax);  // calculate bounding box
+  cout << "Pointcloud BBX (min) (max):" << bbxMin << "\t" << bbxMax << endl;
+
+  // Delete the key structure, Number of nodes in the tree
+  cout << "OcTree Size, Before Delete: " << ot.size() << endl;
+  ot.clear();
+  cout << "OcTree Size, After Delete: " << ot.size() << endl;
+  // insert rays emiitting from v1 to each scan point.
+  ot.insertPointCloud(scan, v1, -1, false, true);
+  ot.writeBinary("/tmp/sampleOcTree.bt");
+
+  // scan.crop(lower, upper);     // crop
+  // scan.minDist(thresh);         // remove any point closer then thresh
+  // 0,0,0
+  // scan.subSampleRandom(n, scan);  // random subsample
 
   // Visulize the ot, create Octomap publisher
   ros::Publisher pub = nh.advertise<octomap_msgs::Octomap>("/octomap", 1);
@@ -173,7 +265,6 @@ int main(int argc, char* argv[]) {
   msg.header.stamp = ros::Time(0);
   octomap_msgs::binaryMapToMsg(ot, msg);
   //   msg.id = "OcTree"; // OcTree, ColorOcTree
-
   // Perodic code
   ros::Rate rate(1);
   while (ros::ok()) {
