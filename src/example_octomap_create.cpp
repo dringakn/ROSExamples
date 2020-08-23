@@ -9,6 +9,9 @@ using namespace std;
 typedef octomap::point3d Point3D;
 
 int main(int argc, char* argv[]) {
+  cout.precision(5);
+  cout.setf(cout.showpos);
+
   // Initialize the node and create node handle
   ros::init(argc, argv, "example_octomap_create");
   ros::NodeHandle nh("~");
@@ -34,6 +37,9 @@ int main(int argc, char* argv[]) {
     ot.updateNode(pt, (distUni(rng) % 2 == 0));
   }
   ROS_INFO("Octree created.");
+  ROS_INFO("Pruning octree for compression...");
+  ot.prune();
+  ROS_INFO("Pruning completed.");
 
   // Save the ot. To visulize: octovis /tmp/sampleOcTree.bt
   ROS_INFO("Saving octomap to /tmp/sampleOcTree.bt ...");
@@ -142,10 +148,22 @@ int main(int argc, char* argv[]) {
        ++it) {
     cout << it.getCoordinate() << '\t' << it.getDepth() << '\t' << '\t'
          << it.getSize() << '\t' << it.getX() << ',' << it.getY() << ','
-         << it.getZ() << endl;
+         << it.getZ() << '\t' << it->getOccupancy() << '\t' << it->getValue()
+         << '\t' << it->getLogOdds() << '\t' << it->getAverageChildColor()
+         << endl;
   }
 
-  //
+  // Instead of using updateNode(pt, occ|free) use insertScan() to update the
+  // free and update nodes with occupancy values.
+  // ot.insertPointCloud(scan, origin,-1,false,false);
+  // ot.insertPointCloudRays(scan, origin, -1, false);
+  // ot.insertRay(origin, end, -1, false);
+
+  // To access leafnode coordinates and it's logodd values (probability)
+  ROS_INFO("Accessing leaf nodes Centers -> LogOdds:");
+  for (auto it = ot.begin_leafs(); it != ot.end_leafs(); ++it) {
+    cout << it.getCoordinate() << " -> " << it->getValue() << endl;
+  }
 
   // Visulize the ot, create Octomap publisher
   ros::Publisher pub = nh.advertise<octomap_msgs::Octomap>("/octomap", 1);
