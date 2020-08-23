@@ -8,6 +8,14 @@
 using namespace std;
 typedef octomap::point3d Point3D;
 
+namespace std {
+template <typename _CharT, typename _Traits>
+inline basic_ostream<_CharT, _Traits>& tab(
+    basic_ostream<_CharT, _Traits>& __os) {
+  return __os.put(__os.widen('\t'));
+}
+}  // namespace std
+
 int main(int argc, char* argv[]) {
   cout.precision(5);
   cout.setf(cout.showpos);
@@ -56,6 +64,7 @@ int main(int argc, char* argv[]) {
     ROS_INFO("Could not load ot from /tmp/sampleOcTree.bt");
 
   // Search a point in the tree
+  // Search node using point3d, key or xyz. Returns a node or null
   Point3D queryPt(0, 0, 0);
   ROS_INFO("Querying Octree ...");
   cout << queryPt << endl;
@@ -153,18 +162,7 @@ int main(int argc, char* argv[]) {
          << endl;
   }
 
-  // Instead of using updateNode(pt, occ|free) use insertScan() to update the
-  // free and update nodes with occupancy values.
-  // ot.insertPointCloud(scan, origin,-1,false,false);
-  // ot.insertPointCloudRays(scan, origin, -1, false);
-  // ot.insertRay(origin, end, -1, false);
-
-  // On a prebuilt map, use castRay() for localization, i.e. to check from a
-  // certain position how likely is to observe a obstacle.
-  // ot.castRay(origin, directon, end, ignore, maxrange);
-
-  // We could use the castRay to determine if there is something in between two
-  // nodes. Check if the specified node is occupied:
+  // Check if the specified node is occupied:
   // ot.isNodeOccupied(ot.search(x,y,z)), watch for NULL, considering the
   // threshold parameters.
   // A node is collapsible if all children exist, don't have children of their
@@ -178,21 +176,12 @@ int main(int argc, char* argv[]) {
    * leaf at the lowest level)
    *
    */
-  // getUnknownLeafCenters(...) return centers of leafs that do NOT exist (but
-  // could) in a given bounding box
-
-  // Search node using point3d, key or xyz. Returns a node or null
-
-  // computeRayXXXX(...), returns all the node traversed by the ray.
-  // computeRayKeys(...) is faster compared to the computeRay(...)
-  // Returns false, if one of the coordinate is out of range.
-
-  // coordToKey(...) converts a coordinate to a Key
 
   // OccupancyOcTree is for 3d OccupancyMapping
 
   // Maximum tree depth is 16 -> with res of 0.01 values have to be +/-327.68m
 
+  // coordToKey(...) converts a coordinate to a Key
   // To access leafnode coordinates and it's logodd values (probability)
   // For multi-resolution queries use maxdepth parameters
   ROS_INFO("Accessing leaf nodes Centers[depth] -> LogOdds:");
@@ -248,6 +237,20 @@ int main(int argc, char* argv[]) {
   cout << "OcTree Size, Before Delete: " << ot.size() << endl;
   ot.clear();
   cout << "OcTree Size, After Delete: " << ot.size() << endl;
+
+  // We could use the castRay to determine if there is something in between two
+  // nodes.
+  // On a prebuilt map, use castRay() for localization, i.e. to check from a
+  // certain position how likely is to observe a obstacle.
+  // ot.castRay(origin, directon, end, ignore, maxrange);
+  // computeRayXXXX(...), returns all the node traversed by the ray.
+  // computeRayKeys(...) is faster compared to the computeRay(...)
+  // Returns false, if one of the coordinate is out of range.
+  // Instead of using updateNode(pt, occ|free) use insertScan() to update the
+  // free and update nodes with occupancy values.
+  // ot.insertPointCloud(scan, origin,-1,false,false);
+  // ot.insertPointCloudRays(scan, origin, -1, false);
+  // ot.insertRay(origin, end, -1, false);
   // insert rays emiitting from v1 to each scan point.
   ot.insertPointCloud(scan, v1, -1, false, true);
   ot.writeBinary("/tmp/sampleOcTree.bt");
@@ -261,7 +264,7 @@ int main(int argc, char* argv[]) {
   scan2.minDist(9);
   for (auto&& pt : scan2) cout << pt << endl;
 
-  // I think, ScanGraph is used to optimize pose graphs.
+  // ScanGraph is used to optimize pose graphs.
   // TODO: ScanGraph Example.
   // octomap::ScanEdge
   // octomap::ScanGraph
@@ -280,6 +283,15 @@ int main(int argc, char* argv[]) {
    * inserted into that scan node as pointcloud in its local coordinate frame
    *
    */
+
+  // getUnknownLeafCenters(...) return centers of leafs that do NOT exist (but
+  // could) in a given bounding box
+  ROS_INFO("ot.getUnknownLeafCenters(list, bbxMin, bbxMax, 11): ");
+  list<octomath::Vector3> list;
+  // 15=124427, 14=15343, 13=1600, 12=277, 11=9, 10=0
+  ot.getUnknownLeafCenters(list, bbxMin, bbxMax, 11);
+  for (auto&& pt : list) cout << pt << endl;
+  cout << "Unknown points: " << list.size() << endl;
 
   // Visulize the ot, create Octomap publisher
   ros::Publisher pub = nh.advertise<octomap_msgs::Octomap>("/octomap", 1);
