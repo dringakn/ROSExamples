@@ -97,14 +97,14 @@ int main(int argc, char* argv[]) {
   cout << "Leafs:" << leafs << endl;
   int nodes = ot.calcNumNodes();
   cout << "Nodes:" << nodes << endl;
-  double volume = ot.volume();
+  double volume = ot.volume();  // length x width x height
   cout << "Volume:" << volume << endl;
-  int memoryUsage = ot.memoryUsage();
+  int memoryUsage = ot.memoryUsage();  // Binary octree
   cout << "Memory Usage:" << memoryUsage << endl;
   double thresh = ot.getOccupancyThres();
-  int memoryUsageNode = ot.memoryUsageNode();
+  int memoryUsageNode = ot.memoryUsageNode();  // Node size 16 Bytes = 2 x 8
   cout << "Memory Usage Node:" << memoryUsageNode << endl;
-  int memoryFullGrid = ot.memoryFullGrid();
+  int memoryFullGrid = ot.memoryFullGrid();  // Including metadata (Bytes)
   cout << "Memory Full Grid:" << memoryFullGrid << endl;
   cout << "Occupancy Threshold:" << thresh << endl;
   Point3D direction(x, y, z), termVoxel, intersection;
@@ -117,6 +117,35 @@ int main(int argc, char* argv[]) {
          << "Intersection:" << intersection << endl;
   else
     cout << "Ray intersection failed." << endl;
+
+  // Get octree iterators
+  ROS_INFO("Octree iterator...");
+  for (auto it = ot.begin(); it != ot.end(); ++it) {
+    cout << it.getCoordinate() << '\t' << it.getDepth() << '\t' << '\t'
+         << it.getSize() << '\t' << it.getX() << ',' << it.getY() << ','
+         << it.getZ() << endl;
+  }
+  ROS_INFO("Octree begin_tree() iterator...");
+  for (auto it = ot.begin_tree(); it != ot.end_tree(); ++it) {
+    cout << it.getCoordinate() << '\t' << it.getDepth() << '\t' << '\t'
+         << it.getSize() << '\t' << it.getX() << ',' << it.getY() << ','
+         << it.getZ() << endl;
+  }
+  ROS_INFO("Octree begin_leafs() iterator...");
+  for (auto it = ot.begin_leafs(); it != ot.end_leafs(); ++it) {
+    cout << it.getCoordinate() << '\t' << it.getDepth() << '\t' << '\t'
+         << it.getSize() << '\t' << it.getX() << ',' << it.getY() << ','
+         << it.getZ() << endl;
+  }
+  ROS_INFO("Octree begin_leafs_bbx(min,max) iterator...");
+  for (auto it = ot.begin_leafs_bbx(bbxMin, bbxMax); it != ot.end_leafs_bbx();
+       ++it) {
+    cout << it.getCoordinate() << '\t' << it.getDepth() << '\t' << '\t'
+         << it.getSize() << '\t' << it.getX() << ',' << it.getY() << ','
+         << it.getZ() << endl;
+  }
+
+  //
 
   // Visulize the ot, create Octomap publisher
   ros::Publisher pub = nh.advertise<octomap_msgs::Octomap>("/octomap", 1);
