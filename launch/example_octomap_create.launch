@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="ros_examples" type="example_octomap_create" name="example_octomap_create" output="screen" ns="/">
+        <param name="resolution" value="0.1"/>
+        <param name="points" value="10"/>
+        <param name="min_max" value="10"/>
+    </node>
+
+</launch>

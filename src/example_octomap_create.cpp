@@ -11,16 +11,16 @@ typedef octomap::point3d Point3D;
 int main(int argc, char* argv[]) {
   // Initialize the node and create node handle
   ros::init(argc, argv, "example_octomap_create");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
 
   // Get the parameters from server
   float resolution;
   if (!nh.param<float>("resolution", resolution, 0.1))
-    nh.setParam("resolution", 0.1);
+    nh.setParam("resolution", resolution);
   int n;
-  if (!nh.param<int>("samples", n, 1000)) nh.setParam("samples", 1000);
+  if (!nh.param<int>("samples", n, 10)) nh.setParam("samples", n);
   int minmax;
-  if (!nh.param<int>("min_max", minmax, 10)) nh.setParam("min_max", 10);
+  if (!nh.param<int>("min_max", minmax, 10)) nh.setParam("min_max", minmax);
   std::mt19937 rng;
   std::uniform_int_distribution<int> distUni(-minmax, minmax);
 
@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
   }
   ROS_INFO("Octree created.");
 
-  // Save the ot
+  // Save the ot. To visulize: octovis /tmp/sampleOcTree.bt
   ROS_INFO("Saving octomap to /tmp/sampleOcTree.bt ...");
   if (ot.writeBinary("/tmp/sampleOcTree.bt"))
     ROS_INFO("Saving done.");
