@@ -1,0 +1,91 @@
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 2.5D Mapping using Elevation Mapping.
+                    Elevation mapping configurations 
+                    are found in yaml files within 
+                    cfg/elevation_mapping_config folder.
+    -->
+
+    <arg name="elevation_robot_frame" default="base_link"/>
+    <arg name="elevation_point_cloud_topic" default="/velodyne_points"/>
+    <arg name="elevation_point_cloud_frame" default="base_link"/>
+    <arg name="elevation_map_length" default="10"/>
+    <arg name="elevation_map_width" default="10"/>
+    <arg name="elevation_map_resolution" default="0.1"/>
+    <arg name="elevation_map_height_min" default="0"/>
+    <arg name="elevation_map_height_max" default="1"/>
+    <arg name="elevation_odom_frame" default="odom"/>
+
+    <!-- Elevation mapping requires robot pose apart from point cloud and tf -->
+    <arg name="elevation_robot_pose_topic" default="/$(arg elevation_robot_frame)_pose"/>
+    <node pkg="ros_examples" type="subscribe_odom_publish_posestamped" name="robot_pose_publisher" required="true" output="screen">
+        <param name="from_frame" value="$(arg elevation_odom_frame)" />
+        <param name="to_frame" value="$(arg elevation_robot_frame)" />
+        <remap from="pose" to="$(arg elevation_robot_pose_topic)"/>
+    </node>
+
+    <env name="ROSCONSOLE_CONFIG_FILE" value="$(dirname)/../cfg/elevation_mapping_config/rosconsole.conf"/>
+
+    <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen" required="true"> launch-prefix="xterm -e gdb --args"
+        <param name="point_cloud_topic" value="$(arg elevation_point_cloud_topic)"/>
+        <param name="robot_pose_with_covariance_topic" value="$(arg elevation_robot_pose_topic)"/>
+        <param name="robot_base_frame_id" value="$(arg elevation_robot_frame)"/>
+        <param name="sensor_frame_id" value="$(arg elevation_point_cloud_frame)"/>
+        <param name="track_point_frame_id" value="$(arg elevation_robot_frame)"/>
+        <!-- map or odom -->
+        <param name="map_frame_id" value="odom"/>
+        <param name="sensor_processor/type" value="laser"/>
+        <param name="track_point_x" value="0"/>
+        <param name="track_point_y" value="0"/>
+        <param name="track_point_z" value="0"/>
+        <param name="robot_pose_cache_size" value="100"/>
+        <param name="min_update_rate" value="5"/>
+        <param name="fused_map_publishing_rate" value="5"/>
+        <param name="visibility_cleanup_rate" value="0.5"/>
+        <param name="relocate_rate" value="5.0"/>
+        <param name="time_tolerance" value="5"/>
+        <param name="scanning_duration" value="0.1"/>
+        <param name="time_offset_for_point_cloud" value="0"/>
+        <param name="position_x" value="0"/>
+        <param name="position_y" value="0"/>
+        <param name="length_in_x" value="$(arg elevation_map_length)"/>
+        <param name="length_in_y" value="$(arg elevation_map_width)"/>
+        <param name="resolution" value="$(arg elevation_map_resolution)"/>
+        <param name="min_variance" value="0.01"/>
+        <param name="max_variance" value="1.0"/>
+        <param name="min_horizontal_variance" value="0.0025"/>
+        <param name="max_horizontal_variance" value="0.1"/>
+        <param name="surface_normal_positive_axis" value="z"/>
+        <param name="mahalanobis_distance_threshold" value="2.5"/>
+        <param name="multi_height_noise" value="0.5"/>
+        <param name="enable_visibility_cleanup" value="true"/>
+        <param name="enable_continuous_cleanup" value="false"/>
+        <param name="initialize_elevation_map" value="false"/>
+        <param name="initialization_method" value="0"/>
+        <param name="length_in_x_init_submap" value="1"/>
+        <param name="length_in_y_init_submap" value="1"/>
+        <param name="margin_init_submap" value="0.3"/>
+        <param name="init_submap_height_offset" value="0"/>
+        <param name="target_frame_init_submap" value="$(arg elevation_robot_frame)"/>
+        <param name="sensor_processor/ignore_points_above" value="$(arg elevation_map_height_max)"/>
+        <param name="sensor_processor/min_radius" value="0.0"/>
+        <param name="sensor_processor/beam_angle" value="0.0"/>
+        <param name="sensor_processor/beam_constant" value="0"/>
+        <param name="robot_motion_map_update/covariance_scale" value="1"/>
+
+    </node>
+
+    <node pkg="grid_map_visualization" type="grid_map_visualization" name="elevation_map_fused_visualization" output="screen">
+        <param name="grid_map_topic" value="/elevation_mapping/elevation_map" />
+        <rosparam command="load" file="$(dirname)/../cfg/elevation_mapping_config/fused.yaml" />
+    </node>
+
+    <node pkg="grid_map_visualization" type="grid_map_visualization" name="elevation_map_raw_visualization" output="screen">
+        <param name="grid_map_topic" value="/elevation_mapping/elevation_map_raw" />
+        <rosparam command="load" file="$(dirname)/../cfg/elevation_mapping_config/raw.yaml" />
+    </node>
+
+</launch>

@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 2.5D Mapping using Elevation Mapping.
+                    Elevation mapping configurations 
+                    are found in yaml files within 
+                    cfg/elevation_mapping_config folder.
+                    sudo apt install ros-melodic-grid-map
+                    cd ~/catkin_ws/src
+                    git clone https://github.com/ANYbotics/kindr.git
+                    git clone https://github.com/ANYbotics/kindr_ros.git
+                    git clone https://github.com/ANYbotics/elevation_mapping.git
+                    cd ~/catkin_ws
+                    catkin build -j8
+                    source devel/setup.bash
+                    roslaunch ros_examples example_gazebo_elevation_mapping.launch
+    -->
+
+    <!-- Gazebo -->
+    <include file="$(dirname)/gazebo.launch">
+        <arg name="use_sim_time" value="true"/>
+        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
+        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+    </include>
+
+    <!-- Elevation mapping requires robot pose apart from point cloud and tf -->
+    <!-- <node pkg="ranger_navigation" type="tf_to_pose_publisher.py" name="ranger_pose_publisher">
+        <param name="from_frame" value="$(arg cartographer_odom_output_frame)" />
+        <param name="to_frame" value="$(arg robot_base_frame)" />
+    </node> -->
+
+    <!-- Elevation Mapping -->
+    <include file="$(dirname)/elevation_mapping.launch">
+        <arg name="elevation_robot_frame" value="base_link"/>
+        <arg name="elevation_point_cloud_topic" value="/velodyne_points"/>
+        <arg name="elevation_point_cloud_frame" value="velodyne_lidar"/>
+        <arg name="elevation_map_length" value="100"/>
+        <arg name="elevation_map_width" value="100"/>
+        <arg name="elevation_map_resolution" value="0.1"/>
+        <arg name="elevation_map_height_min" value="0"/>
+        <arg name="elevation_map_height_max" value="1"/>
+        <arg name="elevation_odom_frame" value="odom"/>
+    </include>
+
+    <!-- RViz -->
+    <include file="$(dirname)/rviz.launch">
+        <arg name="rviz_config" value="$(dirname)/../rviz/example_gazebo_elevation_mapping.rviz"/>
+    </include>
+
+
+    <!-- Keyboard -->
+    <include file="$(dirname)/keyboard.launch">
+        <arg name="topic" value="/cmd_vel"/>
+    </include>
+
+
+</launch>
