@@ -26,12 +26,6 @@
         <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
     </include>
 
-    <!-- Elevation mapping requires robot pose apart from point cloud and tf -->
-    <!-- <node pkg="ranger_navigation" type="tf_to_pose_publisher.py" name="ranger_pose_publisher">
-        <param name="from_frame" value="$(arg cartographer_odom_output_frame)" />
-        <param name="to_frame" value="$(arg robot_base_frame)" />
-    </node> -->
-
     <!-- Elevation Mapping -->
     <include file="$(dirname)/elevation_mapping.launch">
         <arg name="elevation_robot_frame" value="base_link"/>
