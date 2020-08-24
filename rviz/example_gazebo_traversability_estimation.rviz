@@ -5,7 +5,6 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /TF1/Frames1
-        - /TraversabilityGridMap1
       Splitter Ratio: 0.5264706015586853
     Tree Height: 268
   - Class: rviz/Selection
@@ -166,6 +165,36 @@ Visualization Manager:
       Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 1.0981436967849731
+        Min Value: -0.03495704382658005
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: AxisColor
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: TraversabilityPC
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.10000000149011612
+      Style: Flat Squares
+      Topic: /traversability_map_visualization/traversability_cloud
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
       Class: grid_map_rviz_plugin/GridMap
       Color: 200; 200; 200
       Color Layer: elevation
@@ -285,6 +314,46 @@ Visualization Manager:
       Topic: /move_base/current_goal
       Unreliable: false
       Value: true
+    - Alpha: 0.699999988079071
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: false
+      Name: TraversabilityMap
+      Topic: /traversability_map_visualization/traversability_map
+      Unreliable: false
+      Use Timestamp: false
+      Value: false
+    - Alpha: 0.699999988079071
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: false
+      Name: SlopeMap
+      Topic: /traversability_map_visualization/slope_map
+      Unreliable: false
+      Use Timestamp: false
+      Value: false
+    - Alpha: 0.699999988079071
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: false
+      Name: RoughnessMap
+      Topic: /traversability_map_visualization/roughness_map
+      Unreliable: false
+      Use Timestamp: false
+      Value: false
+    - Alpha: 0.699999988079071
+      Class: rviz/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: false
+      Name: StepMap
+      Topic: /traversability_map_visualization/step_map
+      Unreliable: false
+      Use Timestamp: false
+      Value: false
     - Class: rviz/Image
       Enabled: true
       Image Topic: /front_camera/image_raw
@@ -325,7 +394,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 12.18039321899414
+      Distance: 12.873068809509277
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -340,10 +409,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7553974390029907
+      Pitch: 0.8603973388671875
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz)
-      Yaw: 3.221727132797241
+      Yaw: 2.6617250442504883
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 106.41262817382812

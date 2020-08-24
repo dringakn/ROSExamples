@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 2.5D Mapping using Elevation Mapping.
+                    Elevation mapping configurations 
+                    are found in yaml files within 
+                    cfg/elevation_mapping_config folder.
+                    sudo apt install ros-melodic-grid-map
+                    cd ~/catkin_ws/src
+                    git clone https://github.com/ANYbotics/kindr.git
+                    git clone https://github.com/ANYbotics/kindr_ros.git
+                    git clone https://github.com/ANYbotics/elevation_mapping.git
+                    git clone https://github.com/ethz-asl/traversability_estimation.git
+                    git clone https://github.com/ANYbotics/any_node.git
+                    cd ~/catkin_ws
+                    rosdep install - -from-paths src - -ignore-src -y -r
+                    catkin build -j8
+                    source devel/setup.bash
+                    roslaunch ros_examples example_gazebo_traversability_estimation.launch
+    -->
+
+    <!-- Gazebo -->
+    <include file="$(dirname)/gazebo.launch">
+        <arg name="use_sim_time" value="true"/>
+        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
+        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+    </include>
+
+    <!-- Elevation Mapping -->
+    <include file="$(dirname)/elevation_mapping.launch">
+        <arg name="elevation_robot_frame" value="base_link"/>
+        <arg name="elevation_point_cloud_topic" value="/velodyne_points"/>
+        <arg name="elevation_point_cloud_frame" value="velodyne_lidar"/>
+        <arg name="elevation_map_length" value="100"/>
+        <arg name="elevation_map_width" value="100"/>
+        <arg name="elevation_map_resolution" value="0.1"/>
+        <arg name="elevation_map_height_min" value="0"/>
+        <arg name="elevation_map_height_max" value="1"/>
+        <arg name="elevation_odom_frame" value="odom"/>
+    </include>
+
+    <!-- Start the Traversability estimation -->
+    <include file="$(dirname)/traversability_estimation.launch">
+        <arg name="robot_frame" value="base_link"/>
+        <arg name="traversability_map_length" value="40"/>
+        <arg name="traversability_map_width" value="40"/>
+        <arg name="traversability_map_resolution" value="0.2"/>
+        <arg name="traversability_map_height_min" value="0"/>
+        <arg name="traversability_map_height_max" value="1"/>
+    </include>
+
+    <!-- RViz -->
+    <include file="$(dirname)/rviz.launch">
+        <arg name="rviz_config" value="$(dirname)/../rviz/example_gazebo_traversability_estimation.rviz"/>
+    </include>
+
+    <!-- Keyboard -->
+    <include file="$(dirname)/keyboard.launch">
+        <arg name="topic" value="/cmd_vel"/>
+    </include>
+
+
+</launch>

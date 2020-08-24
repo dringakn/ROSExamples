@@ -1,0 +1,72 @@
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Traversability estimate using 2.5D Elevation Mapping.
+                    Traversability estimation configurations 
+                    are found in yaml files within 
+                    cfg/traversability_estimation_config folder.
+                    sudo apt install ros-melodic-grid-map
+                    cd ~/catkin_ws/src
+                    git clone https://github.com/ANYbotics/kindr.git
+                    git clone https://github.com/ANYbotics/kindr_ros.git
+                    git clone https://github.com/ANYbotics/elevation_mapping.git
+                    git clone https://github.com/ethz-asl/traversability_estimation.git
+                    git clone https://github.com/ANYbotics/any_node.git
+                    rm -rf any_node/any_worker any_node/any_node any_node/any_node_example
+                    cd ~/catkin_ws
+                    rosdep install - -from-paths src - -ignore-src -y -r
+                    catkin build -j8
+                    source devel/setup.bash
+                    roslaunch ros_examples example_gazebo_traversability_estimation.launch
+    -->
+
+    <arg name="robot_frame" default="base_link"/>
+    <arg name="traversability_map_length" default="10"/>
+    <arg name="traversability_map_width" default="10"/>
+    <arg name="traversability_map_resolution" default="0.1"/>
+    <arg name="traversability_map_height_min" default="0"/>
+    <arg name="traversability_map_height_max" default="1"/>
+
+    <node pkg="traversability_estimation" type="traversability_estimation_node" name="traversability_estimation" output="screen">
+        <param name="robot_frame_id" value="$(arg robot_frame)"/>
+        <param name="footprint/footprint_frame_id" value="$(arg robot_frame)"/>
+        <param name="initial_elevation_map" value="/elevation_mapping/elevation_map"/>
+        <param name="grid_map_to_initialize_traversability_map/grid_map_topic_name" value="/elevation_mapping/elevation_map"/>
+        <param name="submap_service" value="/elevation_mapping/get_submap"/>
+        <param name="use_raw_map" value="false"/>
+        <!-- map or odom -->
+        <param name="map_frame_id" value="odom"/>
+        <param name="update_rate" value="5"/>
+        <param name="min_update_rate" value="5"/>
+        <param name="map_center_x" value="0"/>
+        <param name="map_center_y" value="0"/>
+        <param name="map_length_x" value="$(arg traversability_map_length)"/>
+        <param name="map_length_y" value="$(arg traversability_map_width)"/>
+        <param name="resolution" value="$(arg traversability_map_resolution)"/>
+        <param name="min_height" value="$(arg traversability_map_height_min)"/>
+        <param name="max_height" value="$(arg traversability_map_height_max)"/>
+        <param name="image_topic" value=""/>
+        <param name="image_position_x" value="0"/>
+        <param name="image_position_y" value="0"/>
+        <param name="robot" value="robot"/>
+        <param name="package" value=""/>
+        <param name="image_elevation" value=""/>
+        <param name="footprint_yaw" value="0.7854"/>
+        <param name="max_gap_width" value="0.2"/>
+        <param name="grid_map_to_initialize_traversability_map/enable" value="false"/>
+        <param name="footprint/traversability_default" value="0.7"/>
+        <param name="footprint/circular_footprint_radius" value="1.744"/>
+        <param name="footprint/circular_footprint_radius_inscribed" value="0.88"/>
+        <param name="footprint/circular_footprint_offset" value="0.1"/>
+        <param name="footprint/verify_roughness_footprint" value="true"/>
+        <param name="footprint/check_robot_inclination" value="true"/>
+        <rosparam command="load" file="$(dirname)/../cfg/traversability_estimation_config/robot_footprint_parameter.yaml"/>
+        <rosparam command="load" file="$(dirname)/../cfg/traversability_estimation_config/robot_filter_parameter.yaml"/>
+    </node>
+
+    <node pkg="grid_map_visualization" type="grid_map_visualization" name="traversability_map_visualization" output="screen">
+        <rosparam command="load" file="$(dirname)/../cfg/traversability_estimation_config/traversability.yaml"/>
+    </node>
+</launch>

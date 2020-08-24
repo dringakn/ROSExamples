@@ -1,0 +1,5 @@
+# Footprint parameters
+footprint:
+  # # Vertices of footprint polygon with coordinates [x, y] in robot footprint frame.
+  footprint_polygon:
+    [[1.445, 0.88], [1.445, -0.88], [-1.565, -0.88], [-1.565, 0.88]]
