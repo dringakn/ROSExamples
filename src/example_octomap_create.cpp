@@ -162,6 +162,18 @@ int main(int argc, char* argv[]) {
          << endl;
   }
 
+  // Multi-level resolution
+  // VoxelLength = res × 2^(16-depth)
+  ROS_INFO("Multi-level leaf nodes Centers[depth][voxelLength] -> LogOdds:");
+  for (int i = 0; i <= 16; i++)
+    for (auto it = ot.begin_leafs(i); it != ot.end_leafs(); ++it)
+      cout << it.getCoordinate() << '[' << it.getDepth() << ']' << '['
+           << it.getSize() << ']' << " -> " << it->getValue() << endl;
+  // while (ros::ok) {
+  //   ros::spinOnce();
+  //   ros::Duration(0.1).sleep();
+  // }
+
   // Check if the specified node is occupied:
   // ot.isNodeOccupied(ot.search(x,y,z)), watch for NULL, considering the
   // threshold parameters.
@@ -292,6 +304,14 @@ int main(int argc, char* argv[]) {
   ot.getUnknownLeafCenters(list, bbxMin, bbxMax, 11);
   for (auto&& pt : list) cout << pt << endl;
   cout << "Unknown points: " << list.size() << endl;
+
+  // Multi-level resolution, VoxelLength = res × 2^(16-depth)
+  // 10=6.4, 11=3.2, 12=1.6, 13=0.8, 14=0.4, 15=0.2, 16=0.1
+  ROS_INFO("Multi-level leaf nodes Centers[depth][voxelLength] -> LogOdds:");
+  for (int i = 1; i <= 11; i++)
+    for (auto it = ot.begin_leafs(i); it != ot.end_leafs(); ++it)
+      cout << it.getCoordinate() << '[' << it.getDepth() << ']' << '['
+           << it.getSize() << ']' << " -> " << it->getValue() << endl;
 
   // Visulize the ot, create Octomap publisher
   ros::Publisher pub = nh.advertise<octomap_msgs::Octomap>("/octomap", 1);
