@@ -21,7 +21,7 @@
     <param name="scan_line" value="16" />
     <param name="scan_period" value="0.1" />
     <param name="vertical_angle" value="2.0" />
-    <param name="map_resolution" value="0.2" />
+    <param name="map_resolution" value="0.1" />
     <param name="max_dis" value="90.0" />
     <param name="min_dis" value="0.5" />
 
