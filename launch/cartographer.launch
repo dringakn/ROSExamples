@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 3D Mapping using Google Cartographer.
+                    The google cartographer configurations 
+                    are found in a lua file within 
+                    cfg/cartographer_config folder.
+    -->
+
+    <arg name="cartographer_config_file" default="cartographer.lua"/>
+    <arg name="cartographer_ogm_cell_size" default="0.1"/>
+    <arg name="cartographer_imu_topic" default="/imu"/>
+    <arg name="cartographer_odom_topic" default="/odom"/>
+    <arg name="cartographer_point_cloud_topic" default="/point_cloud"/>
+    <arg name="cartographer_odom_output_frame" default="cartographer_odom"/>
+    <arg name="robot_frame" default="base_link"/>
+
+    <!-- Run Cartographer node -->
+    <node name="cartographer_node" pkg="cartographer_ros" type="cartographer_node" args="
+            -configuration_directory $(dirname)/../cfg/cartographer_config
+            -configuration_basename $(arg cartographer_config_file)" output="screen" required="true">
+        <remap from="imu" to="$(arg cartographer_imu_topic)" />
+        <remap from="odom" to="$(arg cartographer_odom_topic)" />
+        <remap from="points2" to="$(arg cartographer_point_cloud_topic)" />
+    </node>
+
+    <!-- Publish Cartographer Occupancy Grid Map (OGM) -->
+    <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros" type="cartographer_occupancy_grid_node" args="-resolution $(arg cartographer_ogm_cell_size)">
+        <remap from="map" to="cartographer_map"/>
+    </node>
+
+</launch>
