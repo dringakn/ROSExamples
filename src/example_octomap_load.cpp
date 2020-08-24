@@ -26,28 +26,52 @@ int main(int argc, char* argv[]) {
   // Create octree
   octomap::OcTree ot(file);
   // ot.setResolution(0.125);  // ???
+  // ot.prune();
+
+  // Get a list of unknown voxels at coarse resolution.
+  // 0.05 * 2^(16-11) = 1.6m, visulize the difference in points steps.
+  // list<Vector3> list;
+  octomap::point3d_list list;
+  double xmin, ymin, zmin, xmax, ymax, zmax;
+  ot.getMetricMin(xmin, ymin, zmin);
+  ot.getMetricMax(xmax, ymax, zmax);
+  Point3D bbxMin = Point3D(xmin, ymin, zmin);
+  Point3D bbxMax = Point3D(xmax, ymax, zmax);
+  ot.getUnknownLeafCenters(list, bbxMin, bbxMax, 11);
+  for (auto&& pt : list) cout << pt << endl;
+  cout << "Unknown points: " << list.size() << endl;
+
+  // To visulize the result, let's create another tree
+  octomap::OcTree uk(1.6);
+  for (auto&& pt : list) uk.updateNode(pt, true);
+  ros::Publisher p1 = nh.advertise<octomap_msgs::Octomap>("/unknown", 1, true);
+  octomap_msgs::Octomap m1;
+  octomap_msgs::binaryMapToMsg(uk, m1);
+  m1.header.frame_id = "map";
+  m1.header.stamp = ros::Time(0);
+  p1.publish(m1);
+  ros::spinOnce();
 
   // Show octree stats
   Point3D bound = ot.getBBXBounds();
   cout << "Bounding Box:" << bound << endl;
   Point3D center = ot.getBBXCenter();
   cout << "Bounding Box Center:" << center << endl;
-  Point3D bbxMax = ot.getBBXMax();
+  bbxMax = ot.getBBXMax();
   cout << "Bounding Box Max:" << bbxMax << endl;
-  Point3D bbxMin = ot.getBBXMin();
+  bbxMin = ot.getBBXMin();
   cout << "Bounding Box Min:" << bbxMin << endl;
   double clampThreshMax = ot.getClampingThresMax();
   cout << "Clamping Threshold Max:" << clampThreshMax << endl;
   double clampThreshMin = ot.getClampingThresMin();
   cout << "Clamping Threshold Min:" << clampThreshMin << endl;
   // Limit: |MetricMax-MetricMin|
-  double x, y, z;
-  ot.getMetricMax(x, y, z);
-  cout << "Metric Max:" << x << ',' << y << ',' << z << endl;
-  ot.getMetricMin(x, y, z);
-  cout << "Metric Min:" << x << ',' << y << ',' << z << endl;
-  ot.getMetricSize(x, y, z);
-  cout << "Metric Size:" << x << ',' << y << ',' << z << endl;
+  ot.getMetricMax(xmax, ymax, zmax);
+  cout << "Metric Max:" << xmax << ',' << ymax << ',' << zmax << endl;
+  ot.getMetricMin(xmin, ymin, zmin);
+  cout << "Metric Min:" << xmin << ',' << ymin << ',' << zmin << endl;
+  ot.getMetricSize(xmax, ymax, zmax);
+  cout << "Metric Size:" << xmax << ',' << ymax << ',' << zmax << endl;
   double resolution = ot.getResolution();
   cout << "Resolution:" << resolution << endl;
   int depth = ot.getTreeDepth();
