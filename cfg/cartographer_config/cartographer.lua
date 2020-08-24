@@ -7,9 +7,9 @@ options = {
   map_frame = "map",  -- The ROS frame ID to use for publishing submaps, the parent frame of poses, usually “map”.
   tracking_frame = "imu", -- The ROS frame ID of the frame that is tracked by the SLAM algorithm. If an IMU is used, it should be at its position, although it might be rotated. A common choice is "imu".
   published_frame = "odom", -- The ROS frame ID to use as the child frame for publishing poses. For example "odom" if an "odom" frame is supplied by a different part of the system, otherwise base_link
-  provide_odom_frame = true, -- if true, cartographer will provide an odom frame (local, non-loop-closed, continuous pose)
+  provide_odom_frame = false, -- if true, cartographer will provide an odom frame (local, non-loop-closed, continuous pose)
   odom_frame = "cartographer_odom", -- Only used if provide_odom_frame is true. 
-  publish_frame_projected_to_2d = true,
+  publish_frame_projected_to_2d = false,
   use_odometry = true, -- true if odom is available, false otherwise
   use_nav_sat = false, -- false if gps is not available, true otherwise
   use_landmarks = false,
@@ -29,12 +29,13 @@ options = {
 }
 
 TRAJECTORY_BUILDER_3D.num_accumulated_range_data = 10 -- try 2
+-- TRAJECTORY_BUILDER_3D.
 MAP_BUILDER.use_trajectory_builder_3d = true
-MAP_BUILDER.num_background_threads = 7
---POSE_GRAPH.optimize_every_n_nodes = 200
---POSE_GRAPH.constraint_builder.sampling_ratio = 0.03
---POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 10
---POSE_GRAPH.constraint_builder.min_score = 0.62
---POSE_GRAPH.constraint_builder.global_localization_min_score = 0.66
+MAP_BUILDER.num_background_threads = 7 -- 7
+POSE_GRAPH.optimize_every_n_nodes = 100 -- 200
+POSE_GRAPH.constraint_builder.sampling_ratio = 0.03
+POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 10
+POSE_GRAPH.constraint_builder.min_score = 0.62
+POSE_GRAPH.constraint_builder.global_localization_min_score = 0.66
 
 return options

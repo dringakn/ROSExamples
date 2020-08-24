@@ -4,7 +4,6 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Options1
         - /TF1/Frames1
       Splitter Ratio: 0.5264706015586853
     Tree Height: 318
@@ -54,12 +53,12 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
       Value: false
     - Class: rviz/Axes
-      Enabled: true
+      Enabled: false
       Length: 50
       Name: Fixed Frame Origin
       Radius: 0.10000000149011612
       Reference Frame: <Fixed Frame>
-      Value: true
+      Value: false
     - Class: rviz/TF
       Enabled: false
       Frame Timeout: 15
@@ -200,8 +199,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 3.9630563259124756
-        Min Value: -2.075883388519287
+        Max Value: 3.3702218532562256
+        Min Value: -0.5714672207832336
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -321,7 +320,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 8.227426528930664
+      Distance: 12.040362358093262
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -336,10 +335,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6753972172737122
+      Pitch: 0.48039737343788147
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz)
-      Yaw: 2.844865560531616
+      Yaw: 2.75486159324646
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 106.41262817382812
