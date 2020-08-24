@@ -301,6 +301,7 @@ int main(int argc, char* argv[]) {
   ROS_INFO("ot.getUnknownLeafCenters(list, bbxMin, bbxMax, 11): ");
   list<octomath::Vector3> list;
   // 15=124427, 14=15343, 13=1600, 12=277, 11=9, 10=0
+  // 125000-x=124427
   ot.getUnknownLeafCenters(list, bbxMin, bbxMax, 11);
   for (auto&& pt : list) cout << pt << endl;
   cout << "Unknown points: " << list.size() << endl;
@@ -312,6 +313,12 @@ int main(int argc, char* argv[]) {
     for (auto it = ot.begin_leafs(i); it != ot.end_leafs(); ++it)
       cout << it.getCoordinate() << '[' << it.getDepth() << ']' << '['
            << it.getSize() << ']' << " -> " << it->getValue() << endl;
+
+  // change detection, voxels whose logodds changes
+  ot.enableChangeDetection(true);
+  ot.isChangeDetectionEnabled();
+  ot.numChangesDetected();
+  ot.resetChangeDetection();
 
   // Visulize the ot, create Octomap publisher
   ros::Publisher pub = nh.advertise<octomap_msgs::Octomap>("/octomap", 1);
