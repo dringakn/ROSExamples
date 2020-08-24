@@ -5,7 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /TF1/Frames1
-        - /Octomap1/Status1
+        - /Octomap1
       Splitter Ratio: 0.5264706015586853
     Tree Height: 533
   - Class: rviz/Selection
@@ -81,7 +81,7 @@ Visualization Manager:
       Value: true
       Voxel Alpha: 1
       Voxel Coloring: Cell Probability
-      Voxel Rendering: All Voxels
+      Voxel Rendering: Occupied Voxels
     - Class: octomap_rviz_plugin/ColorOccupancyGrid
       Enabled: false
       Max. Height Display: 3.4028234663852886e+38
@@ -183,10 +183,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6703982353210449
+      Pitch: 0.6053982377052307
       Target Frame: map
       Value: ThirdPersonFollower (rviz)
-      Yaw: 2.055398464202881
+      Yaw: 2.600398540496826
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 106.41262817382812
