@@ -7,6 +7,15 @@
                     Elevation mapping configurations 
                     are found in yaml files within 
                     cfg/elevation_mapping_config folder.
+                    sudo apt install ros-melodic-grid-map
+                    cd ~/catkin_ws/src
+                    git clone https://github.com/ANYbotics/kindr.git
+                    git clone https://github.com/ANYbotics/kindr_ros.git
+                    git clone https://github.com/ANYbotics/elevation_mapping.git
+                    cd ~/catkin_ws
+                    catkin build -j8
+                    source devel/setup.bash
+                    roslaunch ros_examples example_gazebo_elevation_mapping.launch
     -->
 
     <arg name="elevation_robot_frame" default="base_link"/>
