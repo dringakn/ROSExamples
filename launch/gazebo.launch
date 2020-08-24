@@ -8,8 +8,8 @@
     -->
 
     <arg name="use_sim_time" default="true"/>
-    <arg name="robot_model" default="$(dirname)/../urdf/test_snippets_mesh.urdf.xacro"/>
-    <arg name="world_file" default="$(dirname)/../world/turtlebot_playground.world"/>
+    <arg name="robot_model" default="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+    <arg name="world_file" default="$(dirname)/../world/willow_grage.world"/>
     <param name="robot_description" command="$(find xacro)/xacro $(arg robot_model)" />
 
 

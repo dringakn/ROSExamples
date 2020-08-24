@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 3D Mapping using a Gazebo simulated 
+                    differential drive mobile robot equipped 
+                    with 3D LIDAR. The FLOAM (Fast LIDAR Odometry and Mapping)
+                    can be installed using:
+                    cd ~/catkin_ws/src
+                    git clone https://github.com/wh200720041/floam.git
+                    cd cd ~/catkin_ws
+                    catkin build -j8
+                    sudo apt install ros-melodic-hector_trajectory_server
+    -->
+
+    <!-- <arg name="use_sim_time" default="true"/> -->
+
+    <!-- For Velodyne VLP-XX (16, 32, 64) -->
+    <param name="scan_line" value="16" />
+    <param name="scan_period" value="0.1" />
+    <param name="vertical_angle" value="2.0" />
+    <param name="map_resolution" value="0.2" />
+    <param name="max_dis" value="90.0" />
+    <param name="min_dis" value="0.5" />
+
+    <!--- FLOAM -->
+    <node pkg="floam" type="floam_odom_estimation_node" name="floam_odom_estimation_node" output="screen"/>
+    <node pkg="floam" type="floam_laser_processing_node" name="floam_laser_processing_node" output="screen"/>
+    <node pkg="floam" type="floam_laser_mapping_node" name="floam_laser_mapping_node" output="screen"/>
+
+    <!-- World to Map tf -->
+    <node pkg="tf" type="static_transform_publisher" name="word2map_tf" args="0 0 0 0 0 0 /world /map 10" />
+    <!-- Map to Odom tf -->
+    <node pkg="tf" type="static_transform_publisher" name="map2odom_tf" args="0 0 0 0 0 0 /map /odom 10" />
+
+    <node pkg="hector_trajectory_server" type="hector_trajectory_server" name="trajectory_server_loam" ns="base_link">
+        <param name="/target_frame_name" value="world" />
+        <param name="/source_frame_name" value="base_link" />
+        <param name="/trajectory_update_rate" value="10.0" />
+        <param name="/trajectory_publish_rate" value="10.0" />
+    </node>
+
+</launch>
