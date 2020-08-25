@@ -14,7 +14,10 @@
 
 
     <!-- Robot transform publisher -->
-    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher"/>
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" value="10"/>
+        <param name="ignore_timestamp" value="true"/>
+    </node>
 
     <!-- Robot joint state values -->
     <!-- Used in-case of no simulation/hardware -->

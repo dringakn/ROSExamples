@@ -28,7 +28,7 @@
     <xacro:sensor_imu_ros name="imu" parent="chassis" topic="/imu" rate="20" noise="0" xyz="0 0 0.05" visulize="false"/>
     <xacro:sensor_rgb_camera name="front_camera" parent="imu" width="640" height="480" fps="10" xyz="0.15 0 0.15"/>
     <xacro:sensor_lidar_3d name="velodyne_lidar" parent="front_camera" topic="/velodyne_points" rate="10" noise="0" minRange="0.1" maxRange="100" samples="360" xyz="0 0 0.15" visulize="false"/>
-    <xacro:sensor_laser_2d name="hukyo_laser" parent="velodyne_lidar" topic="/scan" rate="10" noise="0" minRange="0.1" maxRange="30" samples="360" xyz="0 0 0.15" visulize="false"/>
+    <xacro:sensor_laser_2d name="hukyo_laser" parent="velodyne_lidar" topic="/scan" rate="20" noise="0" minRange="0.1" maxRange="30" samples="360" xyz="0 0 0.15" visulize="false"/>
     <!-- <xacro:sensor_stereo_camera name="stereo_camera" parent="chassis" width="640" height="480" fps="10" xyz="0.15 0 0.05"/> -->
     <!-- <xacro:sensor_depth_camera name="kinect_camera" parent="chassis" width="640" height="480" fps="10" xyz="0.15 0 0.05"/> -->
     <!-- <xacro:sensor_video link="box1" width="160" height="120" topic="image"/> -->
