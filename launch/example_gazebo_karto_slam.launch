@@ -30,6 +30,8 @@
     <!-- Keyboard -->
     <include file="$(dirname)/keyboard.launch">
         <arg name="topic" value="/cmd_vel"/>
+        <arg name="lin_vel" value="0.5"/>
+        <arg name="ang_vel" value="0.3"/>
     </include>
 
 
