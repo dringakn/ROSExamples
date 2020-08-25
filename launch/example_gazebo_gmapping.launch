@@ -4,10 +4,9 @@
     <!-- 
         Author: Dr. -Ing. Ahmad Kamal Nasir
         Email: dringakn@gmail.com
-        Desciption: 2D Occupancy Grid Mapping (OGM) with hector slam.
-                    sudo apt install ros-melodic-hector-slam 
-                    sudo apt install ros-melodic-hector-mapping 
-                    roslaunch ros_examples example_gazebo_hector_slam.launch
+        Desciption: 2D Occupancy Grid Mapping (OGM) with gmapping slam.
+                    sudo apt install ros-melodic-gmapping 
+                    roslaunch ros_examples example_gazebo_gmapping.launch
     -->
 
     <!-- Gazebo -->
