@@ -6,8 +6,11 @@
         Email: dringakn@gmail.com
         Desciption: Keyboard tele-operation launch file.
     -->
+
     <arg name="topic" default="/cmd_vel"/>
     <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" required="true" launch-prefix="xterm -e">
+        <param name="speed" value="0.3"/>
+        <param name="turn" value="0.2"/>
         <remap from="/cmd_vel" to="$(arg topic)"/>
     </node>
 
