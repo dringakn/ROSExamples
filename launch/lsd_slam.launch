@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 3D Mapping with lsd slam.
+                    git clone https://github.com/tum-vision/lsd_slam.git lsd_slam
+                    roslaunch ros_examples example_gazebo_lsd_slam.launch
+    -->
+
+
+</launch>
