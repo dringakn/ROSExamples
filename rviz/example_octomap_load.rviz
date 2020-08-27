@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /TF1/Frames1
+        - /Octomap1/Status1
       Splitter Ratio: 0.5264706015586853
     Tree Height: 533
   - Class: rviz/Selection
@@ -72,7 +73,7 @@ Visualization Manager:
     - Class: octomap_rviz_plugin/OccupancyGrid
       Enabled: true
       Max. Height Display: 3.4028234663852886e+38
-      Max. Octree Depth: 16
+      Max. Octree Depth: 14
       Min. Height Display: -3.4028234663852886e+38
       Name: Octomap
       Octomap Topic: /octomap
@@ -141,14 +142,14 @@ Visualization Manager:
       Value: false
     - Class: octomap_rviz_plugin/OccupancyGrid
       Enabled: true
-      Max. Height Display: inf
+      Max. Height Display: 3.4028234663852886e+38
       Max. Octree Depth: 16
-      Min. Height Display: -inf
+      Min. Height Display: -3.4028234663852886e+38
       Name: Unknown
       Octomap Topic: /unknown
       Queue Size: 1
       Value: true
-      Voxel Alpha: 1
+      Voxel Alpha: 0.10000000149011612
       Voxel Coloring: Z-Axis
       Voxel Rendering: All Voxels
   Enabled: true
@@ -179,25 +180,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 44.1410026550293
+      Distance: 19.57329559326172
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 7.829598426818848
-        Y: 7.940033435821533
-        Z: -1.9073486328125e-6
+        X: 7.90034294128418
+        Y: 14.526690483093262
+        Z: -2.4304536054842174e-6
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.9403976202011108
+      Pitch: -0.024602677673101425
       Target Frame: map
       Value: ThirdPersonFollower (rviz)
-      Yaw: 1.2103981971740723
+      Yaw: 6.238584041595459
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 106.41262817382812

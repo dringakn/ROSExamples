@@ -7,6 +7,13 @@
         Desciption: 3D Mapping using a Gazebo simulated Robot.
     -->
 
+    <!-- Gazebo -->
+    <include file="$(dirname)/gazebo.launch">
+        <arg name="use_sim_time" value="true"/>
+        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
+    </include>
+
     <!-- Octomapping -->
     <include file="$(dirname)/octomap.launch">
         <arg name="cloud_in" value="/velodyne_points"/>
@@ -20,13 +27,9 @@
     <!-- Keyboard -->
     <include file="$(dirname)/keyboard.launch">
         <arg name="topic" value="/cmd_vel"/>
+        <arg name="lin_vel" value="0.5"/>
+        <arg name="ang_vel" value="0.3"/>
     </include>
 
-    <!-- Gazebo -->
-    <include file="$(dirname)/gazebo.launch">
-        <arg name="use_sim_time" value="true"/>
-        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
-        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
-    </include>
 
 </launch>

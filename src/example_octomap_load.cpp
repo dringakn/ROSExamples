@@ -12,16 +12,13 @@ typedef octomath::Pose6D Pose6D;
 int main(int argc, char* argv[]) {
   // Initialize node
   ros::init(argc, argv, "example_octomap_load");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
 
   // Get pre saved octree map file (with path+ext)
   std::string file;
-  if (argc > 1) {
-    file = std::string(argv[1]);
-  } else {
-    file =
-        std::string("/home/office/cmu_ws/src/ros_examples/map/sample_map2.bt");
-  }
+  nh.param<std::string>(
+      "map_file", file,
+      "/home/office/cmu_ws/src/ros_examples/map/sample_map3.bt");
 
   // Create octree
   octomap::OcTree ot(file);
@@ -31,18 +28,21 @@ int main(int argc, char* argv[]) {
   // Get a list of unknown voxels at coarse resolution.
   // 0.05 * 2^(16-11) = 1.6m, visulize the difference in points steps.
   // list<Vector3> list;
+  double res;
+  nh.param<double>("sample_resolution", res, 1);
+  int depth_n = floor(16 - (log(res / ot.getResolution()) / log(2)));
   octomap::point3d_list list;
   double xmin, ymin, zmin, xmax, ymax, zmax;
   ot.getMetricMin(xmin, ymin, zmin);
   ot.getMetricMax(xmax, ymax, zmax);
   Point3D bbxMin = Point3D(xmin, ymin, zmin);
   Point3D bbxMax = Point3D(xmax, ymax, zmax);
-  ot.getUnknownLeafCenters(list, bbxMin, bbxMax, 11);
+  ot.getUnknownLeafCenters(list, bbxMin, bbxMax, depth_n);
   for (auto&& pt : list) cout << pt << endl;
   cout << "Unknown points: " << list.size() << endl;
 
   // To visulize the result, let's create another tree
-  octomap::OcTree uk(1.6);
+  octomap::OcTree uk(res);
   for (auto&& pt : list) uk.updateNode(pt, true);
   ros::Publisher p1 = nh.advertise<octomap_msgs::Octomap>("/unknown", 1, true);
   octomap_msgs::Octomap m1;
@@ -97,13 +97,16 @@ int main(int argc, char* argv[]) {
 
   // Create octree message publisher
   ros::Publisher pub;
-  pub = nh.advertise<octomap_msgs::Octomap>((argc > 2) ? argv[2] : "/octomap",
-                                            1, true);
+  std::string topic;
+  nh.param<std::string>("topic", topic, "/octomap");
+  pub = nh.advertise<octomap_msgs::Octomap>(topic, 1, true);
 
   // Create octree ROS message
+  std::string frame;
+  nh.param<std::string>("frame", frame, "map");
   octomap_msgs::Octomap msg;
   octomap_msgs::binaryMapToMsg(ot, msg);
-  msg.header.frame_id = (argc > 3) ? argv[3] : "map";
+  msg.header.frame_id = frame;
   msg.header.stamp = ros::Time(0);
   pub.publish(msg);
 

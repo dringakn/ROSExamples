@@ -5,7 +5,15 @@
         Email: dringakn@gmail.com
         Desciption: Load and display an octomap.
     -->
-    <node pkg="ros_examples" type="example_octomap_load" name="example_octomap_load" output="screen"/>
+
+    <node pkg="ros_examples" type="example_octomap_load" name="example_octomap_load" output="screen">
+        <param name="map_file" value="/home/office/cmu_ws/src/ros_examples/map/sample_map3.bt"/>
+        <param name="sample_resolution" value="1"/>
+        <param name="topic" value="/octomap"/>
+        <param name="frame" value="map"/>
+    </node>
+
+    <!-- Adjust the tree depth in RViz for visulization. -->
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_octomap_load.rviz" required="true"/>
 
 </launch>
