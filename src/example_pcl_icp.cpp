@@ -8,8 +8,7 @@
         Height and Width descirbes 2D structure of the point cloud. If the cloud
         is unordered, height is 1 and width is the length of the point cloud.
         The fields describes the channels and their layout in the binary data
-   blob.
-        point_step describes the length of a point in bytes.
+        blob .point_step describes the length of a point in bytes.
         row_step describes the length of a row in bytes.
         is_dense is set to  true if there are no invalid points.
         data.size(): Actual point data, size is (row_step*height)
