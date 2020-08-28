@@ -1,5 +1,11 @@
 <launch>
 
+  <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+    -->
+
   <!--- Run V-REP -->
   <node pkg="ros_examples" name="lab11_vrep_launch_script" type="lab11_vrep_launch_script.py" required="true" output="screen"/>
 
@@ -55,11 +61,6 @@
     <param name="recovery_alpha_fast" value="0.2"/>
   </node>
 
-  <!-- 
-        Author: Dr. -Ing. Ahmad Kamal Nasir
-        Email: dringakn@gmail.com
-        Desciption: 
-    -->
 
   <!--- Run navigation stack with local and global cost map parameters -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">

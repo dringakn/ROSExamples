@@ -1,0 +1,12 @@
+local_costmap:
+  plugins:
+    - { name: static_layer, type: "costmap_2d::StaticLayer" }
+    # - { name: obstacle_layer, type: "costmap_2d::ObstacleLayer" } # 2D
+    # - { name: voxel_layer, type: "costmap_2d::VoxelLayer" } # 3D
+    # - {name: spatio_temporal_layer, type: "spatio_temporal_voxel_layer/SpatioTemporalVoxelLayer"}
+    - {
+        name: spatio_temporal_layer,
+        type: "spatio_temporal_voxel_layer/SpatioTemporalVoxelLayer",
+      }
+    - { name: inflation_layer, type: "costmap_2d::InflationLayer" }
+    # - {name: social_layer, type: "social_layer::SocialLayer"}

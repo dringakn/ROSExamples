@@ -1,0 +1,132 @@
+#footprint: [[0.25, -0.15], [0.25, 0.15], [-0.25, 0.15], [-0.25, -0.15]] # 1.0
+footprint_padding: 0.0 # 0.1
+recovery_behaviors:
+  [
+    {
+      name: conservative_reset,
+      type: clear_costmap_recovery/ClearCostmapRecovery,
+    },
+  ]
+# make_plan_clear_costmap: true # parameters of make_plan service
+# make_plan_add_unreachable_goal: false # true, parameters of make_plan service
+
+GlobalPlanner:
+  lethal_cost: 253 #
+  neutral_cost: 1 #
+  cost_factor: 1 # Factor to multiply each cost from costmap by
+  visualize_potential: true # Sgpecifies whether or not to visualize the potential area computed via a PointCloud2.
+  publish_potential: true # Publish Potential Costmap
+  orientation_mode: 0 # None=0, Forward=1, Interpolate=2, ForwardThenInterpolate=3, Backward=4, Leftward=5, Rightward=6
+  orientation_window_size: 1 # What window to use to determine the orientation based on the position derivative specified by the orientation mode
+  old_navfn_behavior: false # If for some reason, you want global_planner to exactly mirror the behavior of navfn, set this to true
+  use_grid_path: true # If true, create a path that follows the grid boundaries. Otherwise, use a gradient descent method.
+  use_quadratic: false # If true, use the quadratic approximation of the potential. Otherwise, use a simpler calculation.
+  use_dijkstra: false # If true, use dijkstra's algorithm. Otherwise, A*.
+  default_tolerance: 1 # A tolerance on the goal point for the planner. The planner will attempt to create a plan that is as close to the specified goal as possible but no further than default_tolerance away
+  allow_unknown: true # Specifies whether or not to allow the planner to create plans that traverse unknown space. NOTE: if you are using a layered costmap_2d costmap with a voxel or obstacle layer, you must also set the track_unknown_space param for that layer to be true, or it will convert all your unknown space to free space (which planner will then happily go right through).
+
+static_layer:
+  enabled: true # Whether to apply this plugin or not
+  unknown_cost_value: -1 # The value for which a cost should be considered unknown when reading in a map from the map server. If the costmap is not tracking unknown space, costs of this value will be considered occupied. A value of zero also results in this parameter being unused.
+  lethal_cost_threshold: 100 # The threshold value at which to consider a cost lethal when reading in a map from the map server.
+  first_map_only: false # Only subscribe to the first message on the map topic, ignoring all subsequent messages
+  subscribe_to_updates: true # In addition to map_topic, also subscribe to map_topic + "_updates"
+  track_unknown_space: false # If true, unknown values in the map messages are translated directly to the layer. Otherwise, unknown values in the map message are translated as FREE_SPACE in the layer.
+  use_maximum: false # Only matters if the static layer is not the bottom layer. If true, only the maximum value will be written to the master costmap
+  trinary_costmap: true # If true, translates all map message values to NO_INFORMATION/FREE_SPACE/LETHAL_OBSTACLE (three values). If false, a full spectrum of intermediate values is possible.
+  # map_topic: /map #The topic that the costmap subscribes to for the static map. This parameter is useful when you have multiple costmap instances within a single node that you want to use different static maps.
+
+inflation_layer:
+  enabled: true # Whether to apply this plugin or not
+  cost_scaling_factor: 0.5 # 0.5, exponential rate at which the obstacle cost drops off (default: 10)
+  inflation_radius: 0.0 # 5, max. distance from an obstacle at which costs are incurred for planning paths.
+
+obstacle_layer:
+  enabled: true # Whether to apply this plugin or not
+  track_unknown_space: true # If false, each pixel has one of 2 states: lethal obstacle or free. If true, each pixel has one of 3 states: lethal obstacle, free, or unknown.
+  footprint_clearing_enabled: true # If true, the robot footprint will clear (mark as free) the space in which it travels.
+  combination_method: 0 # Changes the behaviour how the obstacle_layer handles incoming data from layers beyond it. Possible values are "Overwrite" (0), "Maximum" (1) and "Nothing" (99). "Overwrite" simply overwrites the data below, i.e. they are not used. "Maximum" is what you want most of the times. It takes the maximum of what is supplied in the obstacle_layer or the incoming data. "Nothing" doesn't change the incoming data at all. Note that this highly influences how the costmap behaves, depending on your setting of track_unkown_space.
+  observation_sources: lidar # A list of observation source names separated by spaces. This defines each of the <source_name> namespaces defined below.
+  lidar:
+    topic: /velodyne_points #The topic on which sensor data comes in for this source. Defaults to the name of the source.
+    observation_persistence: 0 # default 0, use all measurements taken during now-value, 0=latest
+    expected_update_rate: 0.5 # How often to expect a reading from a sensor in seconds. A value of 0.0 will allow infinite time between readings. This parameter is used as a failsafe to keep the navigation stack from commanding the robot when a sensor has failed. It should be set to a value that is slightly more permissive than the actual rate of the sensor. For example, if we expect a scan from a laser every 0.05 seconds we might set this parameter to be 0.1 seconds to give a generous buffer and account for some amount of system latency.
+    data_type: PointCloud2 #The data type associated with the topic, right now only "PointCloud", "PointCloud2", and "LaserScan" are supported.
+    marking: true # Whether or not this observation should be used to mark obstacles.
+    clearing: true # Whether or not this observation should be used to clear out freespace.
+    max_obstacle_height: 3.0 # The maximum height in meters of a sensor reading considered valid. This is usually set to be slightly higher than the height of the robot. Setting this parameter to a value greater than the global max_obstacle_height parameter has no effect. Setting this parameter to a value less than the global max_obstacle_height will filter out points from this sensor above that height.
+    min_obstacle_height: 0.0 # The minimum height in meters of a sensor reading considered valid. This is usually set to be at ground height, but can be set higher or lower based on the noise model of your sensor.
+    obstacle_range: 20.0 # 15, The maximum range in meters at which to insert obstacles into the costmap using sensor data.
+    raytrace_range: 20.0 # 3, The maximum range in meters at which to raytrace out obstacles from the map using sensor data.
+    inf_is_valid: true #Allows for Inf values in "LaserScan" observation messages. The Inf values are converted to the laser maximum range.
+
+voxel_layer:
+  enabled: true # Whether to apply this plugin or not
+  origin_z: 0.0 # The z origin of the map in meters.
+  z_resolution: 0.2 # The z resolution of the map in meters/cell.
+  z_voxels: 20 # The number of voxels to in each vertical column, the height of the grid is z_resolution * z_voxels.
+  unknown_threshold: 0 # The number of unknown cells allowed in a column considered to be "known"
+  mark_threshold: 1 # The maximum number of marked cells allowed in a column considered to be "free".
+  publish_voxel_map: true # Whether or not to publish the underlying voxel grid for visualization purposes.
+  footprint_clearing_enabled: true # If true, the robot footprint will clear (mark as free) the space in which it travels.
+  observation_sources: lidar # A list of observation source names separated by spaces. This defines each of the <source_name> namespaces defined below.
+  lidar:
+    topic: /velodyne_points #The topic on which sensor data comes in for this source. Defaults to the name of the source.
+    observation_persistence: 0 # default 0, use all measurements taken during now-value, 0=latest
+    expected_update_rate: 0.5 # How often to expect a reading from a sensor in seconds. A value of 0.0 will allow infinite time between readings. This parameter is used as a failsafe to keep the navigation stack from commanding the robot when a sensor has failed. It should be set to a value that is slightly more permissive than the actual rate of the sensor. For example, if we expect a scan from a laser every 0.05 seconds we might set this parameter to be 0.1 seconds to give a generous buffer and account for some amount of system latency.
+    data_type: PointCloud2 #The data type associated with the topic, right now only "PointCloud", "PointCloud2", and "LaserScan" are supported.
+    marking: true # Whether or not this observation should be used to mark obstacles.
+    clearing: true # Whether or not this observation should be used to clear out freespace.
+    max_obstacle_height: 3.0 # The maximum height in meters of a sensor reading considered valid. This is usually set to be slightly higher than the height of the robot. Setting this parameter to a value greater than the global max_obstacle_height parameter has no effect. Setting this parameter to a value less than the global max_obstacle_height will filter out points from this sensor above that height.
+    min_obstacle_height: -3.0 # The minimum height in meters of a sensor reading considered valid. This is usually set to be at ground height, but can be set higher or lower based on the noise model of your sensor.
+    obstacle_range: 20.0 # 15, The maximum range in meters at which to insert obstacles into the costmap using sensor data.
+    raytrace_range: 20.0 # 3, The maximum range in meters at which to raytrace out obstacles from the map using sensor data.
+    inf_is_valid: true #Allows for Inf values in "LaserScan" observation messages. The Inf values are converted to the laser maximum range.
+
+spatio_temporal_layer:
+  enabled: true # Whether to apply this plugin or not
+  voxel_decay: 1.0 # seconds if linear, e^n if exponential
+  decay_model: 0 # 0 linear; 1 exponential, -1 persistent
+  track_unknown_space: true # default space is unknown
+  voxel_size: 0.2 # meter
+  voxel_filter: true # default off, apply voxel filter to sensor, recommend on
+  voxel_min_points: 0 # default 0, minimum points per voxel for voxel filter
+  min_z: -3.0 # default 0, meters
+  max_z: 3.0 # default 4, meters
+  publish_voxel_map: true # default off
+  unknown_threshold: 15 #voxel height
+  mark_threshold: 3 # voxel height
+  origin_z: 0.0 #meters
+  decay_acceleration: 0 # default 0, 1/s^2. If laser scanner MUST be 0
+  update_footprint_enabled: true
+  transform_tolerance: 0.2 # seconds
+  combination_method: 0 # 1=max, 0=override
+  model_type: 1 # default 0, model type for frustum. 0=depth camera, 1=3d lidar like VLP16 or
+  clear_after_reading: true # default false, clear the buffer after the layer gets readings from it
+  mapping_mode: false # default off, saves map not for navigation
+  map_save_duration: 60.0 # default 60s, how often to autosave
+  observation_sources: lidar # A list of observation source names separated by spaces. This defines each of the <source_name> namespaces defined below.
+  lidar:
+    topic: /velodyne_points #The topic on which sensor data comes in for this source. Defaults to the name of the source.
+    observation_persistence: 0 # default 0, use all measurements taken during now-value, 0=latest
+    expected_update_rate: 0 # How often to expect a reading from a sensor in seconds. A value of 0.0 will allow infinite time between readings. This parameter is used as a failsafe to keep the navigation stack from commanding the robot when a sensor has failed. It should be set to a value that is slightly more permissive than the actual rate of the sensor. For example, if we expect a scan from a laser every 0.05 seconds we might set this parameter to be 0.1 seconds to give a generous buffer and account for some amount of system latency.
+    data_type: PointCloud2 #The data type associated with the topic, right now only "PointCloud", "PointCloud2", and "LaserScan" are supported.
+    marking: true # Whether or not this observation should be used to mark obstacles.
+    clearing: true # Whether or not this observation should be used to clear out freespace.
+    max_obstacle_height: 3.0 # The maximum height in meters of a sensor reading considered valid. This is usually set to be slightly higher than the height of the robot. Setting this parameter to a value greater than the global max_obstacle_height parameter has no effect. Setting this parameter to a value less than the global max_obstacle_height will filter out points from this sensor above that height.
+    min_obstacle_height: -3.0 # The minimum height in meters of a sensor reading considered valid. This is usually set to be at ground height, but can be set higher or lower based on the noise model of your sensor.
+    obstacle_range: 20.0 # 15, The maximum range in meters at which to insert obstacles into the costmap using sensor data.
+    raytrace_range: 20.0 # 3, The maximum range in meters at which to raytrace out obstacles from the map using sensor data.
+    inf_is_valid: true #Allows for Inf values in "LaserScan" observation messages. The Inf values are converted to the laser maximum range.
+
+social_layer:
+  enabled: false #    Whether to apply this plugin or not
+  cutoff: 10 #    Smallest value to publish on costmap adjustments
+  amplitude: 77 #    Amplitude of adjustments at peak
+  covariance: 0.25 #    Covariance of adjustments
+  factor: 5.0 #    Factor with which to scale the velocity
+  keep_time: 0.75 #    Pause before clearing leg list
+  size_x: 5.0 #
+  size_y: 5.0 #
+  all_features: true #
+
