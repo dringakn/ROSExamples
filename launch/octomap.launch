@@ -8,14 +8,22 @@
     -->
 
     <arg name="cloud_in" default="/camera/depth/points"/>
+    <arg name="pointcloud_min_z" default="-1e-9"/>
+    <arg name="pointcloud_max_z" default="1e+9"/>
+    <arg name="occupancy_min_z" default="-1e-9"/>
+    <arg name="occupancy_max_z" default="1e+9"/>
+    <arg name="resolution" default="0.125"/>
+    <arg name="frame_id" default="odom"/>
+    <arg name="base_frame_id" default="base_link"/>
+    <arg name="filter_ground" default="false"/>
+
     <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
 
         <remap from="cloud_in" to="$(arg cloud_in)"/>
-        <param name="resolution" value="0.125"/>
-        <param name="frame_id" value="odom"/>
-        <param name="base_frame_id" value="base_link"/>
+        <param name="resolution" value="$(arg resolution)"/>
+        <param name="frame_id" value="$(arg frame_id)"/>
+        <param name="base_frame_id" value="$(arg base_frame_id)"/>
         <param name="latch" value="true"/>
-        <param name="filter_ground" value="false"/>
         <param name="filter_speckles" value="true"/>
         <param name="height_map" value="true"/>
         <param name="sensor_model/hit" value="0.7"/>
@@ -27,10 +35,11 @@
         <param name="color/g" value="0"/>
         <param name="color/b" value="0"/>
         <param name="color/a" value="0.5"/>
-        <param name="pointcloud_min_z" value="-1e-9"/>
-        <param name="pointcloud_max_z" value="1e+9"/>
-        <param name="occupancy_min_z" value="-1e-9"/>
-        <param name="occupancy_max_z" value="1e+9"/>
+        <param name="pointcloud_min_z" value="$(arg pointcloud_min_z)"/>
+        <param name="pointcloud_max_z" value="$(arg pointcloud_max_z)"/>
+        <param name="occupancy_min_z" value="$(arg occupancy_min_z)"/>
+        <param name="occupancy_max_z" value="$(arg occupancy_max_z)"/>
+        <param name="filter_ground" value="$(arg filter_ground)"/>
         <param name="ground_filter/distance" value="0.04"/>
         <param name="ground_filter/angle" value="0.15"/>
         <param name="ground_filter/plane_distance" value="0.07"/>
