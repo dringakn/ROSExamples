@@ -375,3 +375,7 @@ target_link_libraries(example_octomap_create ${OCTOMAP_LIBRARIES} ${PCL_LIBRARIE
 add_executable(subscribe_odom_publish_posestamped src/subscribe_odom_publish_posestamped.cpp)
 add_dependencies(subscribe_odom_publish_posestamped ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(subscribe_odom_publish_posestamped ${catkin_LIBRARIES})
+
+add_executable(example_pcl_create_pointcloud2_msg src/example_pcl_create_pointcloud2_msg.cpp)
+add_dependencies(example_pcl_create_pointcloud2_msg ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_pcl_create_pointcloud2_msg ${catkin_LIBRARIES})
