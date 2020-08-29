@@ -1,11 +1,12 @@
 /**
  *    Author: Dr. Ing. Ahmad Kamal Nasir
  *    Email: dringakn@gmail.com
+ *    Description:
+ *    Notes: add actionlib_msgs and actionlib package in CMakeLists
  **/
 #include <actionlib/client/simple_action_client.h>
 #include <ros/ros.h>
 #include <ros_examples/delayactionAction.h>
-// add actionlib_msgs and actionlib package in CMakeLists
 
 typedef actionlib::SimpleActionClient<ros_examples::delayactionAction> Client;
 
@@ -23,7 +24,7 @@ void feedback_callback(
 void active_callback() { ROS_INFO("Goal becomes active"); }
 
 int main(int argc, char* argv[]) {
-  ros::init(argc, argv, "example8");
+  ros::init(argc, argv, "example_action_client_simple");
   ros::NodeHandle nh;
   Client client("delayaction", true);
   client.waitForServer();

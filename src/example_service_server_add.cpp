@@ -1,9 +1,9 @@
 /**
  *    Author: Dr. Ing. Ahmad Kamal Nasir
  *    Email: dringakn@gmail.com
+ *    Description: Custom server to respond addition request from client node
+ *    (example_service_client_add)
  **/
-// Custom server to respond addition request from client node (example6)
-//
 #include <ros/ros.h>
 #include <ros_examples/addsrv.h>
 
@@ -14,7 +14,7 @@ bool add(ros_examples::addsrv::Request& req,
 }
 
 int main(int argc, char* argv[]) {
-  ros::init(argc, argv, "example7");
+  ros::init(argc, argv, "example_service_server_add");
   ros::NodeHandle nh;
   ros::ServiceServer server = nh.advertiseService("addservice", add);
   ros::spin();

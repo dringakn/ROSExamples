@@ -1,25 +1,26 @@
 /**
  *    Author: Dr. Ing. Ahmad Kamal Nasir
  *    Email: dringakn@gmail.com
+ *    Description: Publisehs two custom generate messages on "sensor"
+ *                 and "command" topics.
+ *               sensmsg.msg:
+ *                 Header header
+ *                 float64 front
+ *                 float64 left
+ *                 float64 right
+ *               cmdmsg.msg:
+ *                 Header header
+ *                 float64 vl
+ *                 float64 vr
+ *               modify add_message_files(... cmdmsg.msg sensmsg.msg ...) inside
+ *               CMakeLists.txt of the package.
  **/
-// Publisehs two custom generate messages on "sensor" and "command" topics.
-//           sensmsg.msg:
-//             Header header
-//             float64 front
-//             float64 left
-//             float64 right
-//           cmdmsg.msg:
-//             Header header
-//             float64 vl
-//             float64 vr
-// modify add_message_files(... cmdmsg.msg sensmsg.msg ...) inside
-// CMakeLists.txt of the package.
 #include <ros/ros.h>
 #include <ros_examples/cmdmsg.h>
 #include <ros_examples/sensmsg.h>
 
 int main(int argc, char** argv) {
-  ros::init(argc, argv, "example3");
+  ros::init(argc, argv, "example_custom_messages_publisher");
   ros::NodeHandle nh;
   ros::Rate rate(1);
   ros::Publisher pub1 = nh.advertise<ros_examples::sensmsg>("sensor", 1000);
