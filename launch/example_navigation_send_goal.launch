@@ -8,9 +8,13 @@
     -->
 
     <node pkg="ros_examples" type="example_navigation_send_goal" name="example_navigation_send_goal" output="screen">
+        <param name="frame_id" value="odom"/>
+        <param name="x" value="-5"/>
+        <param name="y" value="-5"/>
+        <param name="z" value="0.1"/>
 
     </node>
 
-    <include file="$(dirname)/example_navigaton_octomap.launch" />
+    <include file="$(dirname)/example_navigation_octomap.launch" />
 
 </launch>

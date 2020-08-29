@@ -48,12 +48,12 @@ Visualization Manager:
       Reference Frame: <Fixed Frame>
       Value: false
     - Class: rviz/Axes
-      Enabled: false
+      Enabled: true
       Length: 50
       Name: Fixed Frame Origin
       Radius: 0.10000000149011612
       Reference Frame: <Fixed Frame>
-      Value: false
+      Value: true
     - Alpha: 1
       Class: rviz/RobotModel
       Collision Enabled: false
@@ -359,7 +359,7 @@ Visualization Manager:
           Topic: /move_base/GlobalPlanner/plan
           Unreliable: false
           Value: true
-      Enabled: false
+      Enabled: true
       Name: Navigation
     - Class: rviz/Group
       Displays:
@@ -473,7 +473,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 18.2496395111084
+      Distance: 12.392953872680664
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
