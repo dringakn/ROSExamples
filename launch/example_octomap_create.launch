@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <launch>
 
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Create an octomap.
+    -->
     <node pkg="ros_examples" type="example_octomap_create" name="example_octomap_create" output="screen" ns="/">
         <param name="resolution" value="0.1"/>
         <param name="points" value="10"/>

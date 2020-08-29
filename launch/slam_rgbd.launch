@@ -4,7 +4,7 @@
         Author: Dr. -Ing. Ahmad Kamal Nasir
         Email: dringakn@gmail.com
         Desciption: 
-    -->
+  -->
 
   <node pkg="ros_examples" name="lab10_vrep_launch_script" type="lab10_vrep_launch_script.py" required="true" output="screen"/>
 

@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <launch>
 
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Create a PCL point cloud message
+    -->
+
     <node pkg="ros_examples" type="example_pcl_create_pointcloud2_msg" name="example_pcl_create_pointcloud2_msg" output="screen"/>
 
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_pcl_create_pointcloud_msg.rviz" required="true"/>
