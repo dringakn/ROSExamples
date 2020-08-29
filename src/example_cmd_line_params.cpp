@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 #include <ros/ros.h>
 
 int main(int argc, char **argv) {

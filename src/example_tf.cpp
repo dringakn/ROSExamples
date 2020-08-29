@@ -1,19 +1,20 @@
 /**
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
+    Description:
+      Publish a static transform from "world" to "map" frame
+      use view_frames to view the tf graph (evince frames.pdf)
+      or rosrun tf tf_monitor world map
+      or rosrun tf tf_echo world map
+      or rostopic echo /tf
+      To publishe a static transform between two frames use the following
+    rosrun tf static_transform_publisher x y z yaw pitch roll parent child t_ms
 **/
-// Publish a static transform from "world" to "map" frame
-// use view_frames to view the tf graph (evince frames.pdf)
-// or rosrun tf tf_monitor world map
-// or rosrun tf tf_echo world map
-// or rostopic echo /tf
-// To publishe a static transform between two frames use the following
-// rosrun tf static_transform_publisher x y z yaw pitch roll parent child t_ms
 
-#include <geometry_msgs/PointStamped.h> // Transformation point
+#include <geometry_msgs/PointStamped.h>  // Transformation point
 #include <ros/ros.h>
-#include <tf/transform_broadcaster.h> // Transform broadcaster
-#include <tf/transform_listener.h>    // Transform listener
+#include <tf/transform_broadcaster.h>  // Transform broadcaster
+#include <tf/transform_listener.h>     // Transform listener
 
 void timerCallback(const tf::TransformListener &li) {
   geometry_msgs::PointStamped pt_w;

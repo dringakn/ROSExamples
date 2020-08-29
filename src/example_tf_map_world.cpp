@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 // Launch RViz and click "2D Pose Estimate" or "2D Nav Goal" button
 // It shall publish a PoseWithCovarianceStamp or PoseStamped message res.
 // on the "initialpose" and "move_base_simple/goal" respectively.
@@ -17,13 +18,13 @@
 // or rosrun tf tf_echo world map
 // or rostopic echo /tf
 
-#include <geometry_msgs/PoseStamped.h>               // Transformation pose
-#include <geometry_msgs/PoseWithCovarianceStamped.h> // Transformation pose
-#include <nav_msgs/MapMetaData.h>                    // OGM meta data
-#include <nav_msgs/OccupancyGrid.h>                  // Occupancy grid map
+#include <geometry_msgs/PoseStamped.h>                // Transformation pose
+#include <geometry_msgs/PoseWithCovarianceStamped.h>  // Transformation pose
+#include <nav_msgs/MapMetaData.h>                     // OGM meta data
+#include <nav_msgs/OccupancyGrid.h>                   // Occupancy grid map
 #include <ros/ros.h>
-#include <tf/transform_broadcaster.h> // Transform broadcaster
-#include <tf/transform_listener.h>    // Transform listener
+#include <tf/transform_broadcaster.h>  // Transform broadcaster
+#include <tf/transform_listener.h>     // Transform listener
 
 nav_msgs::MapMetaData map_info;
 

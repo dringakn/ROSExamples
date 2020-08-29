@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 #include "random_numbers/random_numbers.h"
 #include "ros/ros.h"
 

@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 #include <geometry_msgs/Twist.h>
 #include <ros/ros.h>
 #include <termios.h> /* Terminal device*/
@@ -40,9 +41,8 @@ int main(int argc, char **argv) {
   ros::Publisher pub = nh.advertise<geometry_msgs::Twist>("cmd_vel", 1);
   geometry_msgs::Twist currCmd, prvCmd;
   ros::Rate rate(20);
-  unsigned char chars,
-      keyboardBuff[3]; /* Maximum three characters are returned for special
-                          keys*/
+  unsigned char chars, keyboardBuff[3]; /* Maximum three characters are returned
+                                           for special keys*/
   float linVel = 0, angVel = 0, linVel_Scale = 1, angVel_Scale = 1, acc = 0.01;
   float tarLinVel = linVel, tarAngVel = angVel;
   ros::Time currTime, prevTime = ros::Time::now();
@@ -62,13 +62,15 @@ int main(int argc, char **argv) {
   ROS_WARN("Use w/x to increase/decrease angular velocity.");
   ROS_WARN("Use e/c to increase/decrease linear and angular acceleration.");
   if (!nh.hasParam("linVel_Scale")) {
-    ROS_INFO("Parameter (linVelScale) doesn't exist, creating with default "
-             "value: 1.0");
+    ROS_INFO(
+        "Parameter (linVelScale) doesn't exist, creating with default "
+        "value: 1.0");
     nh.setParam("linVel_Scale", linVel_Scale);
   }
   if (!nh.hasParam("angVel_Scale")) {
-    ROS_INFO("Parameter (angVelScale) doesn't exist, creating with default "
-             "value: 1.0");
+    ROS_INFO(
+        "Parameter (angVelScale) doesn't exist, creating with default "
+        "value: 1.0");
     nh.setParam("angVel_Scale", angVel_Scale);
   }
   if (!nh.hasParam("acc")) {
@@ -81,44 +83,38 @@ int main(int argc, char **argv) {
     if (chars == 1) /* Standard character */
     {
       switch (keyboardBuff[0]) {
-      case 'q':
-      case 'Q':
-        if (linVel_Scale < 1e6)
-          linVel_Scale += 0.1;
-        nh.setParam("linVel_Scale", linVel_Scale);
-        break;
-      case 'z':
-      case 'Z':
-        if (linVel_Scale >= 0.1)
-          linVel_Scale -= 0.1;
-        nh.setParam("linVel_Scale", linVel_Scale);
-        break;
-      case 'w':
-      case 'W':
-        if (angVel_Scale < 1e6)
-          angVel_Scale += 0.1;
-        nh.setParam("angVel_Scale", angVel_Scale);
-        break;
-      case 'x':
-      case 'X':
-        if (angVel_Scale >= 0.1)
-          angVel_Scale -= 0.1;
-        nh.setParam("angVel_Scale", angVel_Scale);
-        break;
-      case 'e':
-      case 'E':
-        if (acc < 1e6)
-          acc += 0.01;
-        nh.setParam("acc", acc);
-        break;
-      case 'c':
-      case 'C':
-        if (acc >= 0.01)
-          acc -= 0.01;
-        nh.setParam("acc", acc);
-        break;
-      default:
-        break;
+        case 'q':
+        case 'Q':
+          if (linVel_Scale < 1e6) linVel_Scale += 0.1;
+          nh.setParam("linVel_Scale", linVel_Scale);
+          break;
+        case 'z':
+        case 'Z':
+          if (linVel_Scale >= 0.1) linVel_Scale -= 0.1;
+          nh.setParam("linVel_Scale", linVel_Scale);
+          break;
+        case 'w':
+        case 'W':
+          if (angVel_Scale < 1e6) angVel_Scale += 0.1;
+          nh.setParam("angVel_Scale", angVel_Scale);
+          break;
+        case 'x':
+        case 'X':
+          if (angVel_Scale >= 0.1) angVel_Scale -= 0.1;
+          nh.setParam("angVel_Scale", angVel_Scale);
+          break;
+        case 'e':
+        case 'E':
+          if (acc < 1e6) acc += 0.01;
+          nh.setParam("acc", acc);
+          break;
+        case 'c':
+        case 'C':
+          if (acc >= 0.01) acc -= 0.01;
+          nh.setParam("acc", acc);
+          break;
+        default:
+          break;
       }
       ROS_INFO("linVel_Scale:%05.2f angVel_Scale:%05.2f acc:%05.2f",
                linVel_Scale, angVel_Scale, acc);
@@ -126,24 +122,24 @@ int main(int argc, char **argv) {
     {
       if (keyboardBuff[0] == 27 && keyboardBuff[1] == 91) {
         switch (keyboardBuff[2]) {
-        case 65: /* UP */
-          linVel = 1;
-          angVel = 0;
-          break;
-        case 66: /* DOWN */
-          linVel = -1;
-          angVel = 0;
-          break;
-        case 67: /* RIGHT */
-          linVel = 0;
-          angVel = 1;
-          break;
-        case 68: /* LEFT */
-          linVel = 0;
-          angVel = -1;
-          break;
-        default:
-          break;
+          case 65: /* UP */
+            linVel = 1;
+            angVel = 0;
+            break;
+          case 66: /* DOWN */
+            linVel = -1;
+            angVel = 0;
+            break;
+          case 67: /* RIGHT */
+            linVel = 0;
+            angVel = 1;
+            break;
+          case 68: /* LEFT */
+            linVel = 0;
+            angVel = -1;
+            break;
+          default:
+            break;
         }
       }
     } else /* No character*/

@@ -9,9 +9,17 @@
  *                float64 b
  *                ---
  *                float64 result
- *
- *                modify add_service_files(... addsrv.srv ...) inside
- *                CMakeLists.txt of the package.
+ *    Notes:
+ *          CMakeLists.txt:
+ *          add_service_files(... addsrv.srv ...)
+ *          find_package(catkin REQUIRED COMPONENTS ... message_generation ... )
+ *          add_service_files(FILES ... mysrv.srv ...)
+ *          generate_messages(DEPENDENCIES ... name_of_package_used_in_srv ...)
+ *          catkin_package(CATKIN_DEPENDS message_runtime geometry_msgs)
+ *          Package.xml:
+ *          <build_depend>message_generation</build_depend>
+ *          <build_export_depend>message_generation</build_export_depend>
+ *          <exec_depend>message_runtime</exec_depend>
  **/
 #include <random_numbers/random_numbers.h>
 #include <ros/ros.h>

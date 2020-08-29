@@ -204,6 +204,36 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
+        Max Value: 1.5
+        Min Value: 0.5
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 255; 255; 255
+      Color Transformer: AxisColor
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Max Intensity: 4096
+      Min Color: 0; 0; 0
+      Min Intensity: 0
+      Name: FrontiersPC
+      Position Transformer: XYZ
+      Queue Size: 1
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.125
+      Style: Flat Squares
+      Topic: /frontiers
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
         Max Value: 10
         Min Value: -10
         Value: true
@@ -473,25 +503,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 12.392953872680664
+      Distance: 17.32286262512207
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -1.173994541168213
-        Y: -1.293155312538147
+        X: -0.7799837589263916
+        Y: 0.29411715269088745
         Z: 3.993511199951172e-6
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.4553978443145752
+      Pitch: 0.21479672193527222
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz)
-      Yaw: 4.548582077026367
+      Yaw: 2.9235737323760986
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 106.41262817382812

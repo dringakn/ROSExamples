@@ -1,3 +1,8 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 #include <ros/ros.h>
 
 #include "MyNodeClass.h"

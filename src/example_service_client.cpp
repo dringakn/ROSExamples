@@ -1,7 +1,9 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
+
 #include "ros/ros.h"
 #include "ros_examples/mysrv.h"
 

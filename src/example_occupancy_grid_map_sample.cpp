@@ -1,12 +1,14 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 
 // modify find_packages(... geometry_msgs nav_msgs ...)
-#include "ros/ros.h"
 #include <geometry_msgs/Pose.h>
 #include <nav_msgs/OccupancyGrid.h>
+
+#include "ros/ros.h"
 
 int main(int argc, char *argv[]) {
   ros::init(argc, argv, "example_occupancy_grid_map_sample");

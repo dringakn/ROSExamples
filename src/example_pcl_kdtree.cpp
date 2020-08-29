@@ -1,3 +1,8 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 #include <bits/stdc++.h>              // Standard C++
 #include <pcl/common/distances.h>     // Distances
 #include <pcl/kdtree/kdtree_flann.h>  // KDTree

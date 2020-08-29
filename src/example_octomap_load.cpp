@@ -1,3 +1,8 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 #include <bits/stdc++.h>               // C++ Related stuff
 #include <octomap/octomap.h>           // Octree
 #include <octomap_msgs/conversions.h>  // Octomap messages

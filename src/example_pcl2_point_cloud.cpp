@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 #include "pcl/io/ply_io.h"
 #include "pcl/point_cloud.h"
 #include "pcl_conversions/pcl_conversions.h"

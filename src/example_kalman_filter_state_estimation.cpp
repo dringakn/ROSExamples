@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 #include "eigen3/Eigen/Dense" // Matrix Algebra Library
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Vector3.h"

@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 #include <math.h>
 #include <random_numbers/random_numbers.h>
 #include <ros/ros.h>
@@ -26,8 +27,8 @@ int main(int argc, char **argv) {
   ros::NodeHandle nh;
   ros::Publisher pub = nh.advertise<std_msgs::Float64>("signal", 1);
   random_numbers::RandomNumberGenerator rng;
-  ros::Rate rate(1000);        // 1Khz sampling rate
-  nh.getParam("stdev", stdev); // Get updated value from parmeter server
+  ros::Rate rate(1000);         // 1Khz sampling rate
+  nh.getParam("stdev", stdev);  // Get updated value from parmeter server
   ROS_INFO("A:%04.2f F:%04.2f N(0,%04.2f)", amplitude, frequency, stdev);
 
   while (ros::ok()) {

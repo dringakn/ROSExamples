@@ -1,3 +1,8 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 #include <bits/stdc++.h>                      // Standard C++
 #include <geometry_msgs/PointStamped.h>       // Geometry point message
 #include <nav_msgs/OccupancyGrid.h>           // OGM

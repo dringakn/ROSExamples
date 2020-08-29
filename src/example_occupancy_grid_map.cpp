@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 // Usage: rosrun examples example_occupancy_grid_map 10 10 1 0
 // modify find_packages(... geometry_msgs nav_msgs ...)
 #include <geometry_msgs/Pose.h>

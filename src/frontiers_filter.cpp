@@ -1,3 +1,8 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 #include <octomap/octomap.h>
 #include <octomap_msgs/conversions.h>
 #include <pcl_ros/point_cloud.h>

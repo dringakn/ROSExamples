@@ -1,7 +1,8 @@
-/**
- *    Author: Dr. Ing. Ahmad Kamal Nasir
- *    Email: dringakn@gmail.com
- **/
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 #include <ros/ros.h>
 
 void timer_cb(const ros::TimerEvent& event) {

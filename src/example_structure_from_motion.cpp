@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 #include <cv_bridge/cv_bridge.h>              // ROS and OpenCV interface
 #include <geometry_msgs/Point32.h>            // PointCloud point
 #include <image_transport/image_transport.h>  // ROS and OpenCV image format conversion

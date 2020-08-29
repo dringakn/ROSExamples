@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 
 // modify find_packages(... geometry_msgs nav_msgs ...)
 // rosrun map_server map_server map.yaml

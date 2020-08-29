@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 #include "random_numbers/random_numbers.h"
 #include "ros/ros.h"
 
@@ -10,13 +11,13 @@ double arr[NP] = {1, 5, 10, 15, 20, 3, 7, 8, 25, 50};
 
 unsigned int max(double array[NP], double &maxValue) {
   unsigned int maxIdx = 0;
-  maxValue = array[0]; // start with max = first element
+  maxValue = array[0];  // start with max = first element
   for (unsigned int i = 1; i < NP; i++)
     if (array[i] > maxValue) {
       maxValue = array[i];
       maxIdx = i;
     }
-  return maxIdx; // return index of highest value in array
+  return maxIdx;  // return index of highest value in array
 }
 
 int main(int argc, char **argv) {
@@ -26,8 +27,7 @@ int main(int argc, char **argv) {
 
   // normalize and print array
   double sumArr = 0;
-  for (unsigned int i = 0; i < NP; i++)
-    sumArr += arr[i];
+  for (unsigned int i = 0; i < NP; i++) sumArr += arr[i];
   for (unsigned int i = 0; i < NP; i++) {
     arr[i] /= sumArr;
     printf("%5.3f,", arr[i]);
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
   double beta = 0.0, maxArr;
   unsigned int maxArrIdx = max(arr, maxArr);
   unsigned int idx =
-      rng.uniformInteger(0, NP - 1); // Generate random sample index
+      rng.uniformInteger(0, NP - 1);  // Generate random sample index
   for (unsigned int k = 0; k < NP; k++) {
     beta = beta + rng.uniformReal(0, 2 * maxArr);
     while (beta > arr[idx]) {
@@ -50,8 +50,7 @@ int main(int argc, char **argv) {
   }
 
   // print results
-  for (int i = 0; i < NP; i++)
-    printf("%5.3f,", S[i]);
+  for (int i = 0; i < NP; i++) printf("%5.3f,", S[i]);
   printf("\nID:%d Max:%5.3f\n", maxArrIdx + 1, maxArr);
 
   return 0;

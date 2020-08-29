@@ -1,7 +1,8 @@
-/**
- *    Author: Dr. Ing. Ahmad Kamal Nasir
- *    Email: dringakn@gmail.com
- **/
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 // Add find_package(OpenCV)
 // Add cv_bridge and image_transport library.
 // Add include_directories (include ${OpenCV_INCLUDE_DIRS})

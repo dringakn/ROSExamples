@@ -1,3 +1,8 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 #include <bits/stdc++.h>                     // Standard C++ libraries
 #include <pcl/point_cloud.h>                 // PCL
 #include <pcl/visualization/cloud_viewer.h>  // PC Visulizer

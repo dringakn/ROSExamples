@@ -1,7 +1,8 @@
-/**
- *    Author: Dr. Ing. Ahmad Kamal Nasir
- *    Email: dringakn@gmail.com
- **/
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 
 // rosrun map_server map_server map.yaml
 // or

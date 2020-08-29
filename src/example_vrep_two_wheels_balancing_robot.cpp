@@ -1,7 +1,8 @@
-/**
+/*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-**/
+    Description:
+*/
 #include "geometry_msgs/Twist.h"
 #include "geometry_msgs/Vector3.h"
 #include "ros/ros.h"

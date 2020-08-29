@@ -1,3 +1,8 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+*/
 #include <bits/stdc++.h>  // Standard C++ related functionality
 // #include <ros/ros.h>      // ROS related functionality, comment for GDB
 
