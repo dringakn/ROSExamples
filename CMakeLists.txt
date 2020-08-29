@@ -379,3 +379,8 @@ target_link_libraries(subscribe_odom_publish_posestamped ${catkin_LIBRARIES})
 add_executable(example_pcl_create_pointcloud2_msg src/example_pcl_create_pointcloud2_msg.cpp)
 add_dependencies(example_pcl_create_pointcloud2_msg ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_pcl_create_pointcloud2_msg ${catkin_LIBRARIES})
+
+add_executable(example_navigation_send_goal src/example_navigation_send_goal.cpp)
+add_dependencies(example_navigation_send_goal ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_navigation_send_goal ${catkin_LIBRARIES})
+

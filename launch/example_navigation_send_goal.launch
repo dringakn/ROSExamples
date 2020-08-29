@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Move base action client to send goal.
+    -->
+
+    <node pkg="ros_examples" type="example_navigation_send_goal" name="example_navigation_send_goal" output="screen">
+
+    </node>
+
+    <include file="$(dirname)/example_navigaton_octomap.launch" />
+
+</launch>
