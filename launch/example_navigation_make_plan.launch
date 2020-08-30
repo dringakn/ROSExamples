@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Move base action client to make plan.
+    -->
+
+    <node pkg="ros_examples" type="example_navigation_make_plan" name="example_navigation_make_plan" output="screen">
+        <param name="frame_id" value="odom"/>
+        <param name="start_x" value="0"/>
+        <param name="start_y" value="0"/>
+        <param name="start_z" value="0.1"/>
+        <param name="end_x" value="-50"/>
+        <param name="end_y" value="-50"/>
+        <param name="end_z" value="0.1"/>
+    </node>
+
+    <include file="$(dirname)/example_navigation_octomap.launch" />
+
+</launch>

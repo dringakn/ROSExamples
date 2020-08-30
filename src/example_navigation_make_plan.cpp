@@ -28,9 +28,20 @@ int main(int argc, char* argv[]) {
   ros::init(argc, argv, "example_navigation_make_plan");
   ros::NodeHandle nh("~");
 
+  // Node parameters
+  std::string frame_id;
+  nh.param<std::string>("frame_id", frame_id, "map");
+  double sx, sy, sz, ex, ey, ez;
+  nh.param<double>("start_x", sx, 0);
+  nh.param<double>("start_y", sy, 0);
+  nh.param<double>("start_z", sz, 0);
+  nh.param<double>("end_x", ex, 0);
+  nh.param<double>("end_y", ey, 0);
+  nh.param<double>("end_z", ez, 0);
+
   // Create a service client
   ros::ServiceClient client;
-  client = nh.serviceClient<nav_msgs::GetPlan>("/move_base/make_plane");
+  client = nh.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
 
   // Wait for the service to become active
   while (!client.waitForExistence(ros::Duration(1))) {
@@ -39,17 +50,15 @@ int main(int argc, char* argv[]) {
 
   // Create a request message
   nav_msgs::GetPlanRequest req;
-  req.start.header.frame_id = "map";
-  req.start.header.stamp = ros::Time(0);
-  req.start.pose.position.x = 0;
-  req.start.pose.position.y = 0;
-  req.start.pose.position.z = 0;
+  req.start.header.frame_id = req.goal.header.frame_id = frame_id;
+  req.start.header.stamp = req.goal.header.stamp = ros::Time(0);
+  req.start.pose.position.x = sx;
+  req.start.pose.position.y = sy;
+  req.start.pose.position.z = sz;
   req.start.pose.orientation.w = 1;
-  req.goal.header.frame_id = "map";
-  req.goal.header.stamp = ros::Time(0);
-  req.goal.pose.position.x = 0;
-  req.goal.pose.position.y = 0;
-  req.goal.pose.position.z = 0;
+  req.goal.pose.position.x = ex;
+  req.goal.pose.position.y = ey;
+  req.goal.pose.position.z = ez;
   req.goal.pose.orientation.w = 1;
   req.tolerance = 0.125;
 
