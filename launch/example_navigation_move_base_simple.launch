@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Move base action client to send simple goal.
+    -->
+
+    <node pkg="ros_examples" type="example_navigation_move_base_simple" name="example_navigation_move_base_simple" output="screen">
+        <param name="frame_id" value="odom"/>
+        <param name="x" value="-5"/>
+        <param name="y" value="-5"/>
+        <param name="z" value="0.1"/>
+    </node>
+
+    <include file="$(dirname)/example_navigation_octomap.launch" />
+
+</launch>

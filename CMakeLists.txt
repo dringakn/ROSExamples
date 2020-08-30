@@ -381,3 +381,11 @@ add_executable(example_navigation_send_goal src/example_navigation_send_goal.cpp
 add_dependencies(example_navigation_send_goal ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_navigation_send_goal ${catkin_LIBRARIES})
 
+add_executable(example_navigation_move_base_simple src/example_navigation_move_base_simple.cpp)
+add_dependencies(example_navigation_move_base_simple ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_navigation_move_base_simple ${catkin_LIBRARIES})
+
+add_executable(example_navigation_make_plan src/example_navigation_make_plan.cpp)
+add_dependencies(example_navigation_make_plan ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_navigation_make_plan ${catkin_LIBRARIES})
+

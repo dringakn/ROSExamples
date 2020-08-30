@@ -2,23 +2,24 @@
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
     Description:
-         Note:
-            move_base_simple/goal: (Topic, geometry_msgs/PoseStamped)
-            Provides a non-action interface to move_base for users
-            that don't care about tracking the execution status of their goals.
+    Note:
+        move_base_simple/goal: (Topic, geometry_msgs/PoseStamped)
+        Provides a non-action interface to move_base for users
+        that don't care about tracking the execution status of their goals.
 
-            move_base/feedback: (Topic, move_base_msgs/MoveBaseActionFeedback)
-            Feedback contains the current position of the base in the world.
+        move_base/feedback: (Topic, move_base_msgs/MoveBaseActionFeedback)
+        Feedback contains the current position of the base in the world.
 
-            move_base/status: (Topic, actionlib_msgs/GoalStatusArray)
-            Provides status information on the goals that are sent to the
-            move_base action.
+        move_base/status: (Topic, actionlib_msgs/GoalStatusArray)
+        Provides status information on the goals that are sent to the
+        move_base action.
 
-            make_plan: (Service)
-            Allows an external user to ask for a plan to a given pose
-            from move_base without causing move_base to execute that plan.
+        move_base/result: (Topic, move_base_msgs/MoveBaseActionResult)
+        Result is empty for the move_base action.
 
-
+        make_plan: (Service, nav_msgs/GetPlan)
+        Allows an external user to ask for a plan to a given pose
+        from move_base without causing move_base to execute that plan.
 */
 
 #include <actionlib/client/simple_action_client.h>  // Action Client
