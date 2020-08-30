@@ -64,10 +64,22 @@ int main(int argc, char* argv[]) {
 
   // Create a response message and call
   nav_msgs::GetPlanResponse res;
+
+  while (client.call(req, res)) {
+    ROS_INFO_STREAM(res.plan.header.frame_id << "\t" << res.plan.poses.size());
+    req.goal.pose.position.x = -100 + random() % 200;
+    req.goal.pose.position.y = -100 + random() % 200;
+    ros::spinOnce();
+    ros::Duration(1).sleep();
+  }
+  ROS_INFO("Failed to get a plan. Outside map");
+
+  req.goal.pose.position.x = -100 + random() % 200;
+  req.goal.pose.position.y = -100 + random() % 200;
   if (client.call(req, res)) {
     ROS_INFO_STREAM(res.plan.header.frame_id << "\t" << res.plan.poses.size());
   } else {
-    ROS_INFO("Plan failed.");
+    ROS_INFO("Failed to get a plan. Outside map");
   }
 
   ros::spin();
