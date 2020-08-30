@@ -20,7 +20,7 @@ TebLocalPlannerROS:
   oscillation_recovery: true
 
   # Goal Tolerance Parameters
-  xy_goal_tolerance: 0.5 # Euclidean distance to the goal position (m)
+  xy_goal_tolerance: 0.25 # Euclidean distance to the goal position (m)
   yaw_goal_tolerance: 3.14 # 180deg, Allowed final orientation error (rad)
   free_goal_vel: false # true, Remove the goal velocity constraint such that the robot can arrive at the goal with maximum speed
 
@@ -30,12 +30,12 @@ TebLocalPlannerROS:
   dt_hysteresis: 0.05 #
   min_samples: 3 # Minimum number of samples
   global_plan_overwrite_orientation: true # Overwrite orientation of local subgoals provided by the global planner
-  max_global_plan_lookahead_dist: 10.0 # Specify the maximum length (cumulative Euclidean distances) of the subset of the global plan taken into account for optimization
+  max_global_plan_lookahead_dist: 5.0 # Specify the maximum length (cumulative Euclidean distances) of the subset of the global plan taken into account for optimization
   force_reinit_new_goal_dist: 0.25 # Reinitialize the trajectory if a previous goal is updated with a separation of more than the specified value in meters (skip hot-starting)
   feasibility_check_no_poses: 10 # 4, Specify up to which pose on the predicted plan the feasibility should be checked each sampling interval
   publish_feedback: true # Publish planner feedback containing the full trajectory and a list of active obstacles (should be enabled only for evaluation or debugging)
-  allow_init_with_backwards_motion: false # default false -> If true, underlying trajectories might be initialized with backwards motions in case the goal is behind the start within the local costmap (this is only recommended if the robot is equipped with rear sensors)
-  exact_arc_length: true # If true, the planner uses the exact arc length in velocity, acceleration and turning rate computations (-> increased cpu time), otherwise the Euclidean approximation is used.
+  allow_init_with_backwards_motion: true # default false -> If true, underlying trajectories might be initialized with backwards motions in case the goal is behind the start within the local costmap (this is only recommended if the robot is equipped with rear sensors)
+  exact_arc_length: false # If true, the planner uses the exact arc length in velocity, acceleration and turning rate computations (-> increased cpu time), otherwise the Euclidean approximation is used.
 
   # Obstacle Parameters
   min_obstacle_dist: 0.5 # 1.0, Minimum desired separation from obstacles in meters

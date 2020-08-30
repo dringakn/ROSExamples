@@ -3,7 +3,8 @@ Panels:
     Help Height: 0
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /Navigation1
       Splitter Ratio: 0.5264706015586853
     Tree Height: 313
   - Class: rviz/Selection
@@ -204,8 +205,8 @@ Visualization Manager:
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
-        Max Value: 1.5
-        Min Value: 0.5
+        Max Value: 0.75
+        Min Value: 0.75
         Value: true
       Axis: Z
       Channel Name: intensity
@@ -223,9 +224,9 @@ Visualization Manager:
       Position Transformer: XYZ
       Queue Size: 1
       Selectable: true
-      Size (Pixels): 3
+      Size (Pixels): 10
       Size (m): 0.125
-      Style: Flat Squares
+      Style: Points
       Topic: /frontiers
       Unreliable: false
       Use Fixed Frame: true
@@ -279,12 +280,12 @@ Visualization Manager:
           Class: rviz/Map
           Color Scheme: map
           Draw Behind: false
-          Enabled: false
+          Enabled: true
           Name: GlobalCostMap
           Topic: /move_base/global_costmap/costmap
           Unreliable: false
           Use Timestamp: false
-          Value: false
+          Value: true
         - Alpha: 0.5
           Class: rviz/Map
           Color Scheme: costmap
@@ -473,7 +474,7 @@ Visualization Manager:
             {}
           Queue Size: 1
           Value: false
-      Enabled: true
+      Enabled: false
       Name: Octomap
   Enabled: true
   Global Options:
@@ -503,7 +504,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 17.32286262512207
+      Distance: 5.7176008224487305
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -518,10 +519,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.21479672193527222
+      Pitch: 1.3647966384887695
       Target Frame: base_link
       Value: ThirdPersonFollower (rviz)
-      Yaw: 2.9235737323760986
+      Yaw: 3.853573799133301
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 106.41262817382812

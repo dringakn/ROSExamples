@@ -40,11 +40,11 @@ int main(int argc, char* argv[]) {
   nh.param<double>("end_z", ez, 0);
 
   // Create a service client
-  ros::ServiceClient client;
-  client = nh.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
+  ros::ServiceClient client_pl;
+  client_pl = nh.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
 
   // Wait for the service to become active
-  while (!client.waitForExistence(ros::Duration(1))) {
+  while (!client_pl.waitForExistence(ros::Duration(1))) {
     ROS_INFO("Waiting for planning service...");
   }
 
@@ -65,18 +65,18 @@ int main(int argc, char* argv[]) {
   // Create a response message and call
   nav_msgs::GetPlanResponse res;
 
-  while (client.call(req, res)) {
+  while (client_pl.call(req, res)) {
     ROS_INFO_STREAM(res.plan.header.frame_id << "\t" << res.plan.poses.size());
-    req.goal.pose.position.x = -100 + random() % 200;
-    req.goal.pose.position.y = -100 + random() % 200;
+    req.goal.pose.position.x = -50 + random() % 100;
+    req.goal.pose.position.y = -50 + random() % 100;
     ros::spinOnce();
     ros::Duration(1).sleep();
   }
   ROS_INFO("Failed to get a plan. Outside map");
 
-  req.goal.pose.position.x = -100 + random() % 200;
-  req.goal.pose.position.y = -100 + random() % 200;
-  if (client.call(req, res)) {
+  req.goal.pose.position.x = -50 + random() % 100;
+  req.goal.pose.position.y = -50 + random() % 100;
+  if (client_pl.call(req, res)) {
     ROS_INFO_STREAM(res.plan.header.frame_id << "\t" << res.plan.poses.size());
   } else {
     ROS_INFO("Failed to get a plan. Outside map");

@@ -92,6 +92,7 @@ void result_cb(const move_base_msgs::MoveBaseActionResultConstPtr& msg) {
             << ", Text:" << msg->status.text << std::endl
             << std::endl;
 }
+
 int main(int argc, char* argv[]) {
   ros::init(argc, argv, "example_navigation_move_base_simple");
   ros::NodeHandle nh("~");

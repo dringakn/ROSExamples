@@ -5,8 +5,8 @@ TrajectoryPlannerROS:
   acc_lim_x: 1.0 # [0, 20.0], The x acceleration limit of the robot in meters/sec^2
   acc_lim_y: 0.0 # [0, 20.0], The y acceleration limit of the robot in meters/sec^2
   acc_lim_theta: 3.14 # [0, 20.0], The rotational acceleration limit of the robot in radians/sec^2
-  max_vel_x: 2.00 # [0, 20.0], The maximum forward velocity allowed for the base in meters/sec
-  min_vel_x: 2.00 # [0, 20.0], The minimum forward velocity allowed for the base in meters/sec. It is useful to specify this to guarantee that velocity commands sent to a mobile base are high enough to allow the base to overcome friction.
+  max_vel_x: 0.50 # [0, 20.0], The maximum forward velocity allowed for the base in meters/sec
+  min_vel_x: 0.50 # [0, 20.0], The minimum forward velocity allowed for the base in meters/sec. It is useful to specify this to guarantee that velocity commands sent to a mobile base are high enough to allow the base to overcome friction.
   max_vel_y: 0.0 # [0, 20.0],
   min_vel_y: 0.0 # [0, 20.0],
   max_vel_theta: 3.14 # [0, 20.0], The absolute value of the maximum rotational velocity for the robot in rad/s
