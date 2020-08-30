@@ -27,8 +27,8 @@
       ### Uncomment one of the local planner and modify the settings accordingly
       #base_local_planner: base_local_planner/TrajectoryPlannerROS # Local Planner-1
       #base_local_planner: dwa_local_planner/DWAPlannerROS # Local Planner-2      
-      base_local_planner: eband_local_planner/EBandPlannerROS # Local Planner-3
-      #base_local_planner: teb_local_planner/TebLocalPlannerROS # Local Planner-4
+      #base_local_planner: eband_local_planner/EBandPlannerROS # Local Planner-3
+      base_local_planner: teb_local_planner/TebLocalPlannerROS # Local Planner-4
       #base_local_planner: mpc_local_planner/MpcLocalPlannerROS # Local Planner-5
       
       clearing_rotation_allowed: true
@@ -257,7 +257,85 @@
 
     <!-- Local Planner-4 Settings -->
     <rosparam ns="TebLocalPlannerROS">
-
+      acc_lim_theta: 0.5
+      acc_lim_x: 0.5
+      acc_lim_y: 0.5
+      allow_init_with_backwards_motion: false
+      cmd_angle_instead_rotvel: false
+      costmap_obstacles_behind_robot_dist: 1.5
+      dt_hysteresis: 0.1
+      dt_ref: 0.3
+      dynamic_obstacle_inflation_dist: 0.6
+      enable_multithreading: true
+      exact_arc_length: false
+      feasibility_check_no_poses: 5
+      force_reinit_new_goal_angular: 0.78
+      force_reinit_new_goal_dist: 1.0
+      free_goal_vel: false
+      global_plan_overwrite_orientation: true
+      global_plan_viapoint_sep: -0.1
+      h_signature_prescaler: 1.0
+      h_signature_threshold: 0.1,
+      include_costmap_obstacles: true
+      include_dynamic_obstacles: false
+      inflation_dist: 0.6
+      is_footprint_dynamic: false
+      legacy_obstacle_association: false
+      max_global_plan_lookahead_dist: 3.0
+      max_number_classes: 5
+      max_vel_theta: 0.3
+      max_vel_x: 0.4
+      max_vel_x_backwards: 0.2
+      max_vel_y: 0.0
+      min_obstacle_dist: 0.5
+      min_turning_radius: 0.0
+      no_inner_iterations: 5
+      no_outer_iterations: 4
+      obstacle_association_cutoff_factor: 5.0
+      obstacle_association_force_inclusion_factor: 1.5
+      obstacle_cost_exponent: 1.0
+      obstacle_heading_threshold: 0.45
+      obstacle_poses_affected: 30
+      optimization_activate: true
+      optimization_verbose: false
+      oscillation_recovery: true
+      penalty_epsilon: 0.1
+      publish_feedback: false
+      roadmap_graph_area_length_scale: 1.0
+      roadmap_graph_area_width: 5.0
+      roadmap_graph_no_samples: 15
+      selection_alternative_time_cost: false
+      selection_cost_hysteresis: 1.0
+      selection_obst_cost_scale: 2.0
+      selection_prefer_initial_plan: 0.95
+      selection_viapoint_cost_scale: 1.0
+      shrink_horizon_backup: true
+      switching_blocking_period: 0.0
+      teb_autosize: true
+      via_points_ordered: false
+      viapoints_all_candidates: true
+      visualize_hc_graph: false
+      visualize_with_time_as_z_axis_scale: 0.0
+      weight_acc_lim_theta: 1.0
+      weight_acc_lim_x: 1.0
+      weight_acc_lim_y: 1.0
+      weight_adapt_factor: 2.0
+      weight_dynamic_obstacle: 50.0
+      weight_dynamic_obstacle_inflation: 0.1
+      weight_inflation: 0.1
+      weight_kinematics_forward_drive: 1.0
+      weight_kinematics_nh: 1000.0
+      weight_kinematics_turning_radius: 1.0
+      weight_max_vel_theta: 1.0
+      weight_max_vel_x: 2.0
+      weight_max_vel_y: 2.0
+      weight_obstacle: 50.0
+      weight_optimaltime: 1.0
+      weight_shortest_path: 0.0
+      weight_viapoint: 1.0
+      wheelbase: 1.0
+      xy_goal_tolerance: 0.2
+      yaw_goal_tolerance: 0.1
     </rosparam>
 
     <!-- Local Planner-5 Settings -->
