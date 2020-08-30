@@ -10,8 +10,11 @@
     <arg name="use_sim_time" default="true"/>
     <arg name="robot_model" default="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
     <arg name="world_file" default="$(dirname)/../world/willow_grage.world"/>
-    <param name="robot_description" command="$(find xacro)/xacro $(arg robot_model)" />
+    <arg name="headless" default="false"/>
+    <arg name="gui" default="true"/>
+    <arg name="output" default="screen"/>
 
+    <param name="robot_description" command="$(find xacro)/xacro $(arg robot_model)" />
 
     <!-- Robot transform publisher -->
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
@@ -31,13 +34,13 @@
         <arg name="world_name" value="$(arg world_file)"/>
         <arg name="paused" value="false"/>
         <arg name="use_sim_time" value="$(arg use_sim_time)"/>
-        <arg name="gui" value="true"/>
-        <arg name="headless" value="false"/>
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="headless" value="$(arg headless)"/>
         <arg name="recording" value="false"/>
         <arg name="debug" value="false"/>
     </include>
 
-    <node pkg="gazebo_ros" type="spawn_model" name="spawn_model" output="screen" args="-urdf -param robot_description -model my_robot -x 0 -y 0 -z 0.5 ">
+    <node pkg="gazebo_ros" type="spawn_model" name="spawn_model" output="$(arg output)" args="-urdf -param robot_description -model my_robot -x 0 -y 0 -z 0.5 ">
 
     </node>
 

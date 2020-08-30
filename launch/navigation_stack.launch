@@ -6,71 +6,264 @@
         Desciption: 
     -->
 
-  <!--- Run V-REP -->
-  <node pkg="ros_examples" name="lab11_vrep_launch_script" type="lab11_vrep_launch_script.py" required="true" output="screen"/>
-
-  <!-- Run the map server -->
-  <node pkg="map_server" name="ros_map_server" type="map_server" args="$(find regnum_lab11)/map/mymap.yaml" required="true" output="screen"/>
-
-  <!--- Run ROS RVIZ -->
-  <node pkg="rviz" type="rviz" name="RViz" required="true" output="screen" args="-d $(find regnum_lab11)/rviz/lab11_rviz_display.rviz"/>
-
-  <!--- Run Keyboard Teleoperation -->
-  <node pkg="teleop_twist_keyboard" name="teleop_twist_keyboard" type="teleop_twist_keyboard.py" launch-prefix="xterm -e" required="true">
-    <remap from="/cmd_vel" to="/cmd_vel"/>
-  </node>
-
-  <!--- Run AMCL -->
-  <node pkg="amcl" type="amcl" name="amcl" output="screen">
-    <!-- Publish scans from best pose at a max of 10 Hz -->
-    <param name="base_frame_id" value="/base_link"/>
-    <param name="global_frame_id" value="/map"/>
-    <param name="odom_frame_id" value="/odom"/>
-    <param name="use_map_topic" value="true"/>
-    <param name="odom_model_type" value="diff"/>
-    <param name="initial_pose_x" value="1"/>
-    <param name="initial_pose_y" value="2.25"/>
-    <param name="initial_pose_a" value="3.14152"/>
-    <param name="transform_tolerance" value="0.1" />
-    <param name="gui_publish_rate" value="10.0"/>
-    <param name="laser_max_beams" value="30"/>
-    <param name="min_particles" value="500"/>
-    <param name="max_particles" value="2500"/>
-    <param name="kld_err" value="0.01"/>
-    <param name="kld_z" value="0.99"/>
-    <param name="odom_alpha1" value="0.005"/>
-    <param name="odom_alpha2" value="0.005"/>
-    <!-- translation std dev, m -->
-    <param name="odom_alpha3" value="0.01"/>
-    <param name="odom_alpha4" value="0.005"/>
-    <param name="odom_alpha5" value="0.003"/>
-    <param name="laser_z_hit" value="0.95"/>
-    <param name="laser_z_short" value="0.05"/>
-    <param name="laser_z_max" value="0.05"/>
-    <param name="laser_z_rand" value="0.05"/>
-    <param name="laser_sigma_hit" value="0.05"/>
-    <param name="laser_lambda_short" value="0.1"/>
-    <param name="laser_lambda_short" value="0.1"/>
-    <!--<param name="laser_model_type" value="likelihood_field"/> -->
-    <param name="laser_model_type" value="beam"/>
-    <param name="laser_likelihood_max_dist" value="0.02"/>
-    <param name="update_min_d" value="0.01"/>
-    <param name="update_min_a" value="0.01"/>
-    <param name="resample_interval" value="1"/>
-    <param name="recovery_alpha_slow" value="0.01"/>
-    <param name="recovery_alpha_fast" value="0.2"/>
-  </node>
-
+  <!-- <include file="$(dirname)/example_fake_tf.launch" /> -->
+  <arg name="output" default="screen"/>
 
   <!--- Run navigation stack with local and global cost map parameters -->
-  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <rosparam file="$(find regnum_lab11)/param/costmap_common_params.yaml" command="load" ns="global_costmap" />
-    <rosparam file="$(find regnum_lab11)/param/costmap_common_params.yaml" command="load" ns="local_costmap" />
-    <rosparam file="$(find regnum_lab11)/param/local_costmap_params.yaml" command="load" />
-    <rosparam file="$(find regnum_lab11)/param/global_costmap_params.yaml" command="load" />
-    <rosparam file="$(find regnum_lab11)/param/base_local_planner_params.yaml" command="load" />
-    <!-- remap from="/cmd_vel" to="/Test_Robot/cmd_vel"/ -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="$(arg output)">
+
+    <!-- move_base parameters -->
+    <!-- Install the planner if not already installed, e.g. -->
+    <!-- sudo apt install ros-melodic-carrot-planner -->
+    <!-- sudo apt install ros-melodic-teb-local-planner -->
+    <rosparam >
+      aggressive_reset: {reset_distance: 1.84}
+
+      ### Uncomment one of the global planner and modify the settings accordingly
+      #base_global_planner: navfn/NavfnROS # Global Planner-1
+      base_global_planner: global_planner/GlobalPlanner # Global Planner-2
+      #base_global_planner: carrot_planner/CarrotPlanner # Global Planner-3
+
+      ### Uncomment one of the local planner and modify the settings accordingly
+      #base_local_planner: base_local_planner/TrajectoryPlannerROS # Local Planner-1
+      #base_local_planner: dwa_local_planner/DWAPlannerROS # Local Planner-2      
+      base_local_planner: eband_local_planner/EBandPlannerROS # Local Planner-3
+      #base_local_planner: teb_local_planner/TebLocalPlannerROS # Local Planner-4
+      #base_local_planner: mpc_local_planner/MpcLocalPlannerROS # Local Planner-5
+      
+      clearing_rotation_allowed: true
+      conservative_reset: {reset_distance: 3.0}
+      conservative_reset_dist: 3.0
+      controller_frequency: 10 # freq
+      controller_patience: 5.0
+      max_planning_retries: -1
+      oscillation_distance: 0.5
+      oscillation_timeout: 0.0
+      planner_frequency: 1 # Path planning update frequency
+      planner_patience: 5.0
+      recovery_behavior_enabled: true
+      restore_defaults: false
+      shutdown_costmaps: false
+    </rosparam>
+
+    <!-- ****************************************************** -->
+    <!-- ****************** Global costmap ******************** -->
+    <!-- ****************************************************** -->
+    <rosparam ns="global_costmap">      
+      global_frame: map
+      robot_base_frame: base_link
+      update_frequency: 2.0
+      publish_frequency: 0.2 # Don't send for visulization
+      rolling_window: true
+      origin_x: 0.0
+      origin_y: 0.0
+      height: 50
+      width: 50
+      resolution: 0.125
+      always_send_full_costmap: false
+
+      footprint: [[0.25, -0.15], [0.25, 0.15], [-0.15, 0.15], [-0.15, -0.15]]
+      footprint_padding: 0.0
+      transform_tolerance: 0.5
+      
+      observation_sources: laser      
+      laser: {sensor_frame: hukyo_laser, data_type: LaserScan, topic: /scan, marking: true, clearing: true}
+      plugins:
+      - {name: static_layer, type: "costmap_2d::StaticLayer"}
+      #- {name: obstacle_layer, type: 'costmap_2d::ObstacleLayer'}
+      - {name: inflation_layer, type: 'costmap_2d::InflationLayer'}
+      static_layer: {enabled: true, map_topic: /map, unknown_cost_value: -1, lethal_cost_threshold: 100, first_map_only: false, subscribe_to_updates: false, track_unknown_space: false, use_maximum: false, trinary_costmap: true}
+      inflation_layer: {cost_scaling_factor: 10.0, enabled: true, inflate_unknown: false, inflation_radius: 0.5}
+      obstacle_layer: {observation_sources: laser, obstacle_range: 5, raytrace_range: 5, combination_method: 0, enabled: true, footprint_clearing_enabled: true, max_obstacle_height: 2.0}
+    </rosparam>
+
+    <!-- ****************************************************** -->
+    <!-- ****************** Local costmap ********************* -->
+    <!-- ****************************************************** -->
+    <rosparam ns="local_costmap">
+      global_frame: odom
+      robot_base_frame: base_link
+      update_frequency: 5.0
+      publish_frequency: 0.2 # Don't send for visulization
+      rolling_window: true
+      origin_x: 0.0
+      origin_y: 0.0
+      width: 5.0
+      height: 5.0
+      resolution: 0.125
+      always_send_full_costmap: false
+
+      footprint: [[0.25, -0.15], [0.25, 0.15], [-0.15, 0.15], [-0.15, -0.15]]
+      footprint_padding: 0.0
+      transform_tolerance: 0.5
+      observation_sources: laser
+      laser: {sensor_frame: hukyo_laser, data_type: LaserScan, topic: /scan, marking: true, clearing: true}
+      static_layer: {enabled: true, map_topic: /map, unknown_cost_value: -1, lethal_cost_threshold: 100, first_map_only: false, subscribe_to_updates: false, track_unknown_space: false, use_maximum: false, trinary_costmap: true}
+      inflation_layer: {cost_scaling_factor: 10.0, enabled: true, inflate_unknown: false, inflation_radius: 0.5}
+      obstacle_layer: {observation_sources: laser, obstacle_range: 2.5, raytrace_range: 3.0, combination_method: 0, enabled: true, footprint_clearing_enabled: true, max_obstacle_height: 2.0}
+      plugins:
+      - {name: static_layer, type: "costmap_2d::StaticLayer"}
+      #- {name: obstacle_layer, type: 'costmap_2d::ObstacleLayer'}
+      - {name: inflation_layer, type: 'costmap_2d::InflationLayer'}
+    </rosparam>
+
+    <!-- ****************************************************** -->
+    <!-- ****************** Global Planners ******************* -->
+    <!-- ****************************************************** -->
+    <!-- Global Planner-1 Settings -->
+    <rosparam ns="NavfnROS">
+      allow_unknown: true # Specifies whether or not to allow navfn to create plans that traverse unknown space. NOTE: if you are using a layered costmap_2d costmap with a voxel or obstacle layer, you must also set the track_unknown_space param for that layer to be true, or it will convert all your unknown space to free space (which navfn will then happily go right through).
+      planner_window_x: 0 # Specifies the x size of an optional window to restrict the planner to. This can be useful for restricting NavFn to work in a small window of a large costmap. 
+      planner_window_y: 0 # Specifies the y size of an optional window to restrict the planner to. This can be useful for restricting NavFn to work in a small window of a large costmap. 
+      default_tolerance: 0 # A tolerance on the goal point for the planner. NavFn will attempt to create a plan that is as close to the specified goal as possible but no further than default_tolerance away. New in navigation 1.3.0
+      visualize_potential: true # Specifies whether or not to visualize the potential area computed by navfn via a PointCloud2. New in navigation 1.3.1
+    </rosparam>
+
+    <!-- Global Planner-2 Settings -->
+    <rosparam ns="GlobalPlanner">
+      lethal_cost: 253 #
+      neutral_cost: 1 #
+      cost_factor: 1 # Factor to multiply each cost from costmap by
+      visualize_potential: true # Sgpecifies whether or not to visualize the potential area computed via a PointCloud2.
+      publish_potential: true # Publish Potential Costmap
+      orientation_mode: 0 # None=0, Forward=1, Interpolate=2, ForwardThenInterpolate=3, Backward=4, Leftward=5, Rightward=6
+      orientation_window_size: 1 # What window to use to determine the orientation based on the position derivative specified by the orientation mode
+      old_navfn_behavior: false # If for some reason, you want global_planner to exactly mirror the behavior of navfn, set this to true
+      use_grid_path: true # If true, create a path that follows the grid boundaries. Otherwise, use a gradient descent method.
+      use_quadratic: false # If true, use the quadratic approximation of the potential. Otherwise, use a simpler calculation.
+      use_dijkstra: false # If true, use dijkstra's algorithm. Otherwise, A*.
+      default_tolerance: 1 # A tolerance on the goal point for the planner. The planner will attempt to create a plan that is as close to the specified goal as possible but no further than default_tolerance away
+      allow_unknown: true # Specifies whether or not to allow the planner to create plans that traverse unknown space. NOTE: if you are using a layered costmap_2d costmap with a voxel or obstacle layer, you must also set the track_unknown_space param for that layer to be true, or it will convert all your unknown space to free space (which planner will then happily go right through).    
+    </rosparam>
+
+    <!-- Global Planner-3 Settings -->
+    <rosparam ns="CarrotPlanner">
+      step_size: 0.125 # The size steps to take backward in meters along the vector between the robot and the user-specified goal point when attempting to find a valid goal for the local planner. 
+      min_dist_from_robot: 0.1 #     The minimum distance from the robot in meters at which a goal point will be sent to the local planner. 
+    </rosparam>
+
+    <!-- ****************************************************** -->
+    <!-- ****************** Local Planners ******************** -->
+    <!-- ****************************************************** -->
+    <!-- Local Planner-1 Settings -->
+    <rosparam ns="TrajectoryPlannerROS">
+      max_vel_x: 0.5
+      min_vel_x: 0.1
+      max_vel_theta: 1.0
+      min_vel_theta: -1.0
+      min_in_place_vel_theta: 0.5
+      acc_lim_theta: 1
+      acc_lim_x: 1
+      acc_lim_y: 1
+      holonomic_robot: true
+      meter_scoring: true
+
+      dwa: false
+      escape_reset_dist: 0.1
+      escape_reset_theta: 1.57
+      escape_vel: -0.1,
+      goal_distance_bias: 0.8
+      path_distance_bias: 0.6
+      heading_lookahead: 1.0
+      heading_scoring: false
+      heading_scoring_timestep: 0.1
+      occdist_scale: 0.01
+      oscillation_reset_dist: 0.05
+      sim_granularity: 0.125
+      angular_sim_granularity: 0.125
+      sim_time: 2
+      simple_attractor: false
+      vx_samples: 20
+      vtheta_samples: 20
+      y_vels: '-0.3,-0.1,0.1,-0.3'
+      restore_defaults: false
+    </rosparam>
+
+    <!-- Local Planner-2 Settings -->
+    <rosparam ns="DWAPlannerROS">
+      acc_lim_theta: 1
+      acc_lim_trans: 0.1
+      acc_lim_x: 1
+      acc_lim_y: 1
+      angular_sim_granularity: 0.1
+      forward_point_distance: 0.325 
+      goal_distance_bias: 0.8
+      max_scaling_factor: 0.2
+      max_vel_theta: 1.0
+      max_vel_trans: 0.5
+      max_vel_x: 0.5
+      max_vel_y: 0.1
+      min_vel_theta: 0.1
+      min_vel_trans: 0.1
+      min_vel_x: 0.0
+      min_vel_y: -0.1
+      occdist_scale: 0.01
+      oscillation_reset_angle: 0.2
+      oscillation_reset_dist: 0.05
+      path_distance_bias: 0.6
+      prune_plan: false
+      restore_defaults: false
+      scaling_speed: 0.25
+      sim_granularity: 0.025 
+      sim_time: 1.7
+      stop_time_buffer: 0.2
+      theta_stopped_vel: 0.1
+      trans_stopped_vel: 0.1
+      twirling_scale: 0.0
+      use_dwa: true
+      vth_samples: 20
+      vx_samples: 3
+      vy_samples: 10
+      xy_goal_tolerance: 0.1
+      yaw_goal_tolerance: 0.1
+    </rosparam>
+
+    <!-- Local Planner-3 Settings -->
+    <rosparam ns="EBandPlannerROS">
+      Ctrl_Rate: 10.0 
+      bubble_velocity_multiplier: 2.0
+      costmap_weight: 10.0
+      differential_drive: true
+      disallow_hysteresis: false
+      eband_equilibrium_approx_max_recursion_depth: 4
+      eband_equilibrium_relative_overshoot: 0.75
+      eband_external_force_gain: 2.0
+      eband_internal_force_gain: 1.0
+      eband_min_relative_overlap: 0.7
+      eband_significant_force_lower_bound: 0.15
+      eband_tiny_bubble_distance: 0.01
+      eband_tiny_bubble_expansion: 0.01 
+      in_place_trans_vel: 0.0
+      k_damp: 3.5
+      k_prop: 4.0
+      marker_lifetime: 0.5
+      max_acceleration: 0.5 
+      max_rotational_acceleration: 1.5
+      max_translational_acceleration: 0.5
+      max_vel_lin: 0.75 
+      max_vel_th: 1.0 
+      min_in_place_vel_th: 0.0
+      min_vel_lin: 0.1
+      min_vel_th: 0.0
+      num_iterations_eband_optimization: 3
+      rot_stopped_vel: 0.01
+      rotation_correction_threshold: 0.5
+      rotation_threshold_multiplier: 1.0
+      trans_stopped_vel: 0.01
+      virtual_mass: 0.75
+      xy_goal_tolerance: 0.1 
+      yaw_goal_tolerance: 0.05
+    </rosparam>
+
+    <!-- Local Planner-4 Settings -->
+    <rosparam ns="TebLocalPlannerROS">
+
+    </rosparam>
+
+    <!-- Local Planner-5 Settings -->
+    <rosparam ns="MpcLocalPlannerROS">
+
+    </rosparam>
   </node>
 
-  <node pkg="rostopic" name="rostopic" type="rostopic" args="pub /startSimulation std_msgs/Bool true" />
 </launch>

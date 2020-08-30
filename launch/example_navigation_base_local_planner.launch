@@ -13,6 +13,8 @@
         <arg name="use_sim_time" value="true"/>
         <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
         <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+        <arg name="headless" value="true"/>
+        <arg name="gui" value="false"/>
     </include>
 
     <!-- GMapping -->
@@ -20,11 +22,19 @@
         <arg name="scan_topic" value="scan"/>
         <arg name="robot_frame" value="base_link"/>
         <arg name="odom_topic" value="/odom"/>
+        <arg name="resolution" value="0.125"/>
+        <arg name="particles" value="100"/>
+        <arg name="output" value="log"/>
+    </include>
+
+    <!-- Navigation -->
+    <include file="$(dirname)/navigation_stack.launch">
+
     </include>
 
     <!-- RViz -->
     <include file="$(dirname)/rviz.launch">
-        <arg name="rviz_config" value="$(dirname)/../rviz/example_gazebo_gmapping.rviz"/>
+        <arg name="rviz_config" value="$(dirname)/../rviz/example_navigation_base_local_planner.rviz"/>
     </include>
 
     <!-- Keyboard -->

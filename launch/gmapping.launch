@@ -12,35 +12,39 @@
     <arg name="scan_topic" default="scan"/>
     <arg name="robot_frame" default="base_link"/>
     <arg name="odom_topic" default="/odom"/>
+    <arg name="resolution" default="0.1"/>
+    <arg name="output" default="screen"/>
+    <arg name="particles" default="100"/>
 
-    <node pkg="gmapping" type="slam_gmapping" name="gmapping" required="true" output="screen">
+    <!-- To supress debug outputs pass on the command line argument: 2>/dev/null -->
+    <node pkg="gmapping" type="slam_gmapping" name="gmapping" required="true" output="$(arg output)" args=" 1 > /dev/null 2 > /dev/null">
         <remap from="scan" to="$(arg scan_topic)" />
         <remap from="base_link" to="$(arg robot_frame)" />
         <remap from="odom" to="$(arg odom_topic)" />
+        <param name="delta" value="$(arg resolution)"/>
+        <param name="particles" value="$(arg particles)"/>
         <rosparam>
           odom_frame: odom
           base_frame: base_link
-          map_update_interval: 1.0
+          map_update_interval: 0.5 # For fast robot, it should be smaller
           maxUrange: 30.0
           maxRange: 30.0
           sigma: 0.01
           kernelSize: 1
-          lstep: 0.01
-          astep: 0.01
+          lstep: 0.125
+          astep: 0.01745
           iterations: 5
           lsigma: 0.075
           ogain: 3.0
           lskip: 0
-          linearUpdate: 0.1
+          linearUpdate: 0.125
           angularUpdate: 0.1745
           temporalUpdate: -1.0
           resampleThreshold: 0.5
-          particles: 100
           xmin: -10.0
           ymin: -10.0
           xmax: 10.0
           ymax: 10.0
-          delta: 0.05
           llsamplerange: 0.01
           llsamplestep: 0.01
           lasamplerange: 0.005

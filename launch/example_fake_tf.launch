@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher_1" args="0 0 0 0 0 0 odom base_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher_2" args="0 0 0 0 0 0 map odom  100"/>
+
+</launch>

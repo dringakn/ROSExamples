@@ -9,11 +9,17 @@
                     roslaunch ros_examples example_gazebo_karto_slam.launch
     -->
 
-    <node pkg="slam_karto" type="slam_karto" name="slam_karto" output="screen">
-        <remap from="scan" to="scan"/>
-        <param name="odom_frame" value="odom"/>
-        <param name="map_update_interval" value="5"/>
-        <param name="resolution" value="0.05"/>
+    <arg name="scan_topic" default="/scan"/>
+    <arg name="odom_frame" default="odom"/>
+    <arg name="map_update_interval" default="50"/>
+    <arg name="resolution" default="0.1"/>
+    <arg name="output" default="screen"/>
+
+    <node pkg="slam_karto" type="slam_karto" name="slam_karto" output="$(arg output)">
+        <remap from="scan" to="$(arg scan_topic)"/>
+        <param name="odom_frame" value="$(arg odom_frame)"/>
+        <param name="map_update_interval" value="$(arg map_update_interval)"/>
+        <param name="resolution" value="$(arg resolution)"/>
 
         <rosparam >
             # General Parameters

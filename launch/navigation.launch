@@ -19,6 +19,7 @@
     <arg name="navigation_local_map_width" default="10"/>
     <arg name="navigation_local_map_length" default="10"/>
     <arg name="footprint" default="[[0.25, -0.15], [0.25, 0.15], [-0.15, 0.15], [-0.15, -0.15]]"/>
+    <arg name="footprint_padding" default="0"/>
 
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 
