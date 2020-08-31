@@ -15,6 +15,18 @@
     -->
 
   <arg name="output" default="screen"/>
+  <arg name="footprint" default="[[0.25, -0.15], [0.25, 0.15], [-0.15, 0.15], [-0.15, -0.15]]"/>
+  <arg name="robot_odom_frame" default="odom"/>
+  <arg name="robot_frame" default="base_link"/>
+  <arg name="map_topic" default="/projected_map"/>
+  <arg name="map_frame" default="odom"/>
+  <arg name="navigation_global_map_resolution" default="0.125"/>
+  <arg name="navigation_global_map_width" default="50"/>
+  <arg name="navigation_global_map_length" default="50"/>
+  <arg name="navigation_local_map_resolution" default="0.125"/>
+  <arg name="navigation_local_map_width" default="20"/>
+  <arg name="navigation_local_map_length" default="20"/>
+  <!-- TODO: Parametrize the stack -->
 
   <!-- <include file="$(dirname)/example_fake_tf.launch" /> -->
 
@@ -26,12 +38,12 @@
     <!-- *********************************************************************** -->
 
     <!-- Global Planner-1 -->
-    <!-- <param name="base_global_planner" value="navfn/NavfnROS"/> -->
-    <!-- <remap from="move_base/NavfnROS/plan" to="global_planner/global_plan"/> -->
+    <param name="base_global_planner" value="navfn/NavfnROS"/>
+    <remap from="move_base/NavfnROS/plan" to="global_planner/global_plan"/>
 
     <!-- Global Planner-2 -->
-    <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
-    <remap from="move_base/GlobalPlanner/plan" to="global_planner/global_plan"/>
+    <!-- <param name="base_global_planner" value="global_planner/GlobalPlanner"/> -->
+    <!-- <remap from="move_base/GlobalPlanner/plan" to="global_planner/global_plan"/> -->
 
     <!-- Global Planner-3 -->
     <!-- <param name="base_global_planner" value="carrot_planner/CarrotPlanner"/> -->
@@ -42,9 +54,9 @@
     <!-- Uncomment one of the Local planner and modify the settings accordingly -->
     <!-- *********************************************************************** -->
     <!-- Local Planner-1 -->
-    <!-- <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/> -->
-    <!-- <remap from="move_base/TrajectoryPlannerROS/global_plan" to="local_planner/global_plan"/> -->
-    <!-- <remap from="move_base/TrajectoryPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+    <remap from="move_base/TrajectoryPlannerROS/global_plan" to="local_planner/global_plan"/>
+    <remap from="move_base/TrajectoryPlannerROS/local_plan" to="local_planner/local_plan"/>
 
     <!-- Local Planner-2 -->
     <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerRO"/> -->
@@ -57,9 +69,9 @@
     <!-- <remap from="move_base/EBandPlannerROS/local_plan" to="local_planner/local_plan"/> -->
 
     <!-- Local Planner-4 -->
-    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
-    <remap from="move_base/TebLocalPlannerROS/global_plan" to="local_planner/global_plan"/>
-    <remap from="move_base/TebLocalPlannerROS/local_plan" to="local_planner/local_plan"/>
+    <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/> -->
+    <!-- <remap from="move_base/TebLocalPlannerROS/global_plan" to="local_planner/global_plan"/> -->
+    <!-- <remap from="move_base/TebLocalPlannerROS/local_plan" to="local_planner/local_plan"/> -->
 
     <!-- Local Planner-5 -->
     <!-- <param name="base_local_planner" value="mpc_local_planner/MpcLocalPlannerROS"/> -->
@@ -152,10 +164,11 @@
     <!-- ****************************************************** -->
     <!-- Global Planner-1 Settings -->
     <rosparam ns="NavfnROS">
-      allow_unknown: true # Specifies whether or not to allow navfn to create plans that traverse unknown space. NOTE: if you are using a layered costmap_2d costmap with a voxel or obstacle layer, you must also set the track_unknown_space param for that layer to be true, or it will convert all your unknown space to free space (which navfn will then happily go right through).
+      allow_unknown: false # Specifies whether or not to allow navfn to create plans that traverse unknown space. NOTE: if you are using a layered costmap_2d costmap with a voxel or obstacle layer, 
+                          # you must also set the track_unknown_space param for that layer to be true, or it will convert all your unknown space to free space (which navfn will then happily go right through).
       planner_window_x: 0 # Specifies the x size of an optional window to restrict the planner to. This can be useful for restricting NavFn to work in a small window of a large costmap. 
       planner_window_y: 0 # Specifies the y size of an optional window to restrict the planner to. This can be useful for restricting NavFn to work in a small window of a large costmap. 
-      default_tolerance: 0 # A tolerance on the goal point for the planner. NavFn will attempt to create a plan that is as close to the specified goal as possible but no further than default_tolerance away. New in navigation 1.3.0
+      default_tolerance: 0.125 # A tolerance on the goal point for the planner. NavFn will attempt to create a plan that is as close to the specified goal as possible but no further than default_tolerance away. New in navigation 1.3.0
       visualize_potential: true # Specifies whether or not to visualize the potential area computed by navfn via a PointCloud2. New in navigation 1.3.1
     </rosparam>
 
@@ -186,37 +199,64 @@
     <!-- ****************** Local Planners ******************** -->
     <!-- ****************************************************** -->
     <!-- Local Planner-1 Settings -->
+    <!-- Published Topics: global_plan, local_plan -->
+    <!-- Subscribed Topics: odom -->
     <rosparam ns="TrajectoryPlannerROS">
-      max_vel_x: 0.5
-      min_vel_x: 0.1
-      max_vel_theta: 1.0
-      min_vel_theta: -1.0
-      min_in_place_vel_theta: 0.5
-      acc_lim_theta: 1
-      acc_lim_x: 1
-      acc_lim_y: 1
-      holonomic_robot: true
-      meter_scoring: true
+      # Robot Configuration Parameters
+      acc_lim_x: 1 # The x acceleration limit of the robot in meters/sec^2 
+      acc_lim_y: 1 # The y acceleration limit of the robot in meters/sec^2 
+      acc_lim_theta: 1 # The rotational acceleration limit of the robot in radians/sec^2 
+      max_vel_x: 0.5 # The maximum forward velocity allowed for the base in meters/sec 
+      min_vel_x: 0.1 # he minimum forward velocity allowed for the base in meters/sec. It is useful to specify this to guarantee that velocity commands sent to a mobile base are high enough to allow the base to overcome friction.
+      max_vel_theta: 1.0 #
+      min_vel_theta: -1.0 #
+      max_rotational_vel: 1 # The maximum rotational velocity allowed for the base in radians/sec 
+      min_in_place_vel_theta: 0.5 # The minimum rotational velocity allowed for the base while performing in-place rotations in radians/sec 
+      escape_vel: -0.1 # Speed used for driving during escapes in meters/sec. 
+                       # Note that it must be negative in order for the robot to actually reverse. 
+                       # A positive speed will cause the robot to move forward while attempting to escape.
+      holonomic_robot: false # false=Differential drive, true=OmniDrive
+      y_vels: '-0.3,-0.1,0.1,-0.3' # The strafing velocities that a holonomic robot will consider in meters/sec.
+      
+      # Goal Tolerance Parameters
+      yaw_goal_tolerance: 0.01745 # The tolerance in radians for the controller in yaw/rotation when achieving its goal 
+      xy_goal_tolerance: 0.125 # The tolerance in meters for the controller in the x and y distance when achieving a goal 
+      latch_xy_goal_tolerance: false # f goal tolerance is latched, if the robot ever reaches the goal xy location it will simply rotate in place, even if it ends up outside the goal tolerance while it is doing so.
 
-      dwa: false
+      # Forward Simulation Parameters
+      sim_time: 2 # The amount of time to forward-simulate trajectories in seconds 
+      sim_granularity: 0.125 # The step size, in meters, to take between points on a given trajectory 
+      angular_sim_granularity: 0.125 # The step size, in radians, to take between angular samples on a given trajectory
+      vx_samples: 20 # The number of samples to use when exploring the x velocity space 
+      vtheta_samples: 20 # The number of samples to use when exploring the theta velocity space 
+
+      # Trajectory Scoring Parameters
+      # The cost function used to score each trajectory is in the following form
+      # cost = 
+      # path_distance_bias * (distance to path from the endpoint of the trajectory in map cells or meters depending on the meter_scoring parameter) 
+      # + goal_distance_bias * (distance to local goal from the endpoint of the trajectory in map cells or meters depending on the meter_scoring parameter) 
+      # + occdist_scale * (maximum obstacle cost along the trajectory in obstacle cost (0-254))
+      meter_scoring: true # Whether the goal_distance_bias and path_distance_bias parameters should assume that goal_distance and path_distance are expressed in units of meters or cells. Cells are assumed by default. 
+      goal_distance_bias: 0.8 # The weighting for how much the controller should stay close to the path it was given
+      path_distance_bias: 0.6 # The weighting for how much the controller should attempt to reach its local goal, also controls speed 
+      occdist_scale: 0.01 # The weighting for how much the controller should attempt to avoid obstacles.
+      heading_lookahead: 1.0 # How far to look ahead in meters when scoring different in-place-rotation trajectories.
+      heading_scoring: false # Whether to score based on the robot's heading to the path or its distance from the path 
+      heading_scoring_timestep: 0.1 # How far to look ahead in time in seconds along the simulated trajectory when using heading scoring 
+      dwa: false # Whether to use the Dynamic Window Approach (DWA)_ or whether to use Trajectory Rollout (NOTE: In our experience DWA worked as well as Trajectory Rollout and is computationally less expensive. It is possible that robots with extremely poor acceleration limits could gain from running Trajectory Rollout, but we recommend trying DWA first.) 
+
+      # Oscillation Prevention Parameters
+      oscillation_reset_dist: 0.05 # How far the robot must travel in meters before oscillation flags are reset.
+
+      # Global Plan Parameters
+      prune_plan: false # Defines whether or not to eat up the plan as the robot moves along the path. If set to true, points will fall off the end of the plan once the robot moves 1 meter past them.
+
+      # Others
       escape_reset_dist: 0.1
       escape_reset_theta: 1.57
-      escape_vel: -0.1,
-      goal_distance_bias: 0.8
-      path_distance_bias: 0.6
-      heading_lookahead: 1.0
-      heading_scoring: false
-      heading_scoring_timestep: 0.1
-      occdist_scale: 0.01
-      oscillation_reset_dist: 0.05
-      sim_granularity: 0.125
-      angular_sim_granularity: 0.125
-      sim_time: 2
-      simple_attractor: false
-      vx_samples: 20
-      vtheta_samples: 20
-      y_vels: '-0.3,-0.1,0.1,-0.3'
       restore_defaults: false
+      simple_attractor: false
+
     </rosparam>
 
     <!-- Local Planner-2 Settings -->

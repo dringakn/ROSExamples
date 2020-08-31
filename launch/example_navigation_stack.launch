@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Navigaiton stack with octomap. 
+    -->
+
+    <!-- Gazebo -->
+    <include file="$(dirname)/gazebo.launch">
+        <arg name="use_sim_time" value="true"/>
+        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
+        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+        <arg name="headless" value="true"/>
+        <arg name="gui" value="false"/>
+        <arg name="output" value="log"/>
+    </include>
+
+    <!-- Octomapping -->
+    <include file="$(dirname)/octomap.launch">
+        <arg name="cloud_in" value="/velodyne_points"/>
+        <arg name="pointcloud_min_z" value="-1e-9"/>
+        <arg name="pointcloud_max_z" value="1e+9"/>
+        <arg name="occupancy_min_z" value="0.25"/>
+        <arg name="occupancy_max_z" value="2"/>
+        <arg name="resolution" value="0.125"/>
+        <arg name="frame_id" value="map"/>
+        <arg name="base_frame_id" value="base_link"/>
+        <arg name="filter_ground" value="false"/>
+        <arg name="output" value="log"/>
+    </include>
+    <!-- Octomap will publish the map in frame_id, only if a tf from sensor_data to frame_id is available. -->
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 0 0 0 map odom 100"/>
+
+    <!-- RViz -->
+    <include file="$(dirname)/rviz.launch">
+        <arg name="rviz_config" value="$(dirname)/../rviz/example_navigation_stack.rviz"/>
+        <arg name="output" value="log"/>
+    </include>
+
+    <!-- Keyboard -->
+    <include file="$(dirname)/keyboard.launch">
+        <arg name="topic" value="/cmd_vel"/>
+        <arg name="lin_vel" value="0.5"/>
+        <arg name="ang_vel" value="0.3"/>
+        <arg name="output" value="log"/>
+    </include>
+
+    <!-- Navigation Stack -->
+    <include file="$(dirname)/navigation_stack.launch">
+        <arg name="footprint" value="[[0.25, -0.15], [0.25, 0.15], [-0.15, 0.15], [-0.15, -0.15]]"/>
+        <arg name="robot_odom_frame" value="odom"/>
+        <arg name="robot_frame" value="base_link"/>
+        <arg name="map_topic" value="/projected_map"/>
+        <arg name="map_frame" value="odom"/>
+        <arg name="navigation_global_map_resolution" value="0.125"/>
+        <arg name="navigation_global_map_width" value="50"/>
+        <arg name="navigation_global_map_length" value="50"/>
+        <arg name="navigation_local_map_resolution" value="0.125"/>
+        <arg name="navigation_local_map_width" value="20"/>
+        <arg name="navigation_local_map_length" value="20"/>
+        <arg name="output" value="log"/>
+    </include>
+
+</launch>

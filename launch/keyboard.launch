@@ -10,8 +10,9 @@
     <arg name="topic" default="/cmd_vel"/>
     <arg name="lin_vel" default="0.5"/>
     <arg name="ang_vel" default="0.3"/>
+    <arg name="output" default="screen"/>
 
-    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" required="true" launch-prefix="xterm -e">
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="teleop_twist_keyboard" required="true" launch-prefix="xterm -e" output="$(arg output)">
         <param name="speed" value="$(arg lin_vel)"/>
         <param name="turn" value="$(arg ang_vel)"/>
         <remap from="/cmd_vel" to="$(arg topic)"/>

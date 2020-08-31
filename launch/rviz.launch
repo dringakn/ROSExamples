@@ -7,7 +7,9 @@
         Desciption: RViz launch file.
     -->
 
+    <arg name="output" default="screen"/>
     <arg name="rviz_config" default="$(dirname)/../rviz/vis.rviz"/>
-    <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(arg rviz_config)" output="screen"/>
+
+    <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(arg rviz_config)" output="$(arg output)"/>
 
 </launch>

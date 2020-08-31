@@ -16,10 +16,13 @@
     <arg name="frame_id" default="odom"/>
     <arg name="base_frame_id" default="base_link"/>
     <arg name="filter_ground" default="false"/>
+    <arg name="output" default="screen"/>
 
-    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+    <node pkg="octomap_server" type="octomap_server_node" name="octomap_server" output="$(arg output)">
 
         <remap from="cloud_in" to="$(arg cloud_in)"/>
+        <remap from="projected_map" to="map"/>
+
         <param name="resolution" value="$(arg resolution)"/>
         <param name="frame_id" value="$(arg frame_id)"/>
         <param name="base_frame_id" value="$(arg base_frame_id)"/>

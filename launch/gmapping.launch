@@ -17,7 +17,8 @@
     <arg name="particles" default="100"/>
 
     <!-- To supress debug outputs pass on the command line argument: 2>/dev/null -->
-    <node pkg="gmapping" type="slam_gmapping" name="gmapping" required="true" output="$(arg output)" args=" 1 > /dev/null 2 > /dev/null">
+    <!-- Or launch it within other terminal -->
+    <node pkg="gmapping" type="slam_gmapping" name="gmapping" required="true" output="$(arg output)" args=" 1 > /dev/null 2 > /dev/null" launch-prefix="xterm -e">
         <remap from="scan" to="$(arg scan_topic)" />
         <remap from="base_link" to="$(arg robot_frame)" />
         <remap from="odom" to="$(arg odom_topic)" />
