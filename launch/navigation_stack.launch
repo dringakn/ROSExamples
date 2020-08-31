@@ -4,33 +4,71 @@
         Author: Dr. -Ing. Ahmad Kamal Nasir
         Email: dringakn@gmail.com
         Desciption: 
+          Global Planners: 
+            GlobalPlanner, NavfnROS, CarrotParrot
+          Local Planners: 
+            TrajectoryPlannerROS, DWAPlannerROS, EBandPlannerROS, TebLocalPlannerROS, MpcLocalPlannerROS  
+        Note:
+            Install the planner if not already installed, e.g.
+            sudo apt install ros-melodic-carrot-planner
+            sudo apt install ros-melodic-teb-local-planner
     -->
 
-  <!-- <include file="$(dirname)/example_fake_tf.launch" /> -->
   <arg name="output" default="screen"/>
+
+  <!-- <include file="$(dirname)/example_fake_tf.launch" /> -->
 
   <!--- Run navigation stack with local and global cost map parameters -->
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="$(arg output)">
 
+    <!-- *********************************************************************** -->
+    <!-- Uncomment one of the global planner and modify the settings accordingly -->
+    <!-- *********************************************************************** -->
+
+    <!-- Global Planner-1 -->
+    <!-- <param name="base_global_planner" value="navfn/NavfnROS"/> -->
+    <!-- <remap from="move_base/NavfnROS/plan" to="global_planner/global_plan"/> -->
+
+    <!-- Global Planner-2 -->
+    <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+    <remap from="move_base/GlobalPlanner/plan" to="global_planner/global_plan"/>
+
+    <!-- Global Planner-3 -->
+    <!-- <param name="base_global_planner" value="carrot_planner/CarrotPlanner"/> -->
+    <!-- <remap from="move_base/CarrotPlanner/plan" to="global_planner/global_plan"/> -->
+
+
+    <!-- *********************************************************************** -->
+    <!-- Uncomment one of the Local planner and modify the settings accordingly -->
+    <!-- *********************************************************************** -->
+    <!-- Local Planner-1 -->
+    <!-- <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/> -->
+    <!-- <remap from="move_base/TrajectoryPlannerROS/global_plan" to="local_planner/global_plan"/> -->
+    <!-- <remap from="move_base/TrajectoryPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+
+    <!-- Local Planner-2 -->
+    <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerRO"/> -->
+    <!-- <remap from="move_base/DWAPlannerRO/global_plan" to="local_planner/global_plan"/> -->
+    <!-- <remap from="move_base/DWAPlannerRO/local_plan" to="local_planner/local_plan"/> -->
+
+    <!-- Local Planner-3 -->
+    <!-- <param name="base_local_planner" value="eband_local_planner/EBandPlannerROS"/> -->
+    <!-- <remap from="move_base/EBandPlannerROS/global_plan" to="local_planner/global_plan"/> -->
+    <!-- <remap from="move_base/EBandPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+
+    <!-- Local Planner-4 -->
+    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
+    <remap from="move_base/TebLocalPlannerROS/global_plan" to="local_planner/global_plan"/>
+    <remap from="move_base/TebLocalPlannerROS/local_plan" to="local_planner/local_plan"/>
+
+    <!-- Local Planner-5 -->
+    <!-- <param name="base_local_planner" value="mpc_local_planner/MpcLocalPlannerROS"/> -->
+    <!-- <remap from="move_base/MpcLocalPlannerROS/global_plan" to="local_planner/global_plan"/> -->
+    <!-- <remap from="move_base/MpcLocalPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+
     <!-- move_base parameters -->
-    <!-- Install the planner if not already installed, e.g. -->
-    <!-- sudo apt install ros-melodic-carrot-planner -->
-    <!-- sudo apt install ros-melodic-teb-local-planner -->
     <rosparam >
-      aggressive_reset: {reset_distance: 1.84}
-
-      ### Uncomment one of the global planner and modify the settings accordingly
-      #base_global_planner: navfn/NavfnROS # Global Planner-1
-      base_global_planner: global_planner/GlobalPlanner # Global Planner-2
-      #base_global_planner: carrot_planner/CarrotPlanner # Global Planner-3
-
-      ### Uncomment one of the local planner and modify the settings accordingly
-      #base_local_planner: base_local_planner/TrajectoryPlannerROS # Local Planner-1
-      #base_local_planner: dwa_local_planner/DWAPlannerROS # Local Planner-2      
-      #base_local_planner: eband_local_planner/EBandPlannerROS # Local Planner-3
-      base_local_planner: teb_local_planner/TebLocalPlannerROS # Local Planner-4
-      #base_local_planner: mpc_local_planner/MpcLocalPlannerROS # Local Planner-5
-      
+      aggressive_reset: {reset_distance: 1.84}    
       clearing_rotation_allowed: true
       conservative_reset: {reset_distance: 3.0}
       conservative_reset_dist: 3.0
@@ -67,11 +105,12 @@
       transform_tolerance: 0.5
       
       observation_sources: laser      
-      laser: {sensor_frame: hukyo_laser, data_type: LaserScan, topic: /scan, marking: true, clearing: true}
+      laser: {sensor_frame: hukyo_laser, data_type: LaserScan, topic: scan, marking: true, clearing: true}
       plugins:
       - {name: static_layer, type: "costmap_2d::StaticLayer"}
-      #- {name: obstacle_layer, type: 'costmap_2d::ObstacleLayer'}
-      - {name: inflation_layer, type: 'costmap_2d::InflationLayer'}
+      #- {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+      #- {name: obstacle_layer, type: "costmap_2d::VoxelLayer"}
+      - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
       static_layer: {enabled: true, map_topic: /map, unknown_cost_value: -1, lethal_cost_threshold: 100, first_map_only: false, subscribe_to_updates: false, track_unknown_space: false, use_maximum: false, trinary_costmap: true}
       inflation_layer: {cost_scaling_factor: 10.0, enabled: true, inflate_unknown: false, inflation_radius: 0.5}
       obstacle_layer: {observation_sources: laser, obstacle_range: 5, raytrace_range: 5, combination_method: 0, enabled: true, footprint_clearing_enabled: true, max_obstacle_height: 2.0}
@@ -97,14 +136,15 @@
       footprint_padding: 0.0
       transform_tolerance: 0.5
       observation_sources: laser
-      laser: {sensor_frame: hukyo_laser, data_type: LaserScan, topic: /scan, marking: true, clearing: true}
+      laser: {sensor_frame: hukyo_laser, data_type: LaserScan, topic: scan, marking: true, clearing: true}
       static_layer: {enabled: true, map_topic: /map, unknown_cost_value: -1, lethal_cost_threshold: 100, first_map_only: false, subscribe_to_updates: false, track_unknown_space: false, use_maximum: false, trinary_costmap: true}
       inflation_layer: {cost_scaling_factor: 10.0, enabled: true, inflate_unknown: false, inflation_radius: 0.5}
-      obstacle_layer: {observation_sources: laser, obstacle_range: 2.5, raytrace_range: 3.0, combination_method: 0, enabled: true, footprint_clearing_enabled: true, max_obstacle_height: 2.0}
+      obstacle_layer: {observation_sources: laser, obstacle_range: 4.5, raytrace_range: 5.0, combination_method: 0, enabled: true, footprint_clearing_enabled: true, max_obstacle_height: 2.0}
       plugins:
       - {name: static_layer, type: "costmap_2d::StaticLayer"}
-      #- {name: obstacle_layer, type: 'costmap_2d::ObstacleLayer'}
-      - {name: inflation_layer, type: 'costmap_2d::InflationLayer'}
+      #- {name: obstacle_layer, type: "costmap_2d::ObstacleLayer"}
+      #- {name: obstacle_layer, type: "costmap_2d::VoxelLayer"}
+      - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
     </rosparam>
 
     <!-- ****************************************************** -->
@@ -340,7 +380,112 @@
 
     <!-- Local Planner-5 Settings -->
     <rosparam ns="MpcLocalPlannerROS">
-
+     odom_topic: odom
+    
+      ## Robot settings
+     robot:
+       type: "unicycle"
+       unicycle:
+         max_vel_x: 0.4
+         max_vel_x_backwards: 0.2
+         max_vel_theta: 0.3
+         acc_lim_x: 0.2 # deactive bounds with zero
+         dec_lim_x: 0.2 # deactive bounds with zero
+         acc_lim_theta: 0.2 # deactivate bounds with zero
+   
+     ## Footprint model for collision avoidance
+     footprint_model:
+       type: "point"
+       is_footprint_dynamic: False
+   
+     ## Collision avoidance
+     collision_avoidance:
+       min_obstacle_dist: 0.2 # Note, this parameter must be chosen w.r.t. the footprint_model
+       enable_dynamic_obstacles: False
+       force_inclusion_dist: 0.5
+       cutoff_dist: 2.5 
+       include_costmap_obstacles: True
+       costmap_obstacles_behind_robot_dist: 1.5
+   
+     ## Planning grid 
+     grid:
+       type: "fd_grid"
+       grid_size_ref: 20
+       dt_ref: 0.3
+       xf_fixed: [True, True, True]
+       warm_start: True
+       collocation_method: "forward_differences"
+       cost_integration_method: "left_sum"
+       variable_grid:
+         enable: True  
+         min_dt: 0.0;
+         max_dt: 10.0;
+         grid_adaptation:
+           enable: True
+           dt_hyst_ratio: 0.1
+           min_grid_size: 2
+           max_grid_size: 50
+   
+     ## Planning options
+     planning:
+       objective:
+         type: "minimum_time" # minimum_time requires grid/variable_grid/enable=True and grid/xf_fixed set properly
+         quadratic_form:
+           state_weights: [2.0, 2.0, 2.0]
+           control_weights: [1.0, 1.0]
+           integral_form: False
+         minimum_time_via_points:
+           position_weight: 10.5
+           orientation_weight: 0.0
+           via_points_ordered: False
+       terminal_cost:
+         type: "none" # can be "none"
+         quadratic:
+           final_state_weights: [2.0, 2.0, 2.0]
+       terminal_constraint:
+         type: "none" # can be "none"
+         l2_ball:
+           weight_matrix: [1.0, 1.0, 1.0]
+           radius: 5
+   
+     ## Controller options
+     controller:
+       outer_ocp_iterations: 5
+       xy_goal_tolerance: 0.2
+       yaw_goal_tolerance: 0.1
+       global_plan_overwrite_orientation: true
+       global_plan_prune_distance: 1.0
+       allow_init_with_backward_motion: True
+       max_global_plan_lookahead_dist: 1.5 
+       global_plan_viapoint_sep: 5.5
+       force_reinit_new_goal_dist: 1.0
+       force_reinit_new_goal_angular: 1.57
+       force_reinit_num_steps: 0
+       prefer_x_feedback: False
+       publish_ocp_results: False
+       
+     ## Solver settings
+     solver:
+       type: "ipopt"
+       ipopt:
+         iterations: 100
+         max_cpu_time: -1.0
+         ipopt_numeric_options:
+           tol: 1e-4
+         ipopt_string_options:
+           linear_solver: "mumps" 
+           hessian_approximation: "exact" # exact or limited-memory
+       lsq_lm:
+         iterations: 10
+         weight_init_eq: 2
+         weight_init_ineq: 2
+         weight_init_bounds: 2
+         weight_adapt_factor_eq: 1.5
+         weight_adapt_factor_ineq: 1.5
+         weight_adapt_factor_bounds: 1.5
+         weight_adapt_max_eq: 500
+         weight_adapt_max_ineq: 500
+         weight_adapt_max_bounds: 500   
     </rosparam>
   </node>
 
