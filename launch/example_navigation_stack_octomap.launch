@@ -35,7 +35,7 @@
 
     <!-- RViz -->
     <include file="$(dirname)/rviz.launch">
-        <arg name="rviz_config" value="$(dirname)/../rviz/example_navigation_stack.rviz"/>
+        <arg name="rviz_config" value="$(dirname)/../rviz/example_navigation_stack_octomap.rviz"/>
         <arg name="output" value="log"/>
     </include>
 

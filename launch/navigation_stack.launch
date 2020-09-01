@@ -219,9 +219,9 @@
       y_vels: '-0.3,-0.1,0.1,-0.3' # The strafing velocities that a holonomic robot will consider in meters/sec.
       
       # Goal Tolerance Parameters
-      yaw_goal_tolerance: 0.01745 # The tolerance in radians for the controller in yaw/rotation when achieving its goal 
-      xy_goal_tolerance: 0.125 # The tolerance in meters for the controller in the x and y distance when achieving a goal 
-      latch_xy_goal_tolerance: false # f goal tolerance is latched, if the robot ever reaches the goal xy location it will simply rotate in place, even if it ends up outside the goal tolerance while it is doing so.
+      yaw_goal_tolerance: 0.1745 # The tolerance in radians for the controller in yaw/rotation when achieving its goal 
+      xy_goal_tolerance: 0.25 # The tolerance in meters for the controller in the x and y distance when achieving a goal 
+      latch_xy_goal_tolerance: true # if goal tolerance is latched, if the robot ever reaches the goal xy location it will simply rotate in place, even if it ends up outside the goal tolerance while it is doing so.
 
       # Forward Simulation Parameters
       sim_time: 2 # The amount of time to forward-simulate trajectories in seconds 

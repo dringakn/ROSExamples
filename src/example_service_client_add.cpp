@@ -25,21 +25,33 @@
 #include <ros/ros.h>
 #include <ros_examples/addsrv.h>
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv)
+{
   ros::init(argc, argv, "example_service_client_add");
   ros::NodeHandle nh;
   ros::Rate rate(1);
   random_numbers::RandomNumberGenerator rng;
-  ros::ServiceClient client =
-      nh.serviceClient<ros_examples::addsrv>("addservice");
+  ros::ServiceClient client = nh.serviceClient<ros_examples::addsrv>("addservice");
 
-  while (ros::ok()) {
+  // Create a service client to connect to octomap_server on "octomap_binary"
+  // client.call(req,res) // actual call to the service
+  // client.exists() // true if advertised and available
+  // client.getService() // return the name of the service
+  // client.isPersistent() // persistent service
+  // client.isValid() // handle for persistent service
+  // client.waitForExistence(ros::Duration(-1)) // blocked wait
+
+  while (ros::ok())
+  {
     ros_examples::addsrv srv;
     srv.request.a = rng.uniformInteger(0, 99);
     srv.request.b = rng.uniformInteger(0, 99);
-    if (client.call(srv)) {
+    if (client.call(srv))
+    {
       ROS_INFO("Sum:%f", srv.response.result);
-    } else {
+    }
+    else
+    {
       ROS_INFO("Failed to call service");
     }
     ros::spinOnce();

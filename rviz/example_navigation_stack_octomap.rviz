@@ -4,9 +4,9 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Navigation1
         - /Navigation1/Footprint1/Status1
-      Splitter Ratio: 0.658823549747467
+        - /Navigation1/GlobalPlanner/GlobalPlan1
+      Splitter Ratio: 0.6941176652908325
     Tree Height: 313
   - Class: rviz/Selection
     Name: Selection
@@ -558,25 +558,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 8.653640747070312
+      Distance: 4.440489768981934
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -4.195868492126465
-        Y: -7.064571380615234
-        Z: 0.10000818967819214
+        X: 6.573366641998291
+        Y: -4.496967315673828
+        Z: 0.10000771284103394
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6147971153259277
+      Pitch: 0.994796633720398
       Target Frame: map
       Value: ThirdPersonFollower (rviz)
-      Yaw: 2.6585724353790283
+      Yaw: 5.871755599975586
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 106.41262817382812

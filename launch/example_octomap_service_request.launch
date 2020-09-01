@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Octomap service request example.
+    -->
+
+    <arg name="map_file" default="/home/office/cmu_ws/src/ros_examples/map/sample_map3.bt"/>
+    <arg name="output" default="screen"/>
+
+    <!-- Octomapping static server-->
+    <node pkg="octomap_server" type="octomap_server_static" name="octomap_server_static" args="$(arg map_file)" output="$(arg output)">
+        <param name="frame_id" value="map"/>
+    </node>
+
+    <node pkg="ros_examples" type="example_octomap_service_request" name="example_octomap_service_request" output="$(arg output)">
+        <param name="topic" value="/octomap_binary"/>
+    </node>
+
+    <!-- Adjust the tree depth in RViz for visulization. -->
+    <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_octomap_load.rviz" required="true"/> -->
+
+</launch>

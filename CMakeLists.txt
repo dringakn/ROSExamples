@@ -361,9 +361,13 @@ add_executable(example_pcl_frontiers_exploration src/example_pcl_frontiers_explo
 add_dependencies(example_pcl_frontiers_exploration ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_pcl_frontiers_exploration ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 
-add_executable(example_octomap_load src/example_octomap_load.cpp)
-add_dependencies(example_octomap_load ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(example_octomap_load ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+add_executable(example_octomap_load_file src/example_octomap_load_file.cpp)
+add_dependencies(example_octomap_load_file ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_octomap_load_file ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+
+add_executable(example_octomap_service_request src/example_octomap_service_request.cpp)
+add_dependencies(example_octomap_service_request ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_octomap_service_request ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 
 add_executable(example_octomap_create src/example_octomap_create.cpp)
 add_dependencies(example_octomap_create ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

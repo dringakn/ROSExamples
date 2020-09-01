@@ -25,6 +25,7 @@
         <arg name="frame_id" value="odom"/>
         <arg name="base_frame_id" value="base_link"/>
         <arg name="filter_ground" value="false"/>
+        <arg name="output" value="screen"/>
     </include>
 
     <!-- RViz -->
