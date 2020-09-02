@@ -2,14 +2,18 @@
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
     Description:
+    Usage: rosrun examples example_occupancy_grid_map 10 10 1 0
+           modify find_packages(... geometry_msgs nav_msgs ...)
 */
-// Usage: rosrun examples example_occupancy_grid_map 10 10 1 0
-// modify find_packages(... geometry_msgs nav_msgs ...)
 #include <geometry_msgs/Pose.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <random_numbers/random_numbers.h>
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
+
+// #include <nav_msgs/GetMap.h> // GetMap Service
+// #include <nav_msgs/SetMap.h> // SetMap Service
+// #include <nav_msgs/GetPlan.h> // GetPlan Service
 
 int main(int argc, char *argv[]) {
   ros::init(argc, argv, "example_occupancy_grid_map");
@@ -17,6 +21,7 @@ int main(int argc, char *argv[]) {
   ros::Publisher map_pub = n.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
   random_numbers::RandomNumberGenerator rng;
   nav_msgs::OccupancyGrid map;
+
   map.header.seq = 0;
   map.header.frame_id = "map";
   map.header.stamp = ros::Time::now();
