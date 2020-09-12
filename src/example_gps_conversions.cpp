@@ -1,3 +1,9 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description:
+    Notes:
+*/
 #include <bits/stdc++.h>
 #include <gps_conversions.h>
 #include <ros/ros.h>

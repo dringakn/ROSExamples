@@ -405,3 +405,11 @@ target_link_libraries(example_navigation_make_plan ${catkin_LIBRARIES})
 add_executable(example_gps_conversions src/example_gps_conversions.cpp)
 add_dependencies(example_gps_conversions ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_gps_conversions ${catkin_LIBRARIES})
+
+add_executable(example_trilateration_range_only_measurements src/example_trilateration_range_only_measurements.cpp)
+add_dependencies(example_trilateration_range_only_measurements ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_trilateration_range_only_measurements ${catkin_LIBRARIES})
+
+add_executable(example_rosparam_list src/example_rosparam_list.cpp)
+add_dependencies(example_rosparam_list ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_rosparam_list ${catkin_LIBRARIES})
