@@ -2,30 +2,35 @@
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
     Description:
-*/
+    Usage:
+      rosrun ros_examples example_occupancy_grid_map 10 10 0.5
+      The example_occupancy_grid_map node creates a random map and publishes it
+      on a latched topic and a transform between world->map frame. We can write
+      a node which can subscribe to the "map" topic.
 
-// rosrun map_server map_server map.yaml
-// or
-// rosrun ros_examples example_occupancy_grid_map 10 10 0.5
+      rosrun ros_examples example_occupancy_grid_map_service_request topic
+      file.txt The example_occupancy_grid_map_service_request node can be used
+      to obtain the map from the specified topic through a service request and
+      save it to a ACSII text file. service (to be implemented) to obtain the
+      map.
 
-// Above node publishes a latched map topic and a static_map service.
-// We can write a node which can subscribe to the "map" topic or call
-// the "static_map" service to obtain the map.
-//
-// Rviz can be used to specify the start and target point.
-// The RViz interface can be used to publish following topics:
-// 		/clicked_point [geometry_msgs/PointStamped]
-// 		/initialpose [geometry_msgs/PoseWithCovarianceStamped]
-// 		/move_base_simple/goal [geometry_msgs/PoseStamped]
-//
-// Modify find_packages(... geometry_msgs nav_msgs ...)
+      rosrun map_server map_server map.yaml
+      map_server can be used to load an image file and publish it on the map
+      topic. It also provides the saved map through a service call.
 
-/*
+
+    Rviz can be used to specify the start and target point.
+    The RViz interface can be used to publish following topics:
+        /clicked_point [geometry_msgs/PointStamped]
+        /initialpose [geometry_msgs/PoseWithCovarianceStamped]
+        /move_base_simple/goal [geometry_msgs/PoseStamped]
+
+    Modify find_packages(... geometry_msgs nav_msgs ...)
+
     Comparision: Map (1000x1000 @ 0.5m/px)
                 ExploredCells PathSteps
     Dijkstra    237346        462
     AStar       107489        458
-
 */
 
 #include "AStar.h"

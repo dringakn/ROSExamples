@@ -26,6 +26,7 @@ find_package(catkin REQUIRED COMPONENTS
   octomap_ros
   octomap_msgs
   pcl_ros
+  costmap_2d
   # pcl_msgs
 )
 
@@ -224,9 +225,17 @@ add_executable(example_structure_from_motion  src/example_structure_from_motion.
 add_dependencies(example_structure_from_motion ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_structure_from_motion  ${catkin_LIBRARIES}  ${OpenCV_LIBRARIES})
 
+add_executable(example_costmap_2d_basic  src/example_costmap_2d_basic.cpp)
+add_dependencies(example_costmap_2d_basic ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_costmap_2d_basic  ${catkin_LIBRARIES})
+
 add_executable(example_occupancy_grid_map  src/example_occupancy_grid_map.cpp)
 add_dependencies(example_occupancy_grid_map ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_occupancy_grid_map  ${catkin_LIBRARIES})
+
+add_executable(example_occupancy_grid_map_server  src/example_occupancy_grid_map_server.cpp)
+add_dependencies(example_occupancy_grid_map_server ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_occupancy_grid_map_server  ${catkin_LIBRARIES})
 
 add_executable(example_laser_scan_fake  src/example_laser_scan_fake.cpp)
 add_dependencies(example_laser_scan_fake ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -393,3 +402,6 @@ add_executable(example_navigation_make_plan src/example_navigation_make_plan.cpp
 add_dependencies(example_navigation_make_plan ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_navigation_make_plan ${catkin_LIBRARIES})
 
+add_executable(example_gps_conversions src/example_gps_conversions.cpp)
+add_dependencies(example_gps_conversions ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_gps_conversions ${catkin_LIBRARIES})
