@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="ros_examples" type="example_eigen_basics" name="example_eigen_basics" output="screen">
+
+    </node>
+
+</launch>
