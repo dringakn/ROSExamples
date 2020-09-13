@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="ros_examples" type="example_trilateration_range_only_measurements" name="example_trilateration_range_only_measurements" output="screen" required="true">
+        <param name="anchors" value="4"/>
+        <rosparam subst_value="true"> 
+            anchor1: [635427.39060620055534, 9066620.96023736149073, 2.06] 
+            anchor2: [635385.40304018917959 ,9066649.31403883732855, 2.06] 
+            anchor3: [635391.32790498214308 ,9066664.40144969709218, 2.06] 
+            anchor4: [635432.94408599426970 ,9066636.86363041959703, 2.06] 
+        </rosparam>
+    </node>
+
+</launch>
