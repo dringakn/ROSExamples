@@ -169,6 +169,10 @@ add_executable(example_tf  src/example_tf.cpp)
 add_dependencies(example_tf ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_tf  ${catkin_LIBRARIES})
 
+add_executable(example_tf_gps src/example_tf_gps.cpp)
+add_dependencies(example_tf_gps ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_tf_gps ${catkin_LIBRARIES})
+
 add_executable(example_vrep_two_wheels_balancing_robot  src/example_vrep_two_wheels_balancing_robot.cpp)
 add_dependencies(example_vrep_two_wheels_balancing_robot ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_vrep_two_wheels_balancing_robot  ${catkin_LIBRARIES})

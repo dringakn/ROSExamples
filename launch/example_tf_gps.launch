@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 
+        Publish the following static transforms at 10Hz;
+            map -> odom (0, 0, 0, 0, 0, 0)
+            odom -> robot (10, 0, 0, 0, 0, 0)
+            robot -> sensor (1, 0, 0, 0, 0, 0)
+        Publish the Odometry of the sensor in the world frame;
+            world -> sensor (111, 0, 0, 0, 0, 0)
+        Using the odometry calculate the transform between world->map
+    -->
+
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher_map_odom" args="0 0 0 0 0 0 map odom 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher_odom_robot" args="10 0 0 0 0 0 odom robot 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher_robot_sensor" args="1 0 0 0 0 0 robot sensor 100"/>
+    <node pkg="rostopic" type="rostopic" name="gps_mimic" args="pub -r 10 /gps nav_msgs/Odometry '{header: {stamp: now, frame_id: world}, child_frame_id: 'gps', pose: {pose: {position: [111, 0, 0], orientation: [0, 0, 0, 1]}}}'"/>
+
+    <!-- 
+        Subscribe to /gps odometry topic to calculate and publish a tf map->odom
+     -->
+    <node pkg="ros_examples" type="example_tf_gps" name="example_tf_gps" output="screen">
+
+    </node>
+
+</launch>
