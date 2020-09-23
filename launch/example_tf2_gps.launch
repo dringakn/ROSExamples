@@ -22,7 +22,7 @@
     <!-- 
         Subscribe to /gps odometry topic to calculate and publish a tf map->odom
      -->
-    <node pkg="ros_examples" type="example_tf_gps" name="example_tf_gps" output="screen">
+    <node pkg="ros_examples" type="example_tf2_gps" name="example_tf2_gps" output="screen">
 
     </node>
 
