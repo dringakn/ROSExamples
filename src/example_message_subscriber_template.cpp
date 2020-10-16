@@ -4,6 +4,7 @@
     Description: Subscribes to a templated message.
                  One class to subscribe multiple type of message.
                  Calculate the timeperiod of messages.
+                 Implement a message timeout timer.
                  Method to get available nodes, topics and master URI.
 */
 
@@ -19,11 +20,14 @@ template <typename T>
 class Sensor {
  private:
   ros::NodeHandle nh;              // Ros node handle
-  string strTopic;                 // Topic name
   ros::Time prevTime1, prevTime2;  // Time period calculation
   ros::Subscriber sub;             // Subscriber object
+  ros::Timer timer;                // Message timer
+  string strTopic;                 // Topic name
   int iExtraInfo;                  // Extra information
-  double timePeriod;               // Timer period
+  double realTimePeriod;           // Real Timer period
+  double expectedTimePeriod;       // Expected Timer period
+  bool timeOut;                    // Specify if message timeout occures
 
  protected:
   /**
@@ -31,12 +35,25 @@ class Sensor {
    *
    * @param msg
    */
-  void Callback(const typename T::ConstPtr& msg) {
+  void msgCallback(const typename T::ConstPtr& msg) {
+    timeOut = false;
     prevTime1 = prevTime2;
     prevTime2 = ros::Time::now();
-    timePeriod = (prevTime2 - prevTime1).toSec();
-    cout << strTopic << ": " << timePeriod << " sec" << endl;
+    realTimePeriod = (prevTime2 - prevTime1).toSec();
+    timer.setPeriod(ros::Duration(expectedTimePeriod), true);
+    cout << strTopic << ": " << realTimePeriod << " sec" << endl;
     cout << *msg << endl;
+  }
+
+  /**
+   * @brief The timer callback event
+   *
+   * @param event
+   */
+  void timerCallback(const ros::TimerEvent& event) {
+    timeOut = true;
+    cout << strTopic << ": "
+         << "Timeout: " << timeOut << endl;
   }
 
  public:
@@ -45,22 +62,34 @@ class Sensor {
    *
    * @param n: ROS node handle
    * @param topic: topic to subscribe
+   * @param timePeriod: message expected timer period
    */
-  Sensor(ros::NodeHandle& n, string topic) {
+  Sensor(ros::NodeHandle& n, string topic, double timePeriod = 1) {
     nh = n;
     strTopic = topic;
+    expectedTimePeriod = timePeriod;
     iExtraInfo = 0;
-    timePeriod = 0;
+    realTimePeriod = 0;
+    timeOut = false;
     prevTime1 = prevTime2 = ros::Time::now();
-    sub = nh.subscribe<T>(strTopic, 1, &Sensor::Callback, this);
+    sub = nh.subscribe<T>(strTopic, 1, &Sensor::msgCallback, this);
+    timer = nh.createTimer(ros::Duration(expectedTimePeriod),
+                           &Sensor::timerCallback, this, false, true);
   }
 
   /**
-   * @brief Get the Time Period between messages
+   * @brief Get the real time Period between messages
    *
    * @return double
    */
-  double getTimePeriod() const { return timePeriod; }
+  double getRealTimePeriod() const { return realTimePeriod; }
+
+  /**
+   * @brief Get the expected time Period between messages
+   *
+   * @return double
+   */
+  double getExpectedTimePeriod() const { return expectedTimePeriod; }
 
   /**
    * @brief Get the Subscirbed topic name
@@ -124,9 +153,9 @@ int main(int argc, char* argv[]) {
   cout.precision(5);
   ros::init(argc, argv, "example_message_subscriber_template");
   ros::NodeHandle nh;
-  Sensor<std_msgs::String> s1(nh, "/test1");
-  Sensor<std_msgs::Int32> s2(nh, "/test2");
-  Sensor<std_msgs::Float32> s3(nh, "/test3");
+  Sensor<std_msgs::String> s1(nh, "/test1", 1);
+  Sensor<std_msgs::Int32> s2(nh, "/test2", 1);
+  Sensor<std_msgs::Float32> s3(nh, "/test3", 1);
   vector<string> topics = s1.getTopics();
   vector<string> nodes = s1.getNodes();
   string host = s1.getHost();
