@@ -421,3 +421,11 @@ target_link_libraries(example_trilateration_range_only_measurements ${catkin_LIB
 add_executable(example_rosparam_list src/example_rosparam_list.cpp)
 add_dependencies(example_rosparam_list ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_rosparam_list ${catkin_LIBRARIES})
+
+add_executable(example_message_multiarray_pub src/example_message_multiarray_pub.cpp)
+add_dependencies(example_message_multiarray_pub ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_message_multiarray_pub ${catkin_LIBRARIES})
+
+add_executable(example_message_multiarray_sub src/example_message_multiarray_sub.cpp)
+add_dependencies(example_message_multiarray_sub ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_message_multiarray_sub ${catkin_LIBRARIES})
