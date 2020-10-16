@@ -433,3 +433,7 @@ target_link_libraries(example_message_multiarray_sub ${catkin_LIBRARIES})
 add_executable(example_message_subscriber_template src/example_message_subscriber_template.cpp)
 add_dependencies(example_message_subscriber_template ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_message_subscriber_template ${catkin_LIBRARIES})
+
+add_executable(example_message_timeout src/example_message_timeout.cpp)
+add_dependencies(example_message_timeout ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_message_timeout ${catkin_LIBRARIES})

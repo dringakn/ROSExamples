@@ -1,7 +1,7 @@
 /*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-    Description:
+    Description: Simple ROS timer callback.
 */
 #include <ros/ros.h>
 
@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
   ros::NodeHandle nh;
   ros::Rate rate(1000);
   // Timer callback is processed only when ros::spinOnce() is called
-  // Or the ros::spin() has the controll.
+  // Or the ros::spin() has the control.
   ros::Timer timer = nh.createTimer(ros::Duration(0.25), timer_cb, false);
   while (ros::ok()) {
     ros::spinOnce();
