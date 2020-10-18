@@ -8,6 +8,7 @@ find_package(catkin REQUIRED) # ROS build system
 find_package(OpenCV REQUIRED) # Open CV
 find_package(PCL REQUIRED) # PCL
 find_package(octomap REQUIRED) # OctoMap
+find_package(Boost REQUIRED) # Boost libraries
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
@@ -41,6 +42,7 @@ include_directories(
   ${Eigen_INCLUDE_DIRS}
   ${PCL_INCLUDE_DIRS}
   ${OCTOMAP_INCLUDE_DIRS}
+  ${BOOST_INCLUDE_DIRS}
 )
 
 ## Generate messages in the 'msg' folder
@@ -437,3 +439,8 @@ target_link_libraries(example_message_subscriber_template ${catkin_LIBRARIES})
 add_executable(example_message_timeout src/example_message_timeout.cpp)
 add_dependencies(example_message_timeout ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_message_timeout ${catkin_LIBRARIES})
+
+add_executable(example_boost_state_machine src/example_boost_state_machine.cpp)
+add_dependencies(example_boost_state_machine ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_boost_state_machine ${catkin_LIBRARIES})
+
