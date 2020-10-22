@@ -1,3 +1,8 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description: Boost start chart example.
+*/
 #include <ros/ros.h>
 
 #include <boost/statechart/custom_reaction.hpp>

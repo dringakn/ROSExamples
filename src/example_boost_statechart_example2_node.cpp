@@ -3,8 +3,11 @@
 ~/test_ws/devel/lib/test_boost_statechart_example/test_boost_statechart_example2_node
 -s SmStateMachine > uml.pu && plantuml uml.pu && xdg-open uml.png
 
-NOTE : The context<>() can't be used inside the constructor / destructors of the
-       state.
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description: Boost start chart example.
+    NOTE : The context<>() can't be used inside the constructor / destructors of
+           the state.
 
 */
 
