@@ -33,7 +33,18 @@ find_package(catkin REQUIRED COMPONENTS
   tf2_geometry_msgs
   tf2_sensor_msgs
   # pcl_msgs
+  rviz
+  std_msgs
+  roscpp
 )
+
+# RViz Display plugin related libraries
+message(STATUS "Using Qt5 based on the rviz_QT_VERSION: ${rviz_QT_VERSION}")
+find_package(Qt5 ${rviz_QT_VERSION} EXACT REQUIRED Core Widgets)
+set(QT_LIBRARIES Qt5::Widgets) # Likner error
+set(CMAKE_AUTOMOC ON) # Unknown symbol error
+
+# catkin_package() #RViz plugin
 
 include_directories(
   include 
@@ -78,6 +89,9 @@ catkin_package(
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
+add_library(example_rviz_display src/example_rviz_display.cpp)
+add_dependencies(example_rviz_display ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_rviz_display ${catkin_LIBRARIES} ${QT_LIBRARIES} )
 
 add_executable(example_simple_ros_cpp_node  src/example_simple_ros_cpp_node.cpp)
 add_dependencies(example_simple_ros_cpp_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
@@ -443,4 +457,8 @@ target_link_libraries(example_message_timeout ${catkin_LIBRARIES})
 add_executable(example_boost_state_machine src/example_boost_state_machine.cpp)
 add_dependencies(example_boost_state_machine ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_boost_state_machine ${catkin_LIBRARIES})
+
+add_executable(example_message_filter src/example_message_filter.cpp)
+add_dependencies(example_message_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_message_filter ${catkin_LIBRARIES})
 
