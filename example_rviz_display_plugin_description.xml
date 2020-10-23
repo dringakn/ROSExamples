@@ -1,0 +1,13 @@
+<!-- 
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+ -->
+
+<library path="libexample_rviz_display">
+  <class name="example_rviz_display/ExampleRvizDisplay"
+         type="example_rviz_display::ExampleRvizDisplay"
+         base_class_type="rviz::Display">
+    <description>Example Rviz Display</description>
+    <message_type>std_msgs/String</message_type>
+  </class>
+</library>
