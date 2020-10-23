@@ -15,8 +15,6 @@
 #include <message_filters/pass_through.h>
 #include <message_filters/simple_filter.h>
 #include <message_filters/subscriber.h>
-#include <message_filters/sync_policies/approximate_time.h>
-#include <message_filters/sync_policies/exact_time.h>
 #include <message_filters/synchronizer.h>
 #include <message_filters/time_sequencer.h>
 #include <message_filters/time_synchronizer.h>
