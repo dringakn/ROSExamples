@@ -1,8 +1,14 @@
 /**
  *    Author: Dr. Ing. Ahmad Kamal Nasir
  *    Email: dringakn@gmail.com
+ *    Note: The header file should be in the same folder as cpp, otherwise,
+ *          during runtime unknown symbol error occures.
  **/
-#include <example_rviz_display.h>
+#include "example_rviz_display.h"
+
+// Important: the name should match, otherwise, runtime error occurs.
+#include <pluginlib/class_list_macros.h>
+PLUGINLIB_EXPORT_CLASS(example_rviz_display::ExampleRvizDisplay, rviz::Display)
 
 namespace example_rviz_display {
 
@@ -19,7 +25,7 @@ ExampleRvizDisplay::ExampleRvizDisplay() {
   enumdata->addOptionStd("Three");
 
   statusdata = new rviz::StatusProperty("Status", "Status Property",
-                                        rviz::StatusLevel::Error, this);
+                                        rviz::StatusLevel::Ok, this);
 
   intdata = new rviz::IntProperty("int", 1, "int data", this,
                                   SLOT(updateCurrentState()));
@@ -90,7 +96,3 @@ void ExampleRvizDisplay::processMessage(const std_msgs::String::ConstPtr& msg) {
 }
 
 }  // namespace example_rviz_display
-
-// Important: the name should match, otherwise, runtime error occurs.
-#include <pluginlib/class_list_macros.h>
-PLUGINLIB_EXPORT_CLASS(example_rviz_display::ExampleRvizDisplay, rviz::Display)
