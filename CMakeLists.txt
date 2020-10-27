@@ -462,3 +462,11 @@ add_executable(example_message_filter src/example_message_filter.cpp)
 add_dependencies(example_message_filter ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_message_filter ${catkin_LIBRARIES})
 
+add_executable(example_octree_intersection src/example_octree_intersection.cpp)
+add_dependencies(example_octree_intersection ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_octree_intersection ${catkin_LIBRARIES})
+
+add_executable(example_filters src/example_filters.cpp)
+add_dependencies(example_filters ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_filters ${catkin_LIBRARIES})
+

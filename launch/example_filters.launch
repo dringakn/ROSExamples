@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node pkg="ros_examples" type="example_filters" name="example_filters" output="screen">
+        <rosparam command="load" file="$(find ros_examples)/cfg/filters/filters.yaml"/>
+    </node>
+
+</launch>

@@ -1,0 +1,9 @@
+MeanFilter:
+  name: MeanFilter
+  type: MeanFilterDouble
+  params: { number_of_observations: 10 }
+
+MedianFilter:
+  name: MedianFilter
+  type: MedianFilterDouble
+  params: { number_of_observations: 10 }
