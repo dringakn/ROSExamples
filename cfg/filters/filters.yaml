@@ -1,5 +1,13 @@
 update_rate: 100
 
+IncrementFilter:
+  name: IncrementFilter
+  type: IncrementFilterDouble
+
+MultiChannelIncrementFilter:
+  name: MultiChannelIncrementFilter
+  type: MultiChannelIncrementFilterDouble
+
 MeanFilter:
   name: MeanFilter
   type: MeanFilterDouble
@@ -41,7 +49,17 @@ SingleChannelLowPass:
     a: [1.0, -0.509525449494429]
     b: [0.245237275252786, 0.245237275252786]
 
-ThreeMultiChannelIncrements:
+OneIncrements:
+  - name: increment1
+    type: filters/IncrementFilterInt
+    
+TwoIncrements:
+  - name: increment1
+    type: filters/IncrementFilterInt
+  - name: increment2
+    type: filters/IncrementFilterInt
+
+ThreeIncrements:
   - name: increment1
     type: filters/IncrementFilterInt
   - name: increment2
@@ -49,7 +67,8 @@ ThreeMultiChannelIncrements:
   - name: increment3
     type: filters/IncrementFilterInt
 
-ThreeIncrements:
+
+ThreeMultiChannelIncrements:
   - name: increment1
     type: filters/IncrementFilterInt
   - name: increment2

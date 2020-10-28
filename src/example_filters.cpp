@@ -4,7 +4,13 @@
  *    Description:
  *          The following example shows how to create mean/median/digital
  *          filters (single/multi channels). Furthermore, how to concatenate
- *          different filters using chain.
+ *          different filters (e.g. increment filter) using chain.
+ *          Filter chain can be used to implement band-pass filter.
+ *          chain works with built-in filters such as
+ *            filters/IncrementFilterInt
+ *            filters/MeanFilterFloat
+ *            filters/MultiChannelMedianFilterDouble
+ *          or with dervied filters as plugin.
  *
  *    Note: Either use mean filter or increment filter as they have the same
  *          ifndef tag. Otherwise, modify the increment.h file to correct the
@@ -15,7 +21,8 @@
  *
  **/
 
-// #include <filters/increment.h>          // Pre-implemented ROS filter
+#include <filters/filter_chain.h>           // Filter chain
+#include <filters/increment.h>              // Pre-implemented ROS filter
 #include <filters/mean.h>                   // Pre-implemented ROS filter
 #include <filters/median.h>                 // Pre-implemented ROS filter
 #include <filters/transfer_function.h>      // Pre-implemented ROS filter
@@ -79,11 +86,27 @@ int main(int argc, char* argv[]) {
       new MultiChannelTransferFunctionFilter<double>();
   tfMFilter->configure(CHANNELS, "MultiChannelLowPass", nh);
 
+  // Increment filter for filter chain testing
+  FilterBase<double>* incFilter = new IncrementFilter<double>();
+  incFilter->configure("IncrementFilter", nh);
+
+  // Multi-chain Increment filter for filter chain testing
+  MultiChannelFilterBase<int>* incMFilter =
+      new MultiChannelIncrementFilter<int>();
+  incMFilter->configure(CHANNELS, "MultiChannelIncrementFilter", nh);
+
+  // Chain filter
+  FilterChain<int> chainFilter("int");
+  chainFilter.configure("ThreeIncrements", nh);
+
   // Topics and messages for publishing
+  ros::Publisher pubInc = nh.advertise<std_msgs::Float64>("/inc_filter", 1);
   ros::Publisher pubMean = nh.advertise<std_msgs::Float64>("/mean_filter", 1);
   ros::Publisher pubMedian =
       nh.advertise<std_msgs::Float64>("/median_filter", 1);
   ros::Publisher pubTF = nh.advertise<std_msgs::Float64>("/digital_filter", 1);
+  ros::Publisher pubMInc =
+      nh.advertise<std_msgs::Float32MultiArray>("/multi_inc_filter", 1);
   ros::Publisher pubMMean =
       nh.advertise<std_msgs::Float32MultiArray>("/multi_mean_filter", 1);
   ros::Publisher pubMMedian =
@@ -91,25 +114,30 @@ int main(int argc, char* argv[]) {
   ros::Publisher pubMTF =
       nh.advertise<std_msgs::Float32MultiArray>("/multi_digital_filter", 1);
 
-  std_msgs::Float64 msgMean, msgMedian, msgTF;
-  std_msgs::Float32MultiArray msgMMean, msgMMedian, msgMTF;
+  std_msgs::Float64 msgMean, msgMedian, msgTF, msgInc;
+  std_msgs::Float32MultiArray msgMMean, msgMMedian, msgMTF, msgMInc;
   msgMMean.layout.dim.push_back(std_msgs::MultiArrayDimension());
   msgMMedian.layout.dim.push_back(std_msgs::MultiArrayDimension());
   msgMTF.layout.dim.push_back(std_msgs::MultiArrayDimension());
+  msgMInc.layout.dim.push_back(std_msgs::MultiArrayDimension());
   msgMMean.layout.data_offset = msgMMedian.layout.data_offset =
-      msgMTF.layout.data_offset = 0;              // offset
-  msgMMean.layout.dim[0].label = "MeanFiltered";  // Array name
+      msgMTF.layout.data_offset = msgMInc.layout.data_offset = 0;  // offset
+  msgMMean.layout.dim[0].label = "MeanFiltered";                   // Array name
   msgMMedian.layout.dim[0].label = "MedianFiltered";
   msgMTF.layout.dim[0].label = "DigitalFiltered";
+  msgMInc.layout.dim[0].label = "IncFiltered";
   msgMMean.layout.dim[0].size = msgMMedian.layout.dim[0].size =
-      msgMTF.layout.dim[0].size = CHANNELS;  // Number of elements
+      msgMTF.layout.dim[0].size = msgMInc.layout.dim[0].size =
+          CHANNELS;  // Number of elements
   msgMMean.layout.dim[0].stride = msgMMedian.layout.dim[0].stride =
-      msgMTF.layout.dim[0].stride = CHANNELS * 4;  // Number of bytes
-  msgMMean.data.resize(CHANNELS);                  // Adjust array size
-  msgMMedian.data.resize(CHANNELS);                // Adjust array size
-  msgMTF.data.resize(CHANNELS);                    // Adjust array size
+      msgMTF.layout.dim[0].stride = msgMInc.layout.dim[0].stride =
+          CHANNELS * 4;              // Number of bytes
+  msgMInc.data.resize(CHANNELS);     // Adjust array size
+  msgMMean.data.resize(CHANNELS);    // Adjust array size
+  msgMMedian.data.resize(CHANNELS);  // Adjust array size
+  msgMTF.data.resize(CHANNELS);      // Adjust array size
 
-  double in, out;                    // single-channel filter input, output
+  double in, out;                    // single-channel filter input/output
   vector<double> inputs(CHANNELS);   // multi-channel filter inputs
   vector<double> outputs(CHANNELS);  // multi-channel filter outputs
 
@@ -155,6 +183,23 @@ int main(int argc, char* argv[]) {
       cout << "TF-" << i << ": " << inputs[i] << " -> " << outputs[i] << endl;
       msgMTF.data[i] = outputs[i];
     }
+
+    // Pass it to the increment filter ang get the incremented output (in+1)
+    incFilter->update(in, msgInc.data);
+    std::vector<int> vin(begin(inputs), end(inputs)), vout(CHANNELS);
+    incMFilter->update(vin, vout);
+    cout << "INC  : " << in << " -> " << msgInc.data << endl;
+    for (int i = 0; i < CHANNELS; i++) {
+      cout << "INC-" << i << ": " << vin[i] << " -> " << vout[i] << endl;
+      msgMInc.data[i] = vout[i];
+    }
+
+    // Pass it to the chain filter ang get the incremented output
+    int intIn = 1, intOut = 0;
+    chainFilter.update(intIn, intOut);
+    cout << "CHAIN  : " << intIn << " -> " << intOut << endl;
+    // chainFilter.update(in, out);
+    // cout << "CHAIN  : " << in << " -> " << out << endl;
 
     cout << endl;
 
