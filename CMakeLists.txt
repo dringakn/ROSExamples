@@ -36,7 +36,10 @@ find_package(catkin REQUIRED COMPONENTS
   rviz
   std_msgs
   roscpp
+  dynamic_reconfigure
 )
+
+generate_dynamic_reconfigure_options(cfg/example_node_parameters.cfg)
 
 # RViz Display plugin related libraries
 message(STATUS "Using Qt5 based on the rviz_QT_VERSION: ${rviz_QT_VERSION}")
@@ -470,3 +473,6 @@ add_executable(example_filters src/example_filters.cpp)
 add_dependencies(example_filters ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_filters ${catkin_LIBRARIES})
 
+add_executable(example_dynamic_reconfigure_rosparam src/example_dynamic_reconfigure_rosparam.cpp)
+add_dependencies(example_dynamic_reconfigure_rosparam ${PROJECT_NAME}_gencfg)
+target_link_libraries(example_dynamic_reconfigure_rosparam ${catkin_LIBRARIES})

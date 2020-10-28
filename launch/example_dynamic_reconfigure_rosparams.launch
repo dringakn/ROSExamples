@@ -1,0 +1,19 @@
+<launch>
+
+    <!-- Launch the dynamic_reconfigure server node -->
+    <node pkg="ros_examples" type="example_dynamic_reconfigure_rosparam" name="example_dynamic_reconfigure_rosparam" output="screen"/>
+
+    <!-- Set the dynamic_reconfigure parameters -->
+    <!-- <node pkg="dynamic_reconfigure" type="dynparam" name="dynparam" args="load /example $(find ros_examples)/cfg/params.yaml"> -->
+    <!-- <node pkg="dynamic_reconfigure" type="dynparam" name="dynparam" args="set_from_parameters /example">
+        <param name="min_ang" type="double" value="-1.0" />
+        <param name="max_ang" type="double" value="1.0" />
+        <param name="param" type="string" value="yoyo" />
+    </node> -->
+
+    <!-- Run the dynamic_reconfigure client -->
+    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure">
+
+    </node>
+
+</launch>

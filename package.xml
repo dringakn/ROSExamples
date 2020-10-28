@@ -10,6 +10,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <!-- Dynamic reconfigure  -->
+  <build_depend>dynamic_reconfigure</build_depend>
+  <exec_depend>dynamic_reconfigure</exec_depend>
+
   <!-- Custom message/service/action related -->
   <build_depend>message_generation</build_depend>
   <build_export_depend>message_generation</build_export_depend>
