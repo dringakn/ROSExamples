@@ -1,9 +1,58 @@
+update_rate: 100
+
 MeanFilter:
   name: MeanFilter
   type: MeanFilterDouble
-  params: { number_of_observations: 10 }
+  params: { number_of_observations: 10000 }
+
+MultiChannelMeanFilter:
+  name: MultiChannelMeanFilter
+  type: MultiChannelMeanFilterDouble
+  params: { number_of_observations: 10000 }
 
 MedianFilter:
   name: MedianFilter
   type: MedianFilterDouble
-  params: { number_of_observations: 10 }
+  params: { number_of_observations: 10000 }
+
+MultiChannelMedianFilter:
+  name: MultiChannelMedianFilter
+  type: MultiChannelMedianFilterDouble
+  params: { number_of_observations: 10000 }
+
+TransferFunction:
+  - name: transfer_function
+    type: MultiChannelTransferFunctionFilterDouble
+    params:
+      a: [1.0, -1.760041880343169, 1.182893262037831]
+      b: [0.018098933007514, 0.054296799022543, 0.054296799022543, 0.018098933007514]
+
+MultiChannelLowPass:
+  name: transferfunction_test
+  type: MultiChannelTransferFunctionFilter<double>
+  params:
+    a: [1.0, -0.509525449494429]
+    b: [0.245237275252786, 0.245237275252786]
+
+SingleChannelLowPass:
+  name: transferfunction_test
+  type: SingleChannelTransferFunctionFilter<double>
+  params:
+    a: [1.0, -0.509525449494429]
+    b: [0.245237275252786, 0.245237275252786]
+
+ThreeMultiChannelIncrements:
+  - name: increment1
+    type: filters/IncrementFilterInt
+  - name: increment2
+    type: filters/IncrementFilterInt
+  - name: increment3
+    type: filters/IncrementFilterInt
+
+ThreeIncrements:
+  - name: increment1
+    type: filters/IncrementFilterInt
+  - name: increment2
+    type: filters/IncrementFilterInt
+  - name: increment3
+    type: filters/IncrementFilterInt
