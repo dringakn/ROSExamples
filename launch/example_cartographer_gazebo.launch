@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 3D Mapping using a Gazebo simulated 
+                    differential drive mobile robot equipped 
+                    with 3D LIDAR. The google cartographer
+                    configurations are found in a lua file
+                    within cfg/cartographer_config folder.
+
+    -->
+
+    <!-- Gazebo -->
+    <include file="$(dirname)/gazebo.launch">
+        <arg name="use_sim_time" value="true"/>
+        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
+        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+    </include>
+
+    <!-- Google Cartographer -->
+    <include file="$(dirname)/cartographer.launch">
+        <arg name="cartographer_config_file" value="cartographer.lua"/>
+        <arg name="cartographer_ogm_cell_size" value="0.1"/>
+        <arg name="cartographer_imu_topic" value="/imu"/>
+        <arg name="cartographer_odom_topic" value="/odom"/>
+        <arg name="cartographer_point_cloud_topic" value="/velodyne_points"/>
+        <arg name="cartographer_odom_output_frame" value="cartographer_odom"/>
+        <arg name="robot_frame" value="base_link"/>
+    </include>
+
+    <!-- RViz -->
+    <include file="$(dirname)/rviz.launch">
+        <arg name="rviz_config" value="$(dirname)/../rviz/example_gazebo_cartographer.rviz"/>
+    </include>
+
+    <!-- Keyboard -->
+    <include file="$(dirname)/keyboard.launch">
+        <arg name="topic" value="/cmd_vel"/>
+    </include>
+
+
+</launch>

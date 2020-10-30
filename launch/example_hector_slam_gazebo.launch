@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 2D Occupancy Grid Mapping (OGM) with hector slam.
+                    sudo apt install ros-melodic-hector-slam 
+                    sudo apt install ros-melodic-hector-mapping 
+                    roslaunch ros_examples example_gazebo_hector_slam.launch
+    -->
+
+    <!-- Gazebo -->
+
+    <include file="$(dirname)/gazebo.launch">
+        <arg name="use_sim_time" value="true"/>
+        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
+        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+    </include>
+
+    <!-- Hector Mapping -->
+    <include file="$(dirname)/hector_slam.launch">
+        <arg name="tf_map_scanmatch_transform_frame_name" value="scanmatcher_frame"/>
+        <arg name="base_frame" value="base_link"/>
+        <arg name="odom_frame" value="odom"/>
+        <arg name="pub_map_odom_transform" value="true"/>
+        <arg name="scan_subscriber_queue_size" value="5"/>
+        <arg name="scan_topic" value="/scan"/>
+        <arg name="map_size" value="1024"/>
+    </include>
+
+    <!-- RViz -->
+    <include file="$(dirname)/rviz.launch">
+        <arg name="rviz_config" value="$(dirname)/../rviz/example_gazebo_hector_slam.rviz"/>
+    </include>
+
+    <!-- Keyboard -->
+    <include file="$(dirname)/keyboard.launch">
+        <arg name="topic" value="/cmd_vel"/>
+    </include>
+
+
+</launch>

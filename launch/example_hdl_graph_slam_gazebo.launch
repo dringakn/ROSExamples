@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: 3D Mapping using a Gazebo simulated 
+                    differential drive mobile robot equipped 
+                    with 3D LIDAR. The HDL Graph SLAM
+                    can be installed using:
+                    sudo apt-get install ros-melodic-geodesy ros-melodic-pcl-ros ros-melodic-nmea-msgs ros-melodic-libg2o
+                    cd ~/catkin_ws/src
+                    git clone https://github.com/koide3/ndt_omp.git
+                    git clone https://github.com/koide3/hdl_graph_slam.git
+                    cd cd ~/catkin_ws
+                    catkin build -j8
+    -->
+
+    <!-- Gazebo -->
+    <include file="$(dirname)/gazebo.launch">
+        <arg name="use_sim_time" value="true"/>
+        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
+        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+    </include>
+
+    <!-- HDL Graph SLAM -->
+    <include file="$(dirname)/hdl_graph_slam.launch">
+        <arg name="nodelet_manager" value="velodyne_nodelet_manager" />
+        <arg name="enable_floor_detection" value="false" />
+        <arg name="enable_gps" value="false" />
+        <arg name="enable_imu_acc" value="false" />
+        <arg name="enable_imu_ori" value="false" />
+        <arg name="points_topic" value="/velodyne_points" />
+    </include>
+
+    <!-- RViz -->
+    <include file="$(dirname)/rviz.launch">
+        <arg name="rviz_config" value="$(dirname)/../rviz/example_gazebo_hdl_graph_slam.rviz"/>
+    </include>
+
+
+    <!-- Keyboard -->
+    <include file="$(dirname)/keyboard.launch">
+        <arg name="topic" value="/cmd_vel"/>
+    </include>
+
+
+</launch>
