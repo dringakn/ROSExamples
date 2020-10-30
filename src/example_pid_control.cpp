@@ -2,10 +2,11 @@
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
     Description:
+    Notes:
+      sudo apt-get install ros-kinect-control-toolbox
+      modify find_package (... control_toolbox ...) in CMakeLists.txt of the
+      package.
 */
-// sudo apt-get install ros-kinect-control-toolbox
-// modify find_package (... control_toolbox ...) in CMakeLists.txt of the
-// package.
 
 #include <control_toolbox/pid.h>
 #include <ros/ros.h>
