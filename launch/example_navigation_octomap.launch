@@ -40,7 +40,19 @@
     </include>
 
     <!-- Navigation Stack -->
-    <include file="$(dirname)/navigation.launch">
+    <include file="$(dirname)/navigation_stack.launch">
+        <!-- <arg name="footprint" value="[[0.25, -0.15], [0.25, 0.15], [-0.15, 0.15], [-0.15, -0.15]]"/>
+        <arg name="robot_odom_frame" value="odom"/>
+        <arg name="robot_frame" value="base_link"/>
+        <arg name="map_topic" value="/projected_map"/>
+        <arg name="map_frame" value="odom"/>
+        <arg name="navigation_global_map_resolution" value="0.125"/>
+        <arg name="navigation_global_map_width" value="50"/>
+        <arg name="navigation_global_map_length" value="50"/>
+        <arg name="navigation_local_map_resolution" value="0.125"/>
+        <arg name="navigation_local_map_width" value="20"/>
+        <arg name="navigation_local_map_length" value="20"/> -->
+        <arg name="output" value="screen"/>
         <arg name="footprint" value="[[0.25, -0.15], [0.25, 0.15], [-0.15, 0.15], [-0.15, -0.15]]"/>
         <arg name="robot_odom_frame" value="odom"/>
         <arg name="robot_frame" value="base_link"/>
@@ -52,6 +64,7 @@
         <arg name="navigation_local_map_resolution" value="0.125"/>
         <arg name="navigation_local_map_width" value="20"/>
         <arg name="navigation_local_map_length" value="20"/>
+
     </include>
 
 </launch>

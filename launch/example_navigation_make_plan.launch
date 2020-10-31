@@ -4,11 +4,17 @@
     <!-- 
         Author: Dr. -Ing. Ahmad Kamal Nasir
         Email: dringakn@gmail.com
-        Desciption: Move base action client to make plan.
+        Desciption: Example move_base action client to make plan.
+                    Run the Simulator.
+                    Run the navigation.
+                    Run the make_plan client node to get a plan.
     -->
 
+    <include file="$(dirname)/simulator.launch" />
+    <include file="$(dirname)/navigation_stack.launch" />
+
     <node pkg="ros_examples" type="example_navigation_make_plan" name="example_navigation_make_plan" output="screen">
-        <param name="frame_id" value="odom"/>
+        <param name="frame_id" value="map"/>
         <param name="start_x" value="0"/>
         <param name="start_y" value="0"/>
         <param name="start_z" value="0.1"/>
@@ -16,7 +22,5 @@
         <param name="end_y" value="-50"/>
         <param name="end_z" value="0.1"/>
     </node>
-
-    <include file="$(dirname)/example_navigation_octomap.launch" />
 
 </launch>

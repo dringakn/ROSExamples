@@ -28,10 +28,10 @@ int main(int argc, char* argv[]) {
   ros::init(argc, argv, "example_navigation_make_plan");
   ros::NodeHandle nh("~");
 
-  // Node parameters
-  std::string frame_id;
+  // Node parameters on the parameter server
+  std::string frame_id;  // Map frame id
   nh.param<std::string>("frame_id", frame_id, "map");
-  double sx, sy, sz, ex, ey, ez;
+  double sx, sy, sz, ex, ey, ez;  // Start and Goal points
   nh.param<double>("start_x", sx, 0);
   nh.param<double>("start_y", sy, 0);
   nh.param<double>("start_z", sz, 0);
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
   nh.param<double>("end_y", ey, 0);
   nh.param<double>("end_z", ez, 0);
 
-  // Create a service client
+  // Create a service client ( Launch the move_base )
   ros::ServiceClient client_pl;
   client_pl = nh.serviceClient<nav_msgs::GetPlan>("/move_base/make_plan");
 
@@ -65,6 +65,7 @@ int main(int argc, char* argv[]) {
   // Create a response message and call
   nav_msgs::GetPlanResponse res;
 
+  // Randomly choose goal locations.
   while (client_pl.call(req, res)) {
     ROS_INFO_STREAM(res.plan.header.frame_id << "\t" << res.plan.poses.size());
     req.goal.pose.position.x = -50 + random() % 100;

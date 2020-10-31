@@ -6,61 +6,62 @@
         For testing:
         rosservice call /get_map "{}"
 
-        This package provides an implementation of a 2D costmap that takes in
-   sensor data from the world, builds a 2D or 3D occupancy grid of the data
-   (depending on whether a voxel based implementation is used), and inflates
-   costs in a 2D costmap based on the occupancy grid and a user specified
-   inflation radius. This package also provides support for map_server based
-   initialization of a costmap, rolling window based costmaps, and parameter
-   based subscription to and configuration of sensor topics.
-   Published Topics:
-   /obstacles (nav_msgs/GridCells)
-   /inflated_obstacles (nav_msgs/GridCells)
-   /unknown_space (nav_msgs/GridCells)
-   /voxel_grid (costmap_2d/VoxelGrid)
-   Subscribed Topics:
-   <point_cloud_topic> (sensor_msgs/PointCloud)
-   <laser_scan_topic> (sensor_msgs/LaserScan)
-   "map" (nav_msgs/OccupancyGrid)
-    Parameters:
-    /global_frame (string, default: "/map")
-    /robot_base_frame (string, default: "base_link")
-    /transform_tolerance (double, default: 0.2)
-    /update_frequency (double, default: 5.0)
-    /publish_frequency (double, default: 0.0)
-    Global costmap parameters:
-    /max_obstacle_height (double, default: 2.0)
-    /obstacle_range (double, default: 2.5)
-    /raytrace_range (double, default: 3.0)
-    /cost_scaling_factor (double, default: 10.0)
-    exp(-1.0 * cost_scaling_factor * (distance_from_obstacle -
-   inscribed_radius)) * (costmap_2d::INSCRIBED_INFLATED_OBSTACLE - 1), where
-   costmap_2d::INSCRIBED_INFLATED_OBSTACLE is currently 254. Robot description
-   parameters: /inflation_radius (double, default: 0.55) /footprint (list,
-   default: []) /robot_radius (double, default: 0.46) Sensor management
-   parameters: /observation_sources (string, default: "")
-    /<source_name>/topic (string, default: source_name)
-    /<source_name>/sensor_frame (string, default: "")
-    /<source_name>/observation_persistence (double, default: 0.0)
-    /<source_name>/expected_update_rate (double, default: 0.0)
-    /<source_name>/data_type (string, default: "PointCloud")
-    /<source_name>/clearing (bool, default: false)
-    /<source_name>/marking (bool, default: true)
-    /<source_name>/max_obstacle_height (double, default: 2.0)
-    /<source_name>/min_obstacle_height (double, default: 0.0)
-    /<source_name>/obstacle_range (double, default: 2.5)
-    /<source_name>/raytrace_range (double, default: 3.0)
-    Map management parameters:
-    /static_map (bool, default: true)
-    /rolling_window (bool, default: false)
-    /unknown_cost_value (int, default: "0")
-    /publish_voxel_map (bool, default: false)
-    /lethal_cost_threshold (int, default: 100)
-    /map_topic (string, default: "map")
-    ...
+    This package provides an implementation of a 2D costmap that takes in
+    sensor data from the world, builds a 2D or 3D occupancy grid of the data
+    (depending on whether a voxel based implementation is used), and inflates
+    costs in a 2D costmap based on the occupancy grid and a user specified
+    inflation radius. This package also provides support for map_server based
+    initialization of a costmap, rolling window based costmaps, and parameter
+    based subscription to and configuration of sensor topics.
 
-   Notes: modify
-   find_packages(... geometry_msgs nav_msgs ...)
+    Published Topics:
+      /obstacles (nav_msgs/GridCells)
+      /inflated_obstacles (nav_msgs/GridCells)
+      /unknown_space (nav_msgs/GridCells)
+      /voxel_grid (costmap_2d/VoxelGrid)
+    Subscribed Topics:
+      <point_cloud_topic> (sensor_msgs/PointCloud)
+      <laser_scan_topic> (sensor_msgs/LaserScan)
+      "map" (nav_msgs/OccupancyGrid)
+    Parameters:
+      /global_frame (string, default: "/map")
+      /robot_base_frame (string, default: "base_link")
+      /transform_tolerance (double, default: 0.2)
+      /update_frequency (double, default: 5.0)
+      /publish_frequency (double, default: 0.0)
+      Global costmap parameters:
+      /max_obstacle_height (double, default: 2.0)
+      /obstacle_range (double, default: 2.5)
+      /raytrace_range (double, default: 3.0)
+      /cost_scaling_factor (double, default: 10.0)
+      exp(-1.0 * cost_scaling_factor * (distance_from_obstacle -
+    inscribed_radius)) * (costmap_2d::INSCRIBED_INFLATED_OBSTACLE - 1), where
+    costmap_2d::INSCRIBED_INFLATED_OBSTACLE is currently 254. Robot description
+    parameters: /inflation_radius (double, default: 0.55) /footprint (list,
+    default: []) /robot_radius (double, default: 0.46) Sensor management
+    parameters: /observation_sources (string, default: "")
+      /<source_name>/topic (string, default: source_name)
+      /<source_name>/sensor_frame (string, default: "")
+      /<source_name>/observation_persistence (double, default: 0.0)
+      /<source_name>/expected_update_rate (double, default: 0.0)
+      /<source_name>/data_type (string, default: "PointCloud")
+      /<source_name>/clearing (bool, default: false)
+      /<source_name>/marking (bool, default: true)
+      /<source_name>/max_obstacle_height (double, default: 2.0)
+      /<source_name>/min_obstacle_height (double, default: 0.0)
+      /<source_name>/obstacle_range (double, default: 2.5)
+      /<source_name>/raytrace_range (double, default: 3.0)
+      Map management parameters:
+      /static_map (bool, default: true)
+      /rolling_window (bool, default: false)
+      /unknown_cost_value (int, default: "0")
+      /publish_voxel_map (bool, default: false)
+      /lethal_cost_threshold (int, default: 100)
+      /map_topic (string, default: "map")
+      ...
+
+    Notes: modify
+    find_packages(... geometry_msgs nav_msgs ...)
 
 */
 
@@ -76,6 +77,7 @@
 #include <nav_msgs/GetMap.h>            // Map Service
 #include <nav_msgs/OccupancyGrid.h>     // Map message
 #include <ros/ros.h>                    // ROS related stuff
+#include <tf/transform_listener.h>      // TF Listener
 
 /**
  * @brief Get the Occupancy Grid Map(OG)
@@ -116,15 +118,26 @@ int main(int argc, char *argv[]) {
   if (nh.param<std::string>("file_name", file_name, "delme.pgm"))
     nh.setParam("file_name", file_name);
   ROS_INFO("File name: %s", file_name.c_str());
-  // Generic implementation
-  // costmap_2d::LETHAL_OBSTACLE
-  // costmap_2d::FREE_SPACE
-  // costmap_2d::NO_INFORMATION
-  // costmap_2d::INSCRIBED_INFLATED_OBSTACLE
+
+  /*
+    While each cell in the costmap can have one of 255 different cost values,
+    the underlying structure that it uses is capable of representing only
+    three (costmap_2d::LETHAL_OBSTACLE, costmap_2d::FREE_SPACE,
+    costmap_2d::NO_INFORMATION). Specifically, each cell in the data structure
+    can be either free, occupied, or unknown. Each status has a special cost
+    value assigned to it upon projection into the costmap. Columns that have a
+    certain number of occupied cells (mark_threshold parameter) are assigned
+    a costmap_2d::LETHAL_OBSTACLE cost, columns that have a certain number of
+    unknown cells (unknown_threshold parameter) are assigned a
+    costmap_2d::NO_INFORMATION cost, and other columns are assigned a
+    costmap_2d::FREE_SPACE cost.
+    costmap_2d::INSCRIBED_INFLATED_OBSTACLE
+  */
+
   costmap_2d::Costmap2D costmap(100, 100, 0.1, 0, 0, costmap_2d::FREE_SPACE);
-  // costmap.cellDistance()
-  // costmap.convexFillCells()
-  // costmap.copyCostmapWindow()
+  // costmap.cellDistance(double world_distance);
+  // costmap.convexFillCells(vector<MapLocation>, vector<MapLocation>)
+  // costmap.copyCostmapWindow(map,x,y,dx,dy)
   // costmap.getCost()
   // costmap.getIndex()
   // costmap.getOriginX()
@@ -191,7 +204,7 @@ int main(int argc, char *argv[]) {
   ROS_INFO("cellDistance(1): %d", costmap.cellDistance(0.1));
 
   // ROS interface (parameters, nh, update etc) implemented
-  tf2_ros::Buffer tf;
+  // tf2_ros::Buffer tf(ros::Duration(10));
   costmap_2d::Costmap2DROS cmr("costmap", tf);
   cmr.start();
   cmr.setUnpaddedRobotFootprint(polygon1);
