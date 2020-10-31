@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Load a map file and test navigation planners.
+        Notes:
+            -In order to subsitute arguments inside rosparam tag set tag subst_value="true".
+            -In order to load the updated rqt_configure parameters, press the reset button in RViz.
+            -<<<Important>>> Global planner related parameters are not shown in the rqt_reconfigure. 
+            -<<<Important>>> The default_tolerance parameter is not implemented for GlobalPanner, 
+             however, it is implemented for NavfnROS.
+            -<<<Important>>> In order to consider the robot footprint into the path planning, it can 
+             be incorporated by the use of inflated costmap layer.
+            -GlobalPlanner "use_dijkstra" can be visulized by adding potential costmap in RViz.
+            -NavfnROS "potential" can be visulized by adding pointcloud in RViz.
+            -allow_unknown controls weather the plan traverse through unknown space.
+            -Orientation filter can be thought as a post-processing step to set the orientation of
+             intermediate waypoints orientation (None, Forward, Interpolate, Left, Right, Back)
+    -->
+
+    <arg name="radius" default="0.5"/>
+
+    <!-- Publish a static tf between base_link map -->
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="1 1 0 0 0 0 map base_link 100"/>
+
+    <!-- Load a sample map using map_server -->
+    <node pkg="map_server" type="map_server" name="map_server" args="$(find ros_examples)/map/revo_lds.yaml"/>
+
+    <!-- Run global and local planner -->
+    <node pkg="move_base" type="move_base" name="move_base">
+
+        <param name="max_planning_retries" value="0"/>
+        <!-- Global Planner-1 -->
+        <!-- <param name="base_global_planner" value="navfn/NavfnROS"/> -->
+        <!-- <remap from="move_base/NavfnROS/plan" to="global_planner/global_plan"/> -->
+        <rosparam ns="NavfnROS" subst_value="true">
+            visualize_potential: true
+            allow_unknown: true # plan may traverse through unknown space?
+            planner_window_x: 0
+            planner_window_y: 0
+            default_tolerance: $(arg radius) # Goal no further than distance
+        </rosparam>
+
+        <!-- Global Planner-2 -->
+        <param name="base_global_planner" value="global_planner/GlobalPlanner"/>
+        <remap from="move_base/GlobalPlanner/plan" to="global_planner/global_plan"/>
+        <rosparam ns="GlobalPlanner" subst_value="true">
+            use_dijkstra: false # A* or dijkistra
+            use_grid_path: true # Discretized/Gradient path 
+            use_quadratic: false # Quadratic/Potential calculator?
+            allow_unknown: true # plan may traverse through unknown space?
+            outline_map: false # set the map boundry as obstacle
+            old_navfn_behavior: false
+            publish_scale: 100
+            planner_window_x: 0
+            planner_window_y: 0
+            default_tolerance: $(arg radius) # Goal no further distance
+        </rosparam>
+        <!-- Global Planner-3 -->
+        <!-- <param name="base_global_planner" value="carrot_planner/CarrotPlanner"/> -->
+        <!-- <remap from="move_base/CarrotPlanner/plan" to="global_planner/global_plan"/> -->
+
+        <!-- Local Planner-1 -->
+        <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+        <remap from="move_base/TrajectoryPlannerROS/global_plan" to="local_planner/global_plan"/>
+        <remap from="move_base/TrajectoryPlannerROS/local_plan" to="local_planner/local_plan"/>
+
+        <!-- Local Planner-2 -->
+        <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/> -->
+        <!-- <remap from="move_base/DWAPlannerROS/global_plan" to="local_planner/global_plan"/> -->
+        <!-- <remap from="move_base/DWAPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+
+        <!-- Local Planner-3 -->
+        <!-- <param name="base_local_planner" value="eband_local_planner/EBandPlannerROS"/> -->
+        <!-- <remap from="move_base/EBandPlannerROS/global_plan" to="local_planner/global_plan"/> -->
+        <!-- <remap from="move_base/EBandPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+
+        <!-- Local Planner-4 -->
+        <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/> -->
+        <!-- <remap from="move_base/TebLocalPlannerROS/global_plan" to="local_planner/global_plan"/> -->
+        <!-- <remap from="move_base/TebLocalPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+
+        <!-- Local Planner-5 -->
+        <!-- <param name="base_local_planner" value="mpc_local_planner/MpcLocalPlannerROS"/> -->
+        <!-- <remap from="move_base/MpcLocalPlannerROS/global_plan" to="local_planner/global_plan"/> -->
+        <!-- <remap from="move_base/MpcLocalPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+
+        <!-- Costmap settings -->
+
+        <rosparam subst_value="true">
+            <!-- 
+                Static layer is used to load a static map, otherwise costmap 
+                need to be generated from the sensor readings. In case of static map
+                the costmap width and height parameters doesn't mattter.
+                The robot_radius seems to have no effect on the planned path.
+             -->
+            global_costmap:
+                robot_radius: $(arg radius) # Robot Footprint
+                inflation_radius: $(arg radius) # Static map obstacle inflation
+                plugins: 
+                    - {name: static_layer, type: "costmap_2d::StaticLayer"}
+                    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+            local_costmap:
+                robot_radius: $(arg radius) # Robot Footprint
+                inflation_radius: $(arg radius) # Static map obtacle inflation
+                plugins: 
+                    - {name: static_layer, type: "costmap_2d::StaticLayer"}
+                    - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+        </rosparam>
+    </node>
+
+    <!-- Run parameter reconfigure to change move_base default parametes -->
+    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure" required="true"/>
+
+    <!-- Run ROS Visulizer -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ros_examples)/rviz/example_planner_evaluation.rviz" required="true"/>
+
+    <!-- Move base goal status -->
+    <!-- <node pkg="rostopic" type="rostopic" name="rostopic" args="echo /move_base/status/status_list" launch-prefix="xterm -e" required="true"/> -->
+
+</launch>
