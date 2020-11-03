@@ -32,6 +32,7 @@
 
       For example: tf2::Vector3 v(p.x, p.y, p.z);
       v = t2  * v; p.x = v.x(); p.y = v.y(); p.z = v.z();
+    - The tfTransformListener functionality is implemented in tfBuffer in tf2.
     - The tf2_ros::TransformBroadcaster and tf2_ros::TransformLister are
       the tf2 equivlents of tf::TransformBroadcaster and tf::TransformListener
       respectively.
@@ -51,7 +52,6 @@
       is most likely to use.
     - geometry_msgs::Transform and geometry_msgs::TransformStamped messages
       can be used for tf related messages.
-    - The tfTransformListener functionality is implemented in tfBuffer in tf2.
     - The transform object for math operations are available in
       tf2/LinearMath/Transform
     - geometry_msgs::* including Transform messages can be directly printed
@@ -159,6 +159,19 @@ int main(int argc, char **argv)
     */
     cout << tfBuffer->lookupTransform("base_link", "map", ros::Time(0), ros::Duration(10)) << endl;
     cout << errorTF << endl;
+
+    /*
+      geometry_msgs::QuaternionStamped
+      geometry_msgs::PoseStamped
+      geometry_msgs::Vector3Stamped
+      geometry_msgs::TransformStamped
+      Tranform the geometry_msgs object from one frame to another.
+      Check canTranform before application.
+    */
+    geometry_msgs::Vector3Stamped v1, v2;
+    v1.header.frame_id = "base_link";
+    v2 = tfBuffer->transform<geometry_msgs::Vector3Stamped>(v1, "map", ros::Duration(0));
+    cout << v2 << endl;
 
     cout << "---" << endl;
     ros::spinOnce();
