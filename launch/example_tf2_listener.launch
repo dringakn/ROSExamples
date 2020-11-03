@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Load a sample costmap.
+    -->
+
+    <!-- Publish a static tf between base_link map -->
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="1 1 0 0 0 0 map base_link 100"/>
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher_1" args="0 0 0 0 0 0 base_link sensor 100"/>
+    <!-- <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="1 1 0 0 0 0 base_link map 100"/> -->
+
+    <!-- Load a sample map using map_server -->
+    <node pkg="map_server" type="map_server" name="map_server" args="$(find ros_examples)/map/revo_lds.yaml"/>
+
+    <node pkg="ros_examples" type="example_tf2_listener" name="example_tf2_listener" required="true" output="screen" ns="/"/>
+    <node pkg="ros_examples" type="example_tf2_listener2" name="example_tf2_listener2" required="true" output="screen" ns="/"/>
+
+</launch>
