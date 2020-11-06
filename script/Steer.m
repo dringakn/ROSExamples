@@ -1,8 +1,8 @@
 function res = Steer(pt2, pt1, eta)
-  if(Nearest(pt2,pt2)<=eta)
+  delta = pt2 - pt1;
+  if(norm(delta)<=eta)
     res = pt1;
   else
-    delta = pt2 - pt1;
     if (delta(1,1) == 0)
       res(1,1) = pt2(1,1);
       res(1,2) = pt2(1,2) + eta;
