@@ -4,10 +4,18 @@
     <!-- 
         Author: Dr. -Ing. Ahmad Kamal Nasir
         Email: dringakn@gmail.com
-        Desciption: Create a costmap.
+        Desciption: Create a costmap from OccupancyGrid message.
     -->
+
+    <node pkg="map_server" type="map_server" name="map_server" args="$(dirname)/../map/sample_map.yaml" output="screen">
+        <remap from="map" to="/map"/>
+        <param name="frame_id" value="map"/>
+    </node>
+
     <node pkg="ros_examples" type="example_costmap_2d_basic" name="example_costmap_2d_basic" required="true" output="screen" ns="/">
         <param name="file_name" value="/home/office/delme/costmap_2d.pgm"/>
     </node>
+
+    <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_rrt_ogm.rviz" required="true"/> -->
 
 </launch>

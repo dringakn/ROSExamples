@@ -65,12 +65,12 @@
 
 */
 
-#include <costmap_2d/cost_values.h>  // Definations of LETHAL, FREE, UNKNOWN
-#include <costmap_2d/costmap_2d.h>   // ROS costmap_2d
+#include <costmap_2d/cost_values.h>           // Definations of LETHAL, FREE, UNKNOWN
+#include <costmap_2d/costmap_2d.h>            // ROS costmap_2d
 #include <costmap_2d/costmap_2d_publisher.h>  // Costmap publisher node
-#include <costmap_2d/costmap_2d_ros.h>  // Costmap2dROS (complete handling)
-#include <costmap_2d/costmap_math.h>    // distanceToLine(), intersects
-#include <costmap_2d/footprint.h>       // Footprint math
+#include <costmap_2d/costmap_2d_ros.h>        // Costmap2dROS (complete handling)
+#include <costmap_2d/costmap_math.h>          // distanceToLine(), intersects
+#include <costmap_2d/footprint.h>             // Footprint math
 #include <costmap_2d/inflation_layer.h>
 #include <costmap_2d/testing_helper.h>  // Printing, counting, copy, layers
 #include <geometry_msgs/Pose.h>         // Map pose
@@ -78,6 +78,43 @@
 #include <nav_msgs/OccupancyGrid.h>     // Map message
 #include <ros/ros.h>                    // ROS related stuff
 #include <tf/transform_listener.h>      // TF Listener
+
+using namespace std;
+
+/**
+ * @brief Create a Costmap2D object from OccupancyGrid message.
+ *
+ * @param msg Pointer to OccupancyGrid message.
+ * @return costmap_2d::Costmap2D
+ */
+costmap_2d::Costmap2D createCostmap2D(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+{
+  costmap_2d::Costmap2D cm(msg->info.width, msg->info.height, msg->info.resolution, msg->info.origin.position.x,
+                           msg->info.origin.position.y, costmap_2d::FREE_SPACE);
+  std::copy(msg->data.begin(), msg->data.end(), cm.getCharMap());
+  // const unsigned int COLS = cm.getSizeInCellsX();
+  // for (int r = 0; r < msg->info.height; r++)
+  //   for (int c = 0; c < msg->info.width; c++)
+  //     cm.setCost(c, r, msg->data[r * COLS + c]);
+  return cm;
+}
+
+/**
+ * @brief Update the existing costmap with the OccupancyGrid message
+ *
+ * @param cm Reference to the costmap to be updated.
+ * @param msg Pointer to OccupancyGrid message.
+ */
+void updateCostmap2D(costmap_2d::Costmap2D& cm, const nav_msgs::OccupancyGrid::ConstPtr& msg)
+{
+  cm.resizeMap(msg->info.width, msg->info.height, msg->info.resolution, msg->info.origin.position.x,
+               msg->info.origin.position.y);
+  std::copy(msg->data.begin(), msg->data.end(), cm.getCharMap());
+  // const unsigned int COLS = cm.getSizeInCellsX();
+  // for (int r = 0; r < msg->info.height; r++)
+  //   for (int c = 0; c < msg->info.width; c++)
+  //     cm.setCost(c, r, msg->data[r * COLS + c]);
+}
 
 /**
  * @brief Get the Occupancy Grid Map(OG)
@@ -87,37 +124,55 @@
  * @return true if the service is available and map recieved
  * @return false otherewise
  */
-
-using namespace std;
-
-bool getMap(nav_msgs::OccupancyGrid &map, std::string topic = "/map") {
-  if (ros::service::waitForService(topic, ros::Duration(1))) {
-    ros::ServiceClient client =
-        ros::service::createClient<nav_msgs::GetMap>(topic);
-    if (client.exists()) {
+bool getMap(nav_msgs::OccupancyGrid& map, std::string topic = "/map")
+{
+  if (ros::service::waitForService(topic, ros::Duration(1)))
+  {
+    ros::ServiceClient client = ros::service::createClient<nav_msgs::GetMap>(topic);
+    if (client.exists())
+    {
       nav_msgs::GetMap::Request req;
       nav_msgs::GetMap::Response res;
-      if (client.call(req, res)) {
+      if (client.call(req, res))
+      {
         map = res.map;
-      } else {
+      }
+      else
+      {
         return false;
       }
-    } else {
+    }
+    else
+    {
       return false;
     }
     return true;
-  } else {
+  }
+  else
+  {
     return false;
   }
 }
 
-int main(int argc, char *argv[]) {
+// costmap_2d::Costmap2D costmap(100, 100, 0.1, 0, 0, costmap_2d::FREE_SPACE);  // non nullptr
+costmap_2d::Costmap2D costmap;  // nullptr
+void mapCallBack(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+{
+  updateCostmap2D(costmap, msg);
+}
+
+int main(int argc, char* argv[])
+{
+  cout.precision(1);
+
   ros::init(argc, argv, "example_costmap_2d_basic");
   ros::NodeHandle nh("~");
   std::string file_name;
   if (nh.param<std::string>("file_name", file_name, "delme.pgm"))
     nh.setParam("file_name", file_name);
   ROS_INFO("File name: %s", file_name.c_str());
+
+  ros::Subscriber subMap = nh.subscribe("/map", 1, mapCallBack);
 
   /*
     While each cell in the costmap can have one of 255 different cost values,
@@ -134,7 +189,6 @@ int main(int argc, char *argv[]) {
     costmap_2d::INSCRIBED_INFLATED_OBSTACLE
   */
 
-  costmap_2d::Costmap2D costmap(100, 100, 0.1, 0, 0, costmap_2d::FREE_SPACE);
   // costmap.cellDistance(double world_distance);
   // costmap.convexFillCells(vector<MapLocation>, vector<MapLocation>)
   // costmap.copyCostmapWindow(map,x,y,dx,dy)
@@ -157,14 +211,20 @@ int main(int argc, char *argv[]) {
   // costmap.worldToMapEnforceBounds(wx,wy,mx,my)
   // costmap.worldToMapNoBounds(wx,wy,mx,my)
 
-  // Save the current map to a pgm file
-  if (costmap.saveMap(file_name)) {
-    ROS_INFO("Map saved");
-  } else {
-    ROS_INFO("Map not saved.");
+  // Wait for the map to be available
+  ROS_INFO("Waiting for map...");
+  while (costmap.getCharMap() == nullptr)
+  {
+    ROS_INFO_THROTTLE(1, "Waiting for map...");
+    ros::spinOnce();
+    ros::Duration(0.1).sleep();
   }
-
-  cout.precision(1);
+  ROS_INFO("Map received.");
+  // Save the current map to a pgm file
+  if (costmap.saveMap(file_name))
+    ROS_INFO("Map saved to: %s", file_name.c_str());
+  else
+    ROS_INFO("Error saving map.");
 
   //   for (int i = 0; i < costmap.getSizeInCellsX(); ++i) {
   //     for (int j = 0; j < costmap.getSizeInCellsY(); ++j) {
@@ -174,45 +234,41 @@ int main(int argc, char *argv[]) {
   //   }
 
   vector<costmap_2d::MapLocation> polygon, polygon_cells;
-  polygon.push_back({0, 0});
-  polygon.push_back({0, 5});
-  polygon.push_back({5, 5});
-  polygon.push_back({5, 0});
+  polygon.push_back({ 0, 0 });
+  polygon.push_back({ 0, 5 });
+  polygon.push_back({ 5, 5 });
+  polygon.push_back({ 5, 0 });
   costmap.convexFillCells(polygon, polygon_cells);
-  polygon_cells.clear();
-  costmap.polygonOutlineCells(polygon, polygon_cells);
   ROS_INFO("convexFillCells(...): %d", polygon_cells.size());
   int idx = 0;
-  for (auto &&c : polygon_cells) {
+  for (auto&& c : polygon_cells)
     cout << idx++ << ": " << c.x << "," << c.y << endl;
-  }
+
+  polygon_cells.clear();
+  costmap.polygonOutlineCells(polygon, polygon_cells);
+  ROS_INFO("polygonOutlineCells(...): %d", polygon_cells.size());
+  idx = 0;
+  for (auto&& c : polygon_cells)
+    cout << idx++ << ": " << c.x << "," << c.y << endl;
+
   vector<geometry_msgs::Point> polygon1;
   geometry_msgs::Point pt;
   pt.x = 0, pt.y = 0, polygon1.push_back(pt);
   pt.x = 0, pt.y = 5, polygon1.push_back(pt);
   pt.x = 5, pt.y = 5, polygon1.push_back(pt);
   pt.x = 5, pt.y = 0, polygon1.push_back(pt);
-  costmap.setConvexPolygonCost(polygon1, costmap_2d::LETHAL_OBSTACLE);
-  costmap_2d::Costmap2D cm1;
-  if (costmap.copyCostmapWindow(cm1, 0, 0, 5, 5)) {
-    ROS_INFO("Success");
+  if (costmap.setConvexPolygonCost(polygon1, costmap_2d::LETHAL_OBSTACLE))
+    ROS_INFO("Success setConvexPolygonCost(...)");
+  else
+    ROS_INFO("Failed setConvexPolygonCost(...)");
 
-  } else {
-    ROS_INFO("Failed");
-  }
+  costmap_2d::Costmap2D cm1;
+  if (costmap.copyCostmapWindow(cm1, 0, 0, 5, 5))
+    ROS_INFO("Success copyCostmapWindow(...)");
+  else
+    ROS_INFO("Failed copyCostmapWindow(...)");
 
   ROS_INFO("cellDistance(1): %d", costmap.cellDistance(0.1));
-
-  // ROS interface (parameters, nh, update etc) implemented
-  // tf2_ros::Buffer tf(ros::Duration(10));
-  costmap_2d::Costmap2DROS cmr("costmap", tf);
-  cmr.start();
-  cmr.setUnpaddedRobotFootprint(polygon1);
-  ros::Rate loop_rate(1);
-  while (ros::ok()) {
-    ros::spinOnce();
-    loop_rate.sleep();
-  }
 
   return 0;
 }
