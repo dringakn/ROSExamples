@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- launch-prefix="xterm -e gdb -ex run args" -->
+    <node pkg="ros_examples" type="example_rrt" name="example_rrt" output="screen" required="false">
+        <param name="growth_rate" value="0.5"/>
+        <param name="marker_size" value="0.025"/>
+        <param name="rate_hz" value="1000"/>
+        <remap from="/move_base_simple/goal" to="/move_base_simple/goal"/>
+        <remap from="rrt" to="rrt"/>
+        <remap from="frontier" to="frontier"/>
+    </node>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_rrt.rviz" required="true"/>
+
+</launch>

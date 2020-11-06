@@ -490,3 +490,13 @@ target_link_libraries(example_tf2_listener ${catkin_LIBRARIES})
 
 add_executable(example_tf2_listener2 src/example_tf2_listener2.cpp)
 target_link_libraries(example_tf2_listener2 ${catkin_LIBRARIES})
+
+add_executable(example_rrt_exploration_ogm src/example_rrt_exploration_ogm.cpp)
+target_link_libraries(example_rrt_exploration_ogm ${catkin_LIBRARIES})
+
+add_executable(example_rrt src/example_rrt.cpp)
+target_link_libraries(example_rrt ${catkin_LIBRARIES})
+
+add_executable(example_visulization_marker_line_strip src/example_visulization_marker_line_strip.cpp)
+target_link_libraries(example_visulization_marker_line_strip ${catkin_LIBRARIES})
+
