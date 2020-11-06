@@ -12,6 +12,29 @@
             Install the planner if not already installed, e.g.
             sudo apt install ros-melodic-carrot-planner
             sudo apt install ros-melodic-teb-local-planner
+
+            -In order to subsitute arguments inside rosparam tag set tag subst_value="true".
+            -In order to load the updated rqt_configure parameters, press the reset button in RViz.
+            -<<<Important>>> Global planner related parameters are not shown in the rqt_reconfigure. 
+            -<<<Important>>> The default_tolerance parameter is not implemented for GlobalPanner, 
+             however, it is implemented for NavfnROS.
+            -<<<Important>>> In order to consider the robot footprint into the path planning, it can 
+             be incorporated by the use of inflated costmap layer.
+            -GlobalPlanner "use_dijkstra" can be visulized by adding potential costmap in RViz.
+            -NavfnROS "potential" can be visulized by adding pointcloud in RViz.
+            -allow_unknown controls weather the plan traverse through unknown space.
+            -Orientation filter can be thought as a post-processing step to set the orientation of
+             intermediate waypoints orientation (None, Forward, Interpolate, Left, Right, Back)
+
+            -The dwa_local_planner supports velocity constraints specified in x,y, and theta while 
+             the base_local_planner only supports constraints specified in x and theta. 
+            -There is some support for y velocities, but users are limited to a pre-specified list of valid y velocity commands. 
+            -This makes the dwa_local_planner a better choice for robots that are holonomic or pseudo-holonomic 
+             because it allows for better sampling of the velocity space.
+            -The dwa_local_planner is essentially a re-write of the base_local_planner's DWA (Dynamic Window Approach) option.
+            -Robots with low acceleration limits may wish to use Trajectory Rollout over DWA. 
+             This option is only available through the base_local_planner package.
+            -
     -->
 
   <arg name="output" default="screen"/>
@@ -41,9 +64,11 @@
     <param name="base_global_planner" value="navfn/NavfnROS"/>
     <remap from="move_base/NavfnROS/plan" to="global_planner/global_plan"/>
 
+
     <!-- Global Planner-2 -->
     <!-- <param name="base_global_planner" value="global_planner/GlobalPlanner"/> -->
     <!-- <remap from="move_base/GlobalPlanner/plan" to="global_planner/global_plan"/> -->
+>
 
     <!-- Global Planner-3 -->
     <!-- <param name="base_global_planner" value="carrot_planner/CarrotPlanner"/> -->
@@ -54,31 +79,33 @@
     <!-- Uncomment one of the Local planner and modify the settings accordingly -->
     <!-- *********************************************************************** -->
     <!-- Local Planner-1 -->
-    <!-- <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
     <remap from="move_base/TrajectoryPlannerROS/global_plan" to="local_planner/global_plan"/>
-    <remap from="move_base/TrajectoryPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+    <remap from="move_base/TrajectoryPlannerROS/local_plan" to="local_planner/local_plan"/>
 
     <!-- Local Planner-2 -->
-    <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/> -->
-    <!-- <remap from="move_base/DWAPlannerROS/global_plan" to="local_planner/global_plan"/> -->
-    <!-- <remap from="move_base/DWAPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+    <!-- <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS"/>
+    <remap from="move_base/DWAPlannerROS/global_plan" to="local_planner/global_plan"/>
+    <remap from="move_base/DWAPlannerROS/local_plan" to="local_planner/local_plan"/> -->
 
-    <!-- Local Planner-3 -->
-    <param name="base_local_planner" value="eband_local_planner/EBandPlannerROS"/>
+    <!-- Local Planner-3 (Good) -->
+    <!-- <param name="base_local_planner" value="eband_local_planner/EBandPlannerROS"/>
     <remap from="move_base/EBandPlannerROS/global_plan" to="local_planner/global_plan"/>
-    <remap from="move_base/EBandPlannerROS/local_plan" to="local_planner/local_plan"/>
+    <remap from="move_base/EBandPlannerROS/local_plan" to="local_planner/local_plan"/> -->
 
     <!-- Local Planner-4 -->
-    <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/> -->
-    <!-- <remap from="move_base/TebLocalPlannerROS/global_plan" to="local_planner/global_plan"/> -->
-    <!-- <remap from="move_base/TebLocalPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+    <!-- <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS"/>
+    <remap from="move_base/TebLocalPlannerROS/global_plan" to="local_planner/global_plan"/>
+    <remap from="move_base/TebLocalPlannerROS/local_plan" to="local_planner/local_plan"/> -->
 
     <!-- Local Planner-5 -->
-    <!-- <param name="base_local_planner" value="mpc_local_planner/MpcLocalPlannerROS"/> -->
-    <!-- <remap from="move_base/MpcLocalPlannerROS/global_plan" to="local_planner/global_plan"/> -->
-    <!-- <remap from="move_base/MpcLocalPlannerROS/local_plan" to="local_planner/local_plan"/> -->
+    <!-- <param name="base_local_planner" value="mpc_local_planner/MpcLocalPlannerROS"/>
+    <remap from="move_base/MpcLocalPlannerROS/global_plan" to="local_planner/global_plan"/>
+    <remap from="move_base/MpcLocalPlannerROS/local_plan" to="local_planner/local_plan"/> -->
 
-    <!-- move_base parameters -->
+    <!-- ****************************************************** -->
+    <!-- *************** move_base parameters ***************** -->
+    <!-- ****************************************************** -->
     <rosparam >
       aggressive_reset: {reset_distance: 1.84}    
       clearing_rotation_allowed: false
@@ -300,7 +327,7 @@
       goal_distance_bias: 1 # The weighting for how much the controller should attempt to reach its local goal, also controls speed
       occdist_scale: 0.02 # The weighting for how much the controller should attempt to avoid obstacles       
       forward_point_distance: 0.325 # The distance from the center point of the robot to place an additional scoring point, in meters
-      stop_time_buffer: 0.5 # The amount of time that the robot must stop before a collision in order for a trajectory to be considered valid in seconds.
+      stop_time_buffer: 1.0 # The amount of time that the robot must stop before a collision in order for a trajectory to be considered valid in seconds.
       scaling_speed: 0.25 # The absolute value of the velocity at which to start scaling the robot's footprint, in m/s 
       max_scaling_factor: 0.2 # The maximum factor to scale the robot's footprint by 
       publish_cost_grid: false
@@ -553,5 +580,7 @@
          weight_adapt_max_bounds: 500   
     </rosparam>
   </node>
+
+  <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure" />
 
 </launch>
