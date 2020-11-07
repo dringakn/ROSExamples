@@ -6,6 +6,7 @@
         Email: dringakn@gmail.com
         Desciption: Move base base local planner.
     -->
+    <arg name="rviz_file" default="example_navigation_base_local_planner.rviz"/>
 
     <!-- Gazebo -->
     <include file="$(dirname)/gazebo.launch">
@@ -28,7 +29,7 @@
 
     <!-- RViz -->
     <include file="$(dirname)/rviz.launch">
-        <arg name="rviz_config" value="$(dirname)/../rviz/example_navigation_base_local_planner.rviz"/>
+        <arg name="rviz_config" value="$(dirname)/../rviz/$(arg rviz_file)"/>
     </include>
 
     <!-- Keyboard -->
