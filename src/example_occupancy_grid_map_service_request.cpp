@@ -25,37 +25,45 @@ bool requestMap(ros::NodeHandle &, const char *);
 void readMap(const nav_msgs::OccupancyGrid &);
 void saveMapToFile(const char *);
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
   ros::init(argc, argv, "example_occupancy_grid_map_service_request");
   ros::NodeHandle n;
   const char *topicName = (argc >= 1) ? argv[1] : "static_map";
   const char *fileName = (argc >= 2) ? argv[2] : "grid.txt";
-  if (requestMap(n, topicName)) {
+  if (requestMap(n, topicName))
+  {
     ROS_INFO("Map request successful.");
     saveMapToFile(fileName);
     return 1;
-  } else {
+  }
+  else
+  {
     ROS_INFO("Map service call failed.");
     return -1;
   }
 }
 
-bool requestMap(ros::NodeHandle &nh, const char *topicName) {
-  while (!ros::service::waitForService(
-      topicName, 3000))  // Number of millisecons to wait, -1 for infinite
+bool requestMap(ros::NodeHandle &nh, const char *topicName)
+{
+  while (!ros::service::waitForService(topicName, 3000))  // Number of millisecons to wait, -1 for infinite
     ROS_INFO("Waiting for the map service (%s) to become available", topicName);
   ros::ServiceClient mapClient = nh.serviceClient<nav_msgs::GetMap>(topicName);
   nav_msgs::GetMap::Request req;
   nav_msgs::GetMap::Response res;
-  if (mapClient.call(req, res)) {
+  if (mapClient.call(req, res))
+  {
     readMap(res.map);
     return true;
-  } else {
+  }
+  else
+  {
     return false;
   }
 }
 
-void readMap(const nav_msgs::OccupancyGrid &map) {
+void readMap(const nav_msgs::OccupancyGrid &map)
+{
   width = map.info.width;
   height = map.info.height;
   resolution = map.info.resolution;
@@ -63,18 +71,22 @@ void readMap(const nav_msgs::OccupancyGrid &map) {
   grid.resize(height, vector<bool>(width));
   int idx = 0;
   for (size_t r = 0; r < height; r++)
-    for (size_t c = 0; c < width; c++) {
+    for (size_t c = 0; c < width; c++)
+    {
       // Occupied or Unknown(-1) are set as 1
       grid[r][c] = (map.data[idx] == 0) ? 0 : 1;
       idx++;
     }
 }
 
-void saveMapToFile(const char *fileName) {
+void saveMapToFile(const char *fileName)
+{
   ofstream gridFile;
   gridFile.open(fileName);
-  for (size_t r = 0; r < height; r++) {
-    for (size_t c = 0; c < width; c++) {
+  for (size_t r = 0; r < height; r++)
+  {
+    for (size_t c = 0; c < width; c++)
+    {
       gridFile << (grid[r][c]) ? "1" : "0";
     }
     gridFile << endl;

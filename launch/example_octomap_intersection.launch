@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Create an octomap.
+    -->
+    <node pkg="ros_examples" type="example_octree_intersection" name="example_octree_intersection" output="screen" ns="/"/>
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ros_examples)/rviz/example_octree_intersection.rviz" />
+</launch>
