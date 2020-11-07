@@ -1,10 +1,10 @@
 /*
-    Author: Dr. Ing. Ahmad Kamal Nasir
-    Email: dringakn@gmail.com
+	Author: Dr. Ing. Ahmad Kamal Nasir
+	Email: dringakn@gmail.com
 	Description:
 		Ray Tracing in 3D. The equation of line in 3D cann't be described by
 		slope-intercept form. Furthermore, the line-equation in slope-intercept
-		form has singularity(not defined) for vertical line.
+		form has singularity (undefined) for vertical line.
 		In 2D the implicith line equation can be derived from slope-intercept
 		form as follows:
 		y = m*x + d => y = (dy/dx)*x + d => dy*x - y*dx + d*dx = 0
@@ -79,33 +79,33 @@
 
 		*/
 
+#include <eigen3/Eigen/Dense>  //Matrix
 #include <iostream>
-#include <eigen3/Eigen/Dense>    //Matrix
 
 using namespace std;
 using namespace Eigen;
 
-int main() {
-	VectorXd Ps = Vector3d(0, 0, 0); // Ray start point
-	VectorXd Pe = Vector3d(2, 4, 3); // Ray end point
-	VectorXd Plane = Vector4d(2, 2, 2, -36); // 3D plane
-	VectorXd Pa = Vector3d(-2, 2, 2); // Polygon point1
-	VectorXd Pb = Vector3d(3, -3, -2); // Polygon point2
-	VectorXd Pc = Vector3d(4, 1, -4); // Polygon point3
-	VectorXd Pd = Vector3d(3, 3, -1); // Polygon point4
-	MatrixXd A = Matrix4d::Zero();
-	// Set-up set of linear equations
-	A << Plane(0), Plane(1), Plane(2), 0, 1, 0, 0, Ps(0) - Pe(0), 0, 1, .0, Ps(1) - Pe(1), 0, 0, 1, Ps(2) - Pe(2);
-	VectorXd b = Vector4d(-Plane(3), Ps(0), Ps(1), Ps(2));
-	cout << "A:" << endl << A << endl << "b:" << endl << b << endl;
-	cout << "Sol:" << endl << A.inverse() * b << endl;
-	A = Matrix3d::Zero();
-	A.col(0) = Pa;
-	A.col(1) = Pb;
-	A.col(2) = Pc;
-	b = Vector3d(1.4, 0.6, -1.2);
-	cout << "A:" << endl << A << endl << "b:" << endl << b << endl;
-	cout << "Sol:" << endl << A.inverse() * b << endl;
-	return 0;
+int main()
+{
+  VectorXd Ps = Vector3d(0, 0, 0);			// Ray start point
+  VectorXd Pe = Vector3d(2, 4, 3);			// Ray end point
+  VectorXd Plane = Vector4d(2, 2, 2, -36);  // 3D plane
+  VectorXd Pa = Vector3d(-2, 2, 2);			// Polygon point1
+  VectorXd Pb = Vector3d(3, -3, -2);		// Polygon point2
+  VectorXd Pc = Vector3d(4, 1, -4);			// Polygon point3
+  VectorXd Pd = Vector3d(3, 3, -1);			// Polygon point4
+  MatrixXd A = Matrix4d::Zero();
+  // Set-up set of linear equations
+  A << Plane(0), Plane(1), Plane(2), 0, 1, 0, 0, Ps(0) - Pe(0), 0, 1, .0, Ps(1) - Pe(1), 0, 0, 1, Ps(2) - Pe(2);
+  VectorXd b = Vector4d(-Plane(3), Ps(0), Ps(1), Ps(2));
+  cout << "A:" << endl << A << endl << "b:" << endl << b << endl;
+  cout << "Sol:" << endl << A.inverse() * b << endl;
+  A = Matrix3d::Zero();
+  A.col(0) = Pa;
+  A.col(1) = Pb;
+  A.col(2) = Pc;
+  b = Vector3d(1.4, 0.6, -1.2);
+  cout << "A:" << endl << A << endl << "b:" << endl << b << endl;
+  cout << "Sol:" << endl << A.inverse() * b << endl;
+  return 0;
 }
-
