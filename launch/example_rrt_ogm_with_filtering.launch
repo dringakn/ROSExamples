@@ -3,7 +3,7 @@
 
     <!-- launch-prefix="xterm -e gdb -ex run args" -->
 
-    <node pkg="ros_examples" type="example_rrt_exploration_ogm" name="example_rrt_exploration_ogm" output="screen" respawn="true">
+    <node pkg="ros_examples" type="example_rrt_exploration_ogm_with_filtering" name="example_rrt_exploration_ogm_with_filtering" output="screen" respawn="true">
         <param name="debug" value="false"/>
         <!-- eta must be greater than map resolution -->
         <param name="eta" value="0.5"/>
@@ -16,11 +16,13 @@
         <remap from="frontier" to="frontier"/>
     </node>
 
-    <node pkg="map_server" type="map_server" name="map_server" args="$(dirname)/../map/sample_map.yaml" output="screen">
+    <!-- <node pkg="map_server" type="map_server" name="map_server" args="$(dirname)/../map/sample_map.yaml" output="screen">
         <remap from="map" to="/map"/>
         <param name="frame_id" value="map"/>
-    </node>
+    </node> -->
 
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_rrt_ogm.rviz" required="true"/>
+    <include file="$(find ros_examples)/launch/simulator.launch">
+        <arg name="rviz_file" default="example_rrt_ogm_with_filtering.rviz"/>
+    </include>
 
 </launch>

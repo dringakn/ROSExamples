@@ -505,3 +505,6 @@ target_link_libraries(example_bresenhem_raster_line ${catkin_LIBRARIES})
 
 add_executable(example_occupancy_grid_map_roi src/example_occupancy_grid_map_roi.cpp)
 target_link_libraries(example_occupancy_grid_map_roi ${catkin_LIBRARIES})
+
+add_executable(example_rrt_exploration_ogm_with_filtering src/example_rrt_exploration_ogm_with_filtering.cpp)
+target_link_libraries(example_rrt_exploration_ogm_with_filtering ${catkin_LIBRARIES})
