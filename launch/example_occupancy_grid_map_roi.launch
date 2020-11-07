@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- launch-prefix="xterm -e gdb -ex run args" -->
+    <node pkg="ros_examples" type="example_occupancy_grid_map_roi" name="example_occupancy_grid_map_roi" output="screen" respawn="true">
+        <remap from="/map" to="/map"/>
+    </node>
+
+    <node pkg="map_server" type="map_server" name="map_server" args="$(dirname)/../map/sample_map.yaml" output="screen">
+        <remap from="map" to="/map"/>
+        <param name="frame_id" value="map"/>
+    </node>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_occupancy_grid_map_roi.rviz" required="true"/>
+
+</launch>

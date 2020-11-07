@@ -1,7 +1,7 @@
 image: revo_lds.pgm
-resolution: 0.050000
-origin: [-25.541028, -22.577104, 0.000000]
-negate: 0
-occupied_thresh: 0.65
-free_thresh: 0.196
-
+resolution: 0.05
+# origin: [-25.541028, -22.577104, 0.0]
+origin: [0, 0, 0]
+occupied_thresh: 0.65 # p>occupied_thresh -> 1 (100)
+free_thresh: 0.196 # p<free_thresh -> 0, otherwise output-1 (255)
+negate: 0 # negate=false -> black=1, white=0
