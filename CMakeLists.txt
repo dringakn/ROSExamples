@@ -500,3 +500,8 @@ target_link_libraries(example_rrt ${catkin_LIBRARIES})
 add_executable(example_visulization_marker_line_strip src/example_visulization_marker_line_strip.cpp)
 target_link_libraries(example_visulization_marker_line_strip ${catkin_LIBRARIES})
 
+add_executable(example_bresenhem_raster_line src/example_bresenhem_raster_line.cpp)
+target_link_libraries(example_bresenhem_raster_line ${catkin_LIBRARIES})
+
+add_executable(example_occupancy_grid_map_roi src/example_occupancy_grid_map_roi.cpp)
+target_link_libraries(example_occupancy_grid_map_roi ${catkin_LIBRARIES})
