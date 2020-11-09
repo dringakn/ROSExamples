@@ -508,3 +508,9 @@ target_link_libraries(example_occupancy_grid_map_roi ${catkin_LIBRARIES})
 
 add_executable(example_rrt_exploration_ogm_with_filtering src/example_rrt_exploration_ogm_with_filtering.cpp)
 target_link_libraries(example_rrt_exploration_ogm_with_filtering ${catkin_LIBRARIES})
+
+add_executable(example_rrt_exploration_ogm_with_filtering_and_assigner src/example_rrt_exploration_ogm_with_filtering_and_assigner.cpp)
+target_link_libraries(example_rrt_exploration_ogm_with_filtering_and_assigner ${catkin_LIBRARIES})
+
+add_executable(example_sensor_msg_pointcloud2 src/example_sensor_msg_pointcloud2.cpp)
+target_link_libraries(example_sensor_msg_pointcloud2 ${catkin_LIBRARIES})
