@@ -509,3 +509,9 @@ target_link_libraries(example_rrt_exploration_ogm_with_filtering_and_assigner ${
 
 add_executable(example_sensor_msg_pointcloud2 src/example_sensor_msg_pointcloud2.cpp)
 target_link_libraries(example_sensor_msg_pointcloud2 ${catkin_LIBRARIES})
+
+add_library(optimal_path_plugin src/optimal_path_plugin.cpp)
+target_link_libraries(optimal_path_plugin ${catkin_LIBRARIES})
+add_executable(optimal_path_node src/optimal_path_node.cpp)
+target_link_libraries(optimal_path_node ${catkin_LIBRARIES})
+

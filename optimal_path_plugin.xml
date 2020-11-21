@@ -1,0 +1,5 @@
+<library path="lib/liboptimal_path_plugin">
+    <class name="optimal_path" type="optimal_path_plugin::OptimalPath" base_class_type="optimal_path_base::OptimalPathBase">
+
+    </class>
+</library>

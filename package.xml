@@ -38,12 +38,13 @@
 
     <!-- 
       Example RViz display plugin to be loaded by rviz.
-      Note: rviz is specfied as the package tag not the current package name, ros_examples.
+      Note: rviz is specfied as the package tag not the current package name (ros_examples).
       It should correspond to the package where the base_class for the plugin lives. 
       In this case, the base class and the inherited plugin classes live in the same package, 
       but in most real-world situations this will not be the case such as rviz.
     -->
     <rviz plugin="${prefix}/example_rviz_display_plugin_description.xml"/>
+    <ros_examples plugin="${prefix}/optimal_path_plugin.xml"/>
 
   </export>
 
