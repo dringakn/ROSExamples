@@ -27,18 +27,27 @@ std::uniform_int_distribution<int> distUni;  // Update the min/max on map cb
 
 /**
  * @brief Occupancy Grid Map (OGM) topic callback.
+ *        Store the recieved map. Furthermore re-initialize the uniform random
+ *        number generator max/min values based upon the map size.
  *
  * @param msg Pointer to the OGM.
  */
-void mapCallBack(const nav_msgs::OccupancyGrid::ConstPtr& msg) {
+void mapCallBack(const nav_msgs::OccupancyGrid::ConstPtr& msg)
+{
   mapData = *msg;
   // Update the RNG domain: 721x779 = 561659
-  distUni = std::uniform_int_distribution<int>(
-      0, mapData.info.height * mapData.info.width);
+  distUni = std::uniform_int_distribution<int>(0, mapData.info.height * mapData.info.width);
   mapRecieved = true;
 }
 
-void rvizCallBack(const geometry_msgs::PointStamped::ConstPtr& msg) {}
+/**
+ * @brief RViz clicked point callback.
+ *
+ * @param msg Pointer to the clicked point.
+ */
+void rvizCallBack(const geometry_msgs::PointStamped::ConstPtr& msg)
+{
+}
 
 /**
  * @brief Nearest point in the list in term of Euclidean distance. It assumes
@@ -50,15 +59,17 @@ void rvizCallBack(const geometry_msgs::PointStamped::ConstPtr& msg) {}
  * @param min Minimum distance for search
  * @return Point3D
  */
-Point3D nearestNeighbor(vector<Point3D>& vertices, Point3D& pt,
-                        float min = FLT_MAX) {
+Point3D nearestNeighbor(vector<Point3D>& vertices, Point3D& pt, float min = FLT_MAX)
+{
   Point3D res;
   float dist;
-  for (auto&& v : vertices) {
+  for (auto&& v : vertices)
+  {
     dist = pcl::euclideanDistance(v, pt);
     if (dist <= FLT_EPSILON)  // 1e-5
       return v;
-    else if (dist < min) {
+    else if (dist < min)
+    {
       dist = min;
       res = v;
     }
@@ -74,17 +85,24 @@ Point3D nearestNeighbor(vector<Point3D>& vertices, Point3D& pt,
  * @param eta Growth rate parameter [0,1]
  * @return Point3D
  */
-Point3D Steer(Point3D& ptNear, Point3D& ptSample, float eta = 0.5) {
-  if (pcl::euclideanDistance(ptNear, ptSample) <= eta) {
+Point3D Steer(Point3D& ptNear, Point3D& ptSample, float eta = 0.5)
+{
+  if (pcl::euclideanDistance(ptNear, ptSample) <= eta)
+  {
     return ptSample;
-  } else {
+  }
+  else
+  {
     float dx = ptSample.x - ptNear.x;
     float dy = ptSample.y - ptNear.y;
     Point3D res;
-    if (dx == 0) {
+    if (dx == 0)
+    {
       res.x = ptNear.x;
       res.y = ptNear.y + eta;
-    } else {
+    }
+    else
+    {
       float m = dy / dx;
       res.x = ((dx) ? 1 : -1) * sqrt(pow(eta, 2) / (1 + pow(m, 2))) + ptNear.x;
       res.y = m * (res.x - ptNear.x) + ptNear.y;
@@ -123,10 +141,12 @@ Point3D Steer(Point3D& ptNear, Point3D& ptSample, float eta = 0.5) {
 //   return result;
 // }
 
-double entropy(const vector<int>& vec) {
+double entropy(const vector<int>& vec)
+{
   unordered_map<int, unsigned> counts;
 
-  for (uint32_t value : vec) {
+  for (uint32_t value : vec)
+  {
     ++counts[value];
   }
 
@@ -134,7 +154,8 @@ double entropy(const vector<int>& vec) {
   const double n = vec.size();
 
   // Entropy: -1 * Sum ( p(x) * log(p(x)) )
-  for (auto it = counts.begin(); it != counts.end(); ++it) {
+  for (auto it = counts.begin(); it != counts.end(); ++it)
+  {
     double p = it->second / n;
     sum += p * log2(p);
   }
@@ -142,7 +163,8 @@ double entropy(const vector<int>& vec) {
   return -1.0 * sum;
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
   cout.precision(5);
   // Initialize the node
   ros::init(argc, argv, "example_rrt_exploration2d");
@@ -165,8 +187,7 @@ int main(int argc, char* argv[]) {
   // Initialize the publishers
   ros::Publisher pubFrontier =  // Newly detected frontier
       nh.advertise<geometry_msgs::PointStamped>(ns + "/frontier", 1);
-  ros::Publisher pubRRT =
-      nh.advertise<visualization_msgs::Marker>(ns + "/rrt", 1, true);
+  ros::Publisher pubRRT = nh.advertise<visualization_msgs::Marker>(ns + "/rrt", 1, true);
   ros::Publisher pubPC = nh.advertise<pcl::PCLPointCloud2>("/pc", 1);
 
   // Set the update rate
@@ -174,7 +195,8 @@ int main(int argc, char* argv[]) {
 
   // Wait for the map to be available
   ROS_INFO("Waiting for map...");
-  while (!mapRecieved) {
+  while (!mapRecieved)
+  {
     ros::spinOnce();
     rate.sleep();
   }
@@ -186,8 +208,10 @@ int main(int argc, char* argv[]) {
   PointCloud::Ptr cloud(new PointCloud());
   Point3D pt;
   pt.z = 0;  // Same z for the OGM
-  for (int y = 0; y < mapData.info.height; y++) {
-    for (int x = 0; x < mapData.info.width; x++) {
+  for (int y = 0; y < mapData.info.height; y++)
+  {
+    for (int x = 0; x < mapData.info.width; x++)
+    {
       pt.intensity = mapData.data[y * mapData.info.width + x];
       // cout << x << ',' << y << ',' << pt.intensity << endl;
       // intensity: -1=Unknown , 0=Free, 100=Obstacle
@@ -195,7 +219,8 @@ int main(int argc, char* argv[]) {
       // Unknown: 413348 (73.59%)
       // Free:    137739 (24.52%)
       // Obstacle:10572  (01.88%)
-      if (pt.intensity != 100) {
+      if (pt.intensity != 100)
+      {
         pt.x = x * mapData.info.resolution;
         pt.y = y * mapData.info.resolution;
         cloud->points.push_back(pt);
@@ -222,15 +247,18 @@ int main(int argc, char* argv[]) {
   vector<int> indices;
   vector<float> sqr_dist;
   vector<int> data;
-  for (auto&& pt : cloud->points) {
+  for (auto&& pt : cloud->points)
+  {
     indices.clear();
     sqr_dist.clear();
-    if (kdtree.radiusSearch(pt, 0.25, indices, sqr_dist) > 0) {
+    if (kdtree.radiusSearch(pt, 0.25, indices, sqr_dist) > 0)
+    {
       data.clear();
       for (int i = 0; i < indices.size(); i++)
         data.push_back((int)(cloud->points[indices[i]].intensity));
       double inf = entropy(data);
-      if (inf > 0.1) {
+      if (inf > 0.1)
+      {
         filtered->points.push_back(pt);
         // cout << inf << '\t' << data.size() << endl;
       }
@@ -254,7 +282,8 @@ int main(int argc, char* argv[]) {
   // // vector.erase(pos|range) removes the element or range and update size.
 
   // Check for the initialization
-  if (init_exploration > 0) {
+  if (init_exploration > 0)
+  {
     //   // Get a random free cell as starting point and remove it from sample
     //   list for (int idx = 0; idx < sample.size(); ++idx) {
     //     if (cloud->points[sample[idx]].intensity == 0) {  // Free space
@@ -266,7 +295,8 @@ int main(int argc, char* argv[]) {
   }
 
   ROS_INFO("Waiting for start location ...");
-  while (init_exploration < 0) {
+  while (init_exploration < 0)
+  {
     // pubRRT.publish(explorationROI);
     ros::spinOnce();
     rate.sleep();
@@ -274,7 +304,8 @@ int main(int argc, char* argv[]) {
   ROS_INFO("Start location recieved.");
 
   // Start processing
-  while (ros::ok()) {
+  while (ros::ok())
+  {
     if (viewer.wasStopped(50))  // Check if the window is closed
       ros::shutdown();          // Shutdown the node
 

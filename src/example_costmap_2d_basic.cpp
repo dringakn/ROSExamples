@@ -234,6 +234,7 @@ int main(int argc, char* argv[])
   //   }
 
   vector<costmap_2d::MapLocation> polygon, polygon_cells;
+  // Polygon coordinates are in the map coordinates
   polygon.push_back({ 0, 0 });
   polygon.push_back({ 0, 5 });
   polygon.push_back({ 5, 5 });
