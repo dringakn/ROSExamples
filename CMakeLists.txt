@@ -477,11 +477,6 @@ add_executable(example_dynamic_reconfigure_rosparam src/example_dynamic_reconfig
 add_dependencies(example_dynamic_reconfigure_rosparam ${PROJECT_NAME}_gencfg)
 target_link_libraries(example_dynamic_reconfigure_rosparam ${catkin_LIBRARIES})
 
-add_library(example_plugin src/example_plugin.cpp include/example_plugin.hpp)
-add_executable(example_pluginlib_node src/example_pluginlib_node.cpp)
-add_dependencies(example_pluginlib_node ${PROJECT_NAME}_gencfg)
-target_link_libraries(example_pluginlib_node ${catkin_LIBRARIES})
-
 add_executable(example_costmap_2dros src/example_costmap_2dros.cpp)
 target_link_libraries(example_costmap_2dros ${catkin_LIBRARIES})
 
