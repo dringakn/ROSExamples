@@ -4,15 +4,18 @@
     <!-- 
         Author: Dr. -Ing. Ahmad Kamal Nasir
         Email: dringakn@gmail.com
-        Desciption: Move base base local planner.
+        Desciption: Run Gazebo simulator with specified robot and world model.
+        Note: Use Gazebo building editor to create/save a world model.
     -->
     <arg name="rviz_file" default="example_navigation_base_local_planner.rviz"/>
+    <arg name="world_file" default="$(dirname)/../world/willow_grage.world"/>
+    <arg name="robot_model" default="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
 
     <!-- Gazebo -->
     <include file="$(dirname)/gazebo.launch">
         <arg name="use_sim_time" value="true"/>
-        <arg name="world_file" value="$(dirname)/../world/willow_grage.world"/>
-        <arg name="robot_model" value="$(dirname)/../urdf/test_snippets.urdf.xacro"/>
+        <arg name="world_file" value="$(arg world_file)"/>
+        <arg name="robot_model" value="$(arg robot_model)"/>
         <arg name="headless" value="true"/>
         <arg name="gui" value="false"/>
     </include>
