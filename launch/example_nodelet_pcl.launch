@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Note: use rqt_reconfigure to adjust the filter parameters at run time.
+        Desciption: Filter pointcloud using pcl nodelet.
+            pcl/BoundaryEstimation
+            pcl/FPFHEstimation
+            pcl/FPFHEstimationOMP
+            pcl/SHOTEstimation
+            pcl/SHOTEstimationOMP
+            pcl/MomentInvariantsEstimation
+            pcl/NormalEstimationOMP
+            pcl/NormalEstimationTBB
+            pcl/NormalEstimation
+            pcl/PFHEstimation
+            pcl/PrincipalCurvaturesEstimation
+            pcl/VFHEstimation
+            pcl/PassThrough
+            pcl/VoxelGrid
+            pcl/ProjectInliers
+            pcl/ExtractIndices
+            pcl/StatisticalOutlierRemoval
+            pcl/RadiusOutlierRemoval
+            pcl/CropBox
+            pcl/NodeletMUX
+            pcl/NodeletDEMUX
+            pcl/PCDReader
+            pcl/BAGReader
+            pcl/PCDWriter
+            pcl/PointCloudConcatenateFieldsSynchronizer
+            pcl/PointCloudConcatenateDataSynchronizer
+            pcl/ExtractPolygonalPrismData
+            pcl/EuclideanClusterExtraction
+            pcl/SACSegmentationFromNormals
+            pcl/SACSegmentation
+            pcl/SegmentDifferences
+            pcl/MovingLeastSquares
+            pcl/ConvexHull2D
+    -->
+
+    <!-- Robot simulator -->
+    <include file="$(find ros_examples)/launch/simulator.launch">
+        <arg name="rviz_file" value="example_nodelet_pcl.rviz"/>
+    </include>
+
+    <!-- Nodelet manager -->
+    <arg name="nodelet_manager" default="nodelet_manager"/>
+    <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager)" args="manager" output="screen">
+    </node>
+
+    <!-- pcl/VoxelGrid Nodelet -->
+    <node pkg="nodelet" type="nodelet" name="nodelet1" args="load pcl/VoxelGrid $(arg nodelet_manager)" output="screen">
+        <remap from="~input" to="/velodyne_points" />
+        <remap from="~output" to="/velodyne_points_filtered" />
+        <remap from="~indices" to="~indices" />
+        <rosparam>
+            filter_field_name: z
+            filter_limit_min: -1.0
+            filter_limit_max: 1.0
+            filter_limit_negative: False # Set to true if we want to return the data outside [filter_limit_min; filter_limit_max]. 
+            leaf_size: 0.2
+            # input_frame: # The input TF frame the data should be transformed into before processing, if input.header.frame_id is different. 
+            # output_frame: # The output TF frame the data should be transformed into after processing, if input.header.frame_id is different
+        </rosparam>
+    </node>
+
+    <!-- pcl/BoundaryEstimation Nodelet -->
+    <node pkg="nodelet" type="nodelet" name="nodelet2" args="load pcl/BoundaryEstimation $(arg nodelet_manager)" output="screen">
+        <remap from="~input" to="/velodyne_points" />
+        <remap from="~output" to="/velodyne_points_bondest" />
+        <remap from="~indices" to="~indices" />
+        <rosparam>
+            k_search: 0
+            radius_search: 0.015
+            spatial_locator: 0 # # Set the spatial locator. Possible values are: 0 (ANN), 1 (FLANN), 2 (organized)
+        </rosparam>
+    </node>
+
+</launch>
