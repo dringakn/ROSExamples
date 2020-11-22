@@ -1,6 +1,12 @@
 <?xml version="1.0"?>
 <launch>
 
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Load an OGM as pointcloud and find frontiers.
+    -->
+
     <!-- Nodelet manager -->
     <arg name="nodelet_manager" default="nodelet_manager"/>
     <node pkg="nodelet" type="nodelet" name="$(arg nodelet_manager)" args="manager" output="screen">
