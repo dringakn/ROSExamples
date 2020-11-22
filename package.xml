@@ -33,7 +33,7 @@
   <exec_depend>libqt5-core</exec_depend>
   <exec_depend>libqt5-gui</exec_depend>
   <exec_depend>libqt5-widgets</exec_depend>
-
+  <depend>nodelet</depend>
   <export>
 
     <!-- 
@@ -43,8 +43,9 @@
       In this case, the base class and the inherited plugin classes live in the same package, 
       but in most real-world situations this will not be the case such as rviz.
     -->
-    <rviz plugin="${prefix}/example_rviz_display_plugin_description.xml"/>
-    <ros_examples plugin="${prefix}/optimal_path_plugin.xml"/>
+    <nodelet plugin="${prefix}/example_nodelet_plugin.xml"/>
+    <ros_examples plugin="${prefix}/example_optimal_path_plugin.xml"/>
+    <rviz plugin="${prefix}/example_rviz_display_plugin.xml"/>
 
   </export>
 

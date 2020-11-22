@@ -1,0 +1,8 @@
+<library path="lib/libnodelet_example">
+    <!-- name: namespace/class -->
+    <class name="nodelet_example/Hello" type="nodelet_example::Hello" base_class_type="nodelet::Nodelet">
+        <description>
+            A nodelet to republish a std_msgs::String from msg_in to msg_out.
+        </description>
+    </class>
+</library>

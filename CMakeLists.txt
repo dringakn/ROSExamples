@@ -37,6 +37,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   roscpp
   dynamic_reconfigure
+  nodelet
 )
 
 generate_dynamic_reconfigure_options(cfg/example_node_parameters.cfg)
@@ -514,4 +515,7 @@ add_library(optimal_path_plugin src/optimal_path_plugin.cpp)
 target_link_libraries(optimal_path_plugin ${catkin_LIBRARIES})
 add_executable(optimal_path_node src/optimal_path_node.cpp)
 target_link_libraries(optimal_path_node ${catkin_LIBRARIES})
+
+add_library(nodelet_example src/example_nodelet.cpp)
+target_link_libraries(nodelet_example ${catkin_LIBRARIES})
 
