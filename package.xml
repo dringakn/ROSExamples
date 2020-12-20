@@ -34,6 +34,26 @@
   <exec_depend>libqt5-gui</exec_depend>
   <exec_depend>libqt5-widgets</exec_depend>
   <depend>nodelet</depend>
+
+  <build_depend>octomap</build_depend>
+  <build_depend>random_numbers</build_depend>
+  <build_depend>pcl_conversions</build_depend>
+  <build_depend>control_toolbox</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>move_base_msgs</build_depend>
+  <build_depend>octomap_ros</build_depend>
+  <build_depend>octomap_msgs</build_depend>
+  <build_depend>pcl_ros</build_depend>
+  <build_depend>costmap_2d</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>tf2_ros</build_depend>
+  <build_depend>tf2_geometry_msgs</build_depend>
+  <build_depend>tf2_sensor_msgs</build_depend>
+  <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>filters</build_depend>
+
   <export>
 
     <!-- 
