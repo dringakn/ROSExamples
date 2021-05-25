@@ -406,9 +406,10 @@ add_executable(example_octomap_service_request src/example_octomap_service_reque
 add_dependencies(example_octomap_service_request ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_octomap_service_request ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 
-add_executable(example_octomap_create src/example_octomap_create.cpp)
-add_dependencies(example_octomap_create ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(example_octomap_create ${OCTOMAP_LIBRARIES} ${PCL_LIBRARIES} ${catkin_LIBRARIES})
+# TODO: Add octomap depend package
+# add_executable(example_octomap_create src/example_octomap_create.cpp)
+# add_dependencies(example_octomap_create ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# target_link_libraries(example_octomap_create ${OCTOMAP_LIBRARIES} ${PCL_LIBRARIES} ${catkin_LIBRARIES})
 
 add_executable(subscribe_odom_publish_posestamped src/subscribe_odom_publish_posestamped.cpp)
 add_dependencies(subscribe_odom_publish_posestamped ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
