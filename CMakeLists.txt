@@ -520,3 +520,6 @@ target_link_libraries(optimal_path_node ${catkin_LIBRARIES})
 add_library(nodelet_example src/example_nodelet.cpp)
 target_link_libraries(nodelet_example ${catkin_LIBRARIES})
 
+add_executable(example_pcl_search_nearest_neighbour src/example_pcl_search_nearest_neighbour.cpp)
+target_link_libraries(example_pcl_search_nearest_neighbour ${catkin_LIBRARIES})
+

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: PCL search nearest neighbour in octree
+    -->
+
+    <node pkg="ros_examples" type="example_pcl_search_nearest_neighbour" name="example_pcl_search_nearest_neighbour" output="screen">
+        <param name="map_file_name" value="$(dirname)/../map/sample.ply"/>
+        <param name="octree_resolution" value="0.25"/>
+        <param name="voxel_size" value="1"/>
+    </node>
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_pcl_search_nearest_neighbour.rviz" required="true"/>
+
+</launch>
