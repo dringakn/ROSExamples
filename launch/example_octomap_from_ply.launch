@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Create an octomap from specified ply file.
+    -->
+    <node pkg="ros_examples" type="example_octomap_from_ply" name="example_octomap_from_ply" output="screen" required="true" ns="/">
+        <param name="map_file_name" value="$(dirname)/../map/sample.ply"/>
+        <param name="resolution" value="0.25"/>
+    </node>
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_octomap_from_ply.rviz" required="true"/>
+
+</launch>
