@@ -44,13 +44,6 @@ void savePointCloud(pcl::PointCloud<Point3D>::Ptr input, std::string output_file
     writer.write<Point3D>(output_file_name.c_str(), *input, true, false); // Output
 }
 
-void savePointCloud(pcl::PointCloud<Point3DI>::Ptr input, std::string output_file_name)
-{
-    pcl::PLYWriter writer;                                                // I/O object
-    ROS_INFO("Saving pointcloud to %s", output_file_name.c_str());        // Info
-    writer.write<Point3DI>(output_file_name.c_str(), *input, true, false); // Output
-}
-
 int main(int argc, char *argv[])
 {
     ros::init(argc, argv, "gap_detection_node");
@@ -101,44 +94,49 @@ int main(int argc, char *argv[])
     octree.getBoundingBox(min_x, min_y, min_z, max_x, max_y, max_z);
     ROS_INFO("Bounding Box: (%4.1f,%4.1f,%4.1f) (%4.1f,%4.1f,%4.1f)", min_x, min_y, min_z, max_x, max_y, max_z);
 
-    // octree.approxNearestSearch(index/point, result_index, sqr_dist)
-    // octree.getOccupiedVoxelCenters(vector<Point3D>)
-    // octree.isVoxelOccupiedAtPoint(idx/point)
-    // octree.nearestKSearch(idx, k, k_indices, sqr_dist)
-    // octree.
-    
-    // Neighbors within radius search
-    // Calculate neighbour of all points
-    ROS_INFO("Calculating density...");
-    pcl::PointCloud<Point3DI>::Ptr densityCloud(new pcl::PointCloud<Point3DI>); // Input point cloud
-    pcl::Indices k_indices;
-    Eigen::Vector3f min_pt, max_pt;
-    double minDensity = DBL_MAX, maxDensity = DBL_MIN, meanDensity = 0;
-    for (auto it = cloud->begin(); it != cloud->end(); ++it)
-    {
-        Point3DI pt;
-        pt.x = it->x;
-        pt.y = it->y;
-        pt.z = it->z;
-        min_pt.x() = pt.x - voxel_size;
-        min_pt.y() = pt.y - voxel_size;
-        min_pt.z() = pt.z - voxel_size;
-        max_pt.x() = pt.x + voxel_size;
-        max_pt.y() = pt.y + voxel_size;
-        max_pt.z() = pt.z + voxel_size;
-        pt.intensity = octree.boxSearch(min_pt, max_pt, k_indices);
-        if (pt.intensity < minDensity)
-            minDensity = pt.intensity;
-        if (pt.intensity > maxDensity)
-            maxDensity = pt.intensity;
-        meanDensity += pt.intensity;
-        densityCloud->push_back(pt);
-    }
-    // Density: Points (1996000) Min (1.00), Max (316.00), Mean (85.62)
-    meanDensity /= (int)cloud->size();
-    ROS_INFO("Density: Points (%d) Min (%3.2f), Max (%3.2f), Mean (%3.2f)", (int)cloud->size(), minDensity, maxDensity, meanDensity);
-    publishPointCloud(densityCloud, pub);
-    savePointCloud(densityCloud, "/home/ahmad/personal_ws/src/ROSExamples/map/sample2.ply");
+    // // Creating the KdTree object for the search method of the extraction
+    // pcl::search::KdTree<Point3D>::Ptr tree(new pcl::search::KdTree<Point3D>);
+    // tree->setInputCloud(filtered1);
+    // std::vector<pcl::PointIndices> cluster_indices;
+    // pcl::EuclideanClusterExtraction<Point3D> ec;
+    // ec.setClusterTolerance(point_distance_cluster); // 2cm
+    // ec.setMinClusterSize(min_points_per_cluster);
+    // ec.setMaxClusterSize(maxDensity);
+    // ec.setSearchMethod(tree);
+    // ec.setInputCloud(filtered1);
+    // ec.extract(cluster_indices);
+
+    // int j = 0;
+    // pcl::PointCloud<Point3D>::Ptr gaps(new pcl::PointCloud<Point3D>);
+    // for (auto it = cluster_indices.begin(); it != cluster_indices.end(); ++it, j++)
+    // {
+    //     pcl::PointCloud<Point3D>::Ptr cloud_cluster(new pcl::PointCloud<Point3D>);
+    //     pcl::CentroidPoint<Point3D> centroid;
+    //     for (auto pit = it->indices.begin(); pit != it->indices.end(); ++pit)
+    //     {
+    //         Point3D pt = (*filtered1)[*pit];
+    //         cloud_cluster->push_back(pt); //*
+    //         centroid.add(pt);
+    //     }
+    //     Point3D pt;
+    //     centroid.get(pt);
+    //     gaps->push_back(pt);
+
+    //     cloud_cluster->width = cloud_cluster->size();
+    //     cloud_cluster->height = 1;
+    //     cloud_cluster->is_dense = true;
+    //     std::cout << "PointCloud representing the Cluster: " << j << ", " << cloud_cluster->size() << " data points." << std::endl;
+    // }
+
+    // ss.str(std::string());
+    // ss << "/home/ahmad/catkin_ws/src/gap-detection/map/gaps"
+    //    << ".ply";
+    // ROS_INFO("Saving gaps to %s", ss.str().c_str());
+    // saved->height = 1;
+    // saved->width = gaps->points.size();
+    // saved->is_dense = false;
+    // saved->header.frame_id = "map";
+    // writer.write<Point3D>(ss.str(), *gaps, true, false);
 
     ros::spin();
 

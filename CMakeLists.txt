@@ -523,3 +523,8 @@ target_link_libraries(nodelet_example ${catkin_LIBRARIES})
 add_executable(example_pcl_search_nearest_neighbour src/example_pcl_search_nearest_neighbour.cpp)
 target_link_libraries(example_pcl_search_nearest_neighbour ${catkin_LIBRARIES})
 
+add_executable(example_octomap_from_ply src/example_octomap_from_ply.cpp)
+target_link_libraries(example_octomap_from_ply ${catkin_LIBRARIES})
+
+add_executable(example_gps_geodatic_to_cartesian src/example_gps_geodatic_to_cartesian.cpp)
+target_link_libraries(example_gps_geodatic_to_cartesian ${catkin_LIBRARIES})

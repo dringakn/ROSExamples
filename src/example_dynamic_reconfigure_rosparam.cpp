@@ -21,7 +21,7 @@
           PACKAGE = "node_example"
 
           gen = ParameterGenerator()
-
+          # (Name, ParamType, Level, Description, Default, Min, Max)
           gen.add("rate", double_t, 0, "Message rate (mSec)", 1, 0.001, 100)
           gen.add("enable", bool_t, 0, "Enable/Disable publisher", True)
           gen.add("message", str_t, 0, "Message to be published", "Bello!")
@@ -43,6 +43,7 @@
             require sudo apt install python3-pip
         - The server node which listens the parameter changes by the
             rqt_reconfigure node is as follows in this example.
+        - The ExampleConfig file is within the include directory of development workspace!!!!
 */
 #include <dynamic_reconfigure/server.h>
 #include <ros/ros.h>
