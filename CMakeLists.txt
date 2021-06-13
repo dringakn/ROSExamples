@@ -528,3 +528,7 @@ target_link_libraries(example_octomap_from_ply ${catkin_LIBRARIES})
 
 add_executable(example_gps_geodatic_to_cartesian src/example_gps_geodatic_to_cartesian.cpp)
 target_link_libraries(example_gps_geodatic_to_cartesian ${catkin_LIBRARIES})
+
+add_executable(example_synchronized_messages_rosbag src/example_synchronized_messages_rosbag.cpp)
+target_link_libraries(example_synchronized_messages_rosbag ${catkin_LIBRARIES})
+
