@@ -58,6 +58,8 @@
 #include <message_filters/synchronizer.h>
 #include <message_filters/time_sequencer.h>
 #include <message_filters/time_synchronizer.h>
+#include <message_filters/sync_policies/approximate_time.h>
+#include <message_filters/sync_policies/exact_time.h>
 #include <geometry_msgs/PointStamped.h>   // Point message
 #include <geometry_msgs/Vector3Stamped.h> // Vector message
 
@@ -78,8 +80,12 @@ int main(int argc, char *argv[])
   ros::NodeHandle nh;
   message_filters::Subscriber<PointStamped> subPt(nh, "/point", 1);
   message_filters::Subscriber<Vector3Stamped> subVt(nh, "/vector", 1);
-  message_filters::TimeSynchronizer<PointStamped, Vector3Stamped> sync(subPt, subVt, 10); // 10: queue size
+  using syncPolicyA = message_filters::sync_policies::ApproximateTime<PointStamped, Vector3Stamped>;
+  using syncPolicyE = message_filters::sync_policies::ExactTime<PointStamped, Vector3Stamped>;
+  // message_filters::TimeSynchronizer<PointStamped, Vector3Stamped> sync(subPt, subVt, 10); // 10: queue size
+  message_filters::Synchronizer<syncPolicyA> sync(syncPolicyA(10), subPt, subVt);
   sync.registerCallback(boost::bind(&Callback, _1, _2));
+  // sync.registerCallback(Callback);
   ros::spin();
   return 0;
 }
