@@ -532,3 +532,5 @@ target_link_libraries(example_gps_geodatic_to_cartesian ${catkin_LIBRARIES})
 add_executable(example_synchronized_messages_rosbag src/example_synchronized_messages_rosbag.cpp)
 target_link_libraries(example_synchronized_messages_rosbag ${catkin_LIBRARIES})
 
+add_executable(example_rosbag_read src/example_rosbag_read.cpp)
+target_link_libraries(example_rosbag_read ${catkin_LIBRARIES})
