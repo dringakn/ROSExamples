@@ -2,7 +2,11 @@
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
     Description:
+      Convert the GPS Geodatic coordinates into the Cartesian coordinates.
+      The z-axis/altitude will be left as it is, therefore, don't require to be converted.
     Notes:
+      Cartesian: easting = x, northing = y, altitude = z
+      Geodatic: Latitude = x, Longitude = y, altitude = z
 */
 #include <bits/stdc++.h>
 #include <gps_conversions.h>
