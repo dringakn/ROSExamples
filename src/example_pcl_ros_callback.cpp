@@ -4,6 +4,7 @@
     Description:
         The following program create a 3D map using inertial and
         3D point cloud date.
+        The callback could be of type sensor_msgs/PointCloud2 or pcl::PCLPointCloud2
     Notes:
         include_directory (... include ${PCL_INCLUDE_DIRS} ...)
         find_package(PCL 1.7 REQUIRED)
