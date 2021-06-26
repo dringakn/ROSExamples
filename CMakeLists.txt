@@ -534,3 +534,6 @@ target_link_libraries(example_synchronized_messages_rosbag ${catkin_LIBRARIES})
 
 add_executable(example_rosbag_read src/example_rosbag_read.cpp)
 target_link_libraries(example_rosbag_read ${catkin_LIBRARIES})
+
+add_executable(example_octomap_basics src/example_octomap_basics.cpp)
+target_link_libraries(example_octomap_basics ${catkin_LIBRARIES})
