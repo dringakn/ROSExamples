@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Octomapping
+    -->
+
+    <param name="use_sime_time" value="false"/>
+
+    <!-- Ros bag player -->
+    <node pkg="rosbag" type="play" name="rosbag_player" args="--clock -r3 $(dirname)/../map/log31.bag" output="log" required="true"/>
+
+    <!-- Velodyne scan to pointcloud -->
+    <include file="$(find gap-detection)/launch/velodyne.launch" />
+
+    <!-- GPS Odometery -->
+    <include file="$(find gap-detection)/launch/odometery.launch" />
+
+    <!-- UFOMapping -->
+    <include file="$(find gap-detection)/launch/ufomap.launch" />
+
+    <!-- Robot transform publisher -->
+    <param name="robot_description" textfile="$(dirname)/../urdf/dji_m300.urdf" />
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="tf_prefix" value=""/>
+        <param name="publish_frequency" value="30"/>
+        <param name="ignore_timestamp" value="true"/>
+        <param name="use_tf_static" value="true"/>
+    </node>
+
+    <!-- RViz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/octomapping_node.rviz" required="true"/>
+
+    <!-- RQT reconfigure -->
+    <node pkg="rqt_reconfigure" type="rqt_reconfigure" name="rqt_reconfigure" />
+
+</launch>

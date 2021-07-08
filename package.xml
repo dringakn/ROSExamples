@@ -33,6 +33,10 @@
   <exec_depend>libqt5-core</exec_depend>
   <exec_depend>libqt5-gui</exec_depend>
   <exec_depend>libqt5-widgets</exec_depend>
+  <build_depend>ufomap_msgs</build_depend>
+  <exec_depend>ufomap_msgs</exec_depend>
+  <build_depend>ufomap_ros</build_depend>
+  <exec_depend>ufomap_ros</exec_depend>
   <depend>nodelet</depend>
 
   <build_depend>octomap</build_depend>

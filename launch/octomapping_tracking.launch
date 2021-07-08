@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Octomapping
+    -->
+
+    <param name="use_sime_time" value="true"/>
+
+    <!-- Ros bag player -->
+    <node pkg="rosbag" type="play" name="rosbag_player" args="--clock -r1 $(dirname)/../map/log31.bag" output="log" required="true"/>
+
+    <!-- Velodyne scan to pointcloud -->
+    <include file="$(find gap-detection)/launch/velodyne.launch" />
+
+    <!-- Robot transform publisher -->
+    <param name="robot_description" textfile="$(dirname)/../urdf/dji_m300.urdf" />
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="tf_prefix" value=""/>
+        <param name="publish_frequency" value="30"/>
+        <param name="ignore_timestamp" value="true"/>
+        <param name="use_tf_static" value="true"/>
+    </node>
+
+    <!-- Octomapping -->
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher" args="0 0 0 0 0 0 map odom 30"/>
+    <node pkg="gap-detection" type="octomapping" name="octomapping" required="true" output="screen">
+        <remap from="/gps_in" to="/dji_osdk_ros/gps_position"/>
+        <remap from="/imu_in" to="/dji_osdk_ros/imu"/>
+        <remap from="/lidar_in" to="/velodyne_points"/>
+        <remap from="/octomap_in" to="/octomap_binary"/>
+    </node>
+
+    <arg name="loadFilePath" default=""/>
+    <node pkg="octomap_server" type="octomap_tracking_server_node" name="octomap_tracking_server_node" output="screen" args="$(arg loadFilePath)">
+        <remap from="cloud_in" to="/velodyne_points"/>
+        <remap from="projected_map" to="map"/>
+        <param name="resolution" value="0.5"/>
+        <param name="frame_id" value="odom"/>
+        <param name="base_frame_id" value="base_link"/>
+        <param name="latch" value="false"/>
+        <param name="filter_speckles" value="true"/>
+        <param name="height_map" value="true"/>
+        <param name="sensor_model/hit" value="0.7"/>
+        <param name="sensor_model/miss" value="0.4"/>
+        <param name="sensor_model/min" value="0.12"/>
+        <param name="sensor_model/max" value="0.97"/>
+        <param name="sensor_model/max_range" value="-1"/>
+        <param name="color/r" value="1"/>
+        <param name="color/g" value="0"/>
+        <param name="color/b" value="0"/>
+        <param name="color/a" value="0.5"/>
+        <param name="pointcloud_min_z" value="-10"/>
+        <param name="pointcloud_max_z" value="1000"/>
+        <param name="occupancy_min_z" value="-10"/>
+        <param name="occupancy_max_z" value="1000"/>
+        <param name="filter_ground" value="false"/>
+        <param name="ground_filter/distance" value="0.04"/>
+        <param name="ground_filter/angle" value="0.15"/>
+        <param name="ground_filter/plane_distance" value="0.07"/>
+        <!-- Tracking server related parameters -->
+        <!-- Invert track_changes/listen_changes for server/client: SeverMode[track_changes=true,listen_changes=false] -->
+        <param name="track_changes" value="true"/>
+        <param name="listen_changes" value="false"/>
+        <param name="min_change_pub" value="0" />
+        <param name="topic_changes" value="/octomap_change" />
+        <param name="change_id_frame" value="odom" />
+        <param name="save_directory" value="$(optenv OCTOMAP_SAVE_DIR /home/ahmad)" />
+    </node>
+
+    <!-- RViz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/octomapping.rviz" required="true"/>
+
+</launch>
