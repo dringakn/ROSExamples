@@ -3,6 +3,10 @@
  *    Email: dringakn@gmail.com
  *    Description:
  *    Notes: Add pcl_ros library in CMakeLists
+ *      For testing 
+ *      roscore
+ *      rosrun ros_examples  example_pcl_load_ply_file _map_file_name:=/home/ahmad/catkin_ws/src/ROSExamples/map/sample.ply
+ *      rviz (Add Pointcloud visulizer)
  **/
 #include <pcl/io/ply_io.h>
 #include <pcl/point_cloud.h>
