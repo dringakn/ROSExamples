@@ -54,6 +54,15 @@
 #include <ufo/map/occupancy_map.h>
 #include <bits/stdc++.h>
 
+/*
+	Modifications: Load pointcloud map file (ply)
+    Notes: Add pcl_ros to the CMakeLists.txt
+*/
+#include <pcl/io/ply_io.h>
+typedef pcl::PointXYZI Point3D;
+typedef pcl::PointCloud<Point3D> PointCloud;
+
+
 using namespace std;
 
 void printPoint3(ufo::map::Point3 pt, std::string prefix)
@@ -142,6 +151,22 @@ int main(int argc, char *argv[])
             std::cout << "\t Occupked?:" << it.containsOccupied();
             std::cout << "\t Value:" << it.getOccupancy();
             std::cout << std::endl;
+        }
+
+        /*
+            Load pointcloud file (ply) into the UFOMap
+        */
+        std::string map_file_name = "/home/ahmad/catkin_ws/src/gap_detection/map/map.ply";
+        PointCloud *pc = new PointCloud();
+        if (pcl::io::loadPLYFile(map_file_name.c_str(), *pc) != -1)
+        {
+            for (auto &&pt : pc->points)
+                map.updateOccupancy(map.toCode(pt.x, pt.y, pt.z, 0), map.getClampingThresMax());
+            ROS_INFO("Pointcloud file (%s) loaded %d x %d", map_file_name.c_str(), pc->height, pc->width);
+        }
+        else
+        {
+            ROS_INFO("Map file (%s) doesn't exist!", map_file_name.c_str());
         }
     }
 
