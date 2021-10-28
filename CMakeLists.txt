@@ -196,6 +196,10 @@ add_executable(example_tf  src/example_tf.cpp)
 add_dependencies(example_tf ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_tf  ${catkin_LIBRARIES})
 
+add_executable(example_tf2  src/example_tf2.cpp)
+add_dependencies(example_tf2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_tf2  ${catkin_LIBRARIES})
+
 add_executable(example_tf2_gps src/example_tf2_gps.cpp)
 add_dependencies(example_tf2_gps ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_tf2_gps ${catkin_LIBRARIES})
