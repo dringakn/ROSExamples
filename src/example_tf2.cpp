@@ -60,8 +60,27 @@
 #define DEG2RAD(x) ((x)*M_PI / 180.0)
 #define RAD2DEG(x) ((x)*180.0 / M_PI)
 
+inline void print_tf2_vector3(tf2::Vector3 v)
+{
+    std::cout << v.getX() << ", " << v.getY() << ", " << v.getZ() << std::endl;
+}
+
+inline void print_tf2_quaternion(tf2::Quaternion q)
+{
+    std::cout << q.getX() << ", " << q.getY() << ", " << q.getZ() << ", " << q.getW() << std::endl;
+}
+
+inline void print_tf2_transform(tf2::Transform t)
+{
+    print_tf2_vector3(t.getOrigin());
+    print_tf2_quaternion(t.getRotation());
+}
+
 int main(int argc, char **argv)
 {
+    std::cout.precision(3);                              // Show three places after the decimal
+    std::cout.setf(std::ios::fixed | std::ios::showpos); // Set fixed point format and '+'
+
     ros::init(argc, argv, "example_tf_node");
     ros::NodeHandle nh;
 
@@ -72,18 +91,20 @@ int main(int argc, char **argv)
     tf2::fromMsg(quat_msg, q);
 
     // Create quaternion using Euler angles
-    q.setRPY(0, 0, DEG2RAD(90)); // Create this quaternion from roll/pitch/yaw (in radians)
-    q.normalize();
+    // q.setRPY(0, 0, DEG2RAD(90)); // Create this quaternion from roll/pitch/yaw (in radians)
+    // q = q.normalize();                                  // x^2 + y^2 + z^2 +w^2 = 1
+    // create quaterion, better compared to setRPY(), first rotation, then translation
+    // q.setRotation(tf2::Vector3(0, 0, 1), DEG2RAD(0.0)); // +ve=CCW (Right-hand)
 
     // Convert quaternion to Euler angles
-    double yaw, pitch, roll;
-    tf2::getEulerYPR(q, yaw, pitch, roll);
-    ROS_INFO("Yaw:%f, Pitch:%f, Roll:%f", RAD2DEG(yaw), RAD2DEG(pitch), RAD2DEG(roll));
+    // double yaw, pitch, roll;
+    // tf2::getEulerYPR(q, yaw, pitch, roll);
+    // ROS_INFO("Yaw:%f, Pitch:%f, Roll:%f", RAD2DEG(yaw), RAD2DEG(pitch), RAD2DEG(roll));
 
     // Linear Algebra
-    tf2::angleShortestPath(q, q);
-    tf2::dot(q, q);
-    tf2::inverse(q);
+    // tf2::angleShortestPath(q, q);
+    // tf2::dot(q, q);
+    // tf2::inverse(q);
     // tf2::lerp(v1, v2, t);
     // tf2::quatRotate(q, v);
     // tf2::shortestArcQuat(v1, v2);
@@ -93,6 +114,25 @@ int main(int argc, char **argv)
     // tf2::tf2Dot(v1, v2);
     // tf2::tf2Triple(v1, v2, v3);
     // tf2::tf2PlaneSpace1(n, p, q);
+
+    tf2::Transform t; // The transformation
+    t.setIdentity();  // Reset transormation
+    // tf2::fromMsg(map.info.origin, t); // Get the transformaiton from the message
+    tf2::Vector3 v1(2, 2, 0), v2(0, 0, 0);
+    // v2 = t * v1;
+    // v2 = t.inverse() * v1;
+    // print_tf2_transform(t);
+    // print_tf2_vector3(v1);
+    // print_tf2_vector3(v2);
+    // v2.getSkewSymmetricMatrix(&v1, &v1, &v1);
+
+    // Transformation
+    double x = atof(argv[1]), y = atof(argv[2]), z = atof(argv[3]), angle = atof(argv[4]);
+    t.setOrigin(tf2::Vector3(x, y, z));
+    t.setRotation(tf2::Quaternion(tf2::Vector3(0, 0, 1), DEG2RAD(angle)));
+    v1.setValue(1, 1, 0);
+    v2 = t * v1;
+    print_tf2_vector3(v2);
 
     ros::Rate rate(10);
     while (ros::ok())
