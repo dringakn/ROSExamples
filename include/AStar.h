@@ -1,6 +1,12 @@
 /**
  *    Author: Dr. Ing. Ahmad Kamal Nasir
  *    Email: dringakn@gmail.com
+ *    Description:
+ *      Given a start point, end point and an OGM (Occupancy Grid Map) find the shortest path using A* algorithm.
+ *      The input points are of standard ROS message type geometry_msgs::PointStamped and the OGM is of type 
+ *      nav_msgs::OccupancyGrid. 
+ * 
+ *      The output path is of type nav_msgs::Path.
  **/
 #include <cstddef>                     // nullptr
 #include <geometry_msgs/Point.h>       // Start/Goal Point

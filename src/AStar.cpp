@@ -1,6 +1,12 @@
 /**
  *    Author: Dr. Ing. Ahmad Kamal Nasir
  *    Email: dringakn@gmail.com
+ *    Description:
+ *      Given a start point, end point and an OGM (Occupancy Grid Map) find the shortest path using A* algorithm.
+ *      The input points are of standard ROS message type geometry_msgs::PointStamped and the OGM is of type 
+ *      nav_msgs::OccupancyGrid. 
+ * 
+ *      The output path is of type nav_msgs::Path.
  **/
 
 #include "AStar.h"
@@ -9,6 +15,11 @@ AStar::AStar() {}
 
 AStar::~AStar() {}
 
+/**
+ * @brief The start point for the path. The point is assumed to be in the map frame.
+ * 
+ * @param s 
+ */
 void AStar::setStartPoint(geometry_msgs::PointStamped &s) {
   start.header = s.header;
   start.point.x = floor(s.point.x / map->info.resolution);
@@ -16,6 +27,11 @@ void AStar::setStartPoint(geometry_msgs::PointStamped &s) {
   start.point.z = floor(s.point.z / map->info.resolution);
 }
 
+/**
+ * @brief The end point for the path. The point is assumed to be in the map frame.
+ * 
+ * @param g 
+ */
 void AStar::setGoalPoint(geometry_msgs::PointStamped &g) {
   goal.header = g.header;
   goal.point.x = floor(g.point.x / map->info.resolution);
@@ -23,10 +39,25 @@ void AStar::setGoalPoint(geometry_msgs::PointStamped &g) {
   goal.point.z = floor(g.point.z / map->info.resolution);
 }
 
+/**
+ * @brief Store the map memory pointer.
+ * 
+ * @param m 
+ */
 void AStar::setMap(const nav_msgs::OccupancyGrid::ConstPtr &m) { map = m; }
 
+/**
+ * @brief Return the previously calculated path.
+ * 
+ * @return nav_msgs::Path 
+ */
 nav_msgs::Path AStar::getPath() { return path; }
 
+/**
+ * @brief Calculate the shortest path. This function is called after specifying the start and goal points.
+ * 
+ * @return int : The cost of the path.
+ */
 int AStar::shortestPath() {
   int width = map->info.width;
   int height = map->info.height;
