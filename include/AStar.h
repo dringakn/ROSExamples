@@ -25,7 +25,12 @@
 using namespace std;
 
 #define INF FLT_MAX
-
+/**
+ * @brief Intermediate data structure to store gridcell or node information.
+ *        The members includes x(int), y(int), cost(float). Overloaded with
+ *        ">" and "<" operators to compare cost value. 
+ * 
+ */
 class point {
 public:
   int x, y;
