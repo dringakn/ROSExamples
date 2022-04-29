@@ -2,6 +2,15 @@
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
     Description:
+      Create and publisha a random occupancy grid map.
+      Furthermore, publisha a transformation from "world" to "map"
+      Four parameters can be passed as command line. 
+      The first parameter is the width of the map as number of cells.
+      The second parameter is the height of the map as number of cells.
+      The third parameter is the resolution of map as number of grid cells per meter.
+      The fourth parameter is a boolean flag, if 1 then the map frame position (x,y,z) 
+      is set to random location between -5 to 5 (Uniform distributation).
+      
     Usage: rosrun examples example_occupancy_grid_map 10 10 1 0
            modify find_packages(... geometry_msgs nav_msgs ...)
 */

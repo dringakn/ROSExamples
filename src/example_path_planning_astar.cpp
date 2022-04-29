@@ -2,14 +2,19 @@
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
     Description:
+      Test the AStar algorithm.
+      For testing an occupancy grid map is required. 
+      If there doesn't exist any, Use the example_occupancy_grid_map to create and publish one.
+      If it already exist then use the map_server to load and publish the map on a ROS topic.
+
     Usage:
       rosrun ros_examples example_occupancy_grid_map 10 10 0.5
-      The example_occupancy_grid_map node creates a random map and publishes it
+      The "example_occupancy_grid_map" node creates a random map and publishes it
       on a latched topic and a transform between world->map frame. We can write
       a node which can subscribe to the "map" topic.
 
-      rosrun ros_examples example_occupancy_grid_map_service_request topic
-      file.txt The example_occupancy_grid_map_service_request node can be used
+      rosrun ros_examples example_occupancy_grid_map_service_request topic file.txt 
+      The "example_occupancy_grid_map_service_request" node can be used
       to obtain the map from the specified topic through a service request and
       save it to a ACSII text file. service (to be implemented) to obtain the
       map.
@@ -63,7 +68,8 @@ void initpose_cb(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr &msg,
   pt.header = msg->header;
   pt.header.stamp = ros::Time();
   pt.point = msg->pose.pose.position;
-  if (frame2map(li, pt, pt_m)) g.setStartPoint(pt_m);
+  if (frame2map(li, pt, pt_m)) 
+    g.setStartPoint(pt_m);
 }
 
 void goalpose_cb(const geometry_msgs::PoseStamped::ConstPtr &msg,
