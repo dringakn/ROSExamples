@@ -71,10 +71,10 @@ int AStar::shortestPath()
   int exploredCells = 0;
 
   // Data structures for the AStar (A*) algorithm
-  // Store the points/nodes/gridcells with the specified sorted order. 
-  priority_queue<point, vector<point>, greater<point>> pq;  // smallest element on the top.
-  vector<float> cost(n, INF);   // Cost value for all the grid cells are set to infinity.
-  vector<int> parent(n, -1);    // Set the parent value to each of the grid cell to be unknown (-1)
+  // Store the points/nodes/gridcells with the specified sorted order.
+  priority_queue<point, vector<point>, greater<point>> pq; // smallest element on the top.
+  vector<float> cost(n, INF);                              // Cost value for all the grid cells are set to infinity.
+  vector<int> parent(n, -1);                               // Set the parent value to each of the grid cell to be unknown (-1)
 
   // Return if the start point is outside the map
   if (start.point.x < 0 || start.point.x >= width || start.point.y < 0 ||
@@ -103,7 +103,28 @@ int AStar::shortestPath()
     if (pt.x == goal.point.x && pt.y == goal.point.y)
       break;
 
-    // Find the neighbouring cells (3x3)
+    /*
+      Find the neighbouring cells (3x3)
+      Generating all the 8 successor of this cell
+
+          N.W   N   N.E
+            \   |   /
+            \  |  /
+          W----Cell----E
+              / | \
+            /   |  \
+          S.W    S   S.E
+
+      Cell-->Popped Cell (i, j)
+      N -->  North       (i-1, j)
+      S -->  South       (i+1, j)
+      E -->  East        (i, j+1)
+      W -->  West        (i, j-1)
+      N.E--> North-East  (i-1, j+1)
+      N.W--> North-West  (i-1, j-1)
+      S.E--> South-East  (i+1, j+1)
+      S.W--> South-West  (i+1, j-1)
+    */
     for (int r = -1; r <= 1; r++)
       for (int c = -1; c <= 1; c++)
       {
@@ -123,24 +144,23 @@ int AStar::shortestPath()
         if (map->data[nidx] == 100)
           continue;
 
-        
         // Weighted cost in all direction, Diagonal are most costlier
         // newcost = previouscost + motioncost (Euclidean distance) + heuristic
         // motioncast: cost to move from current to the neighbour
         // heuristic: approximate cost to move from neighbour to the target
         // Note: The Euclidean distance for diagonal is more than the longitudinal/lateral
-        //       A 3x3 matrix can also be used for custom cost
+        //       <<< A 3x3 matrix can also be used for custom cost >>>
         //       The difference between Dijkstra and AStar is only the second term (heuristic).
         int pidx = pt.x + pt.y * height;
         float ncost = pt.cost + sqrt(r * r + c * c) + sqrt(pow(x - goal.point.x, 2) + pow(y - goal.point.y, 2));
-        if (ncost < cost[nidx])     // Add the cell to the queue if new cost is smaller than prior cost
+        if (ncost < cost[nidx]) // Add the cell to the queue if new cost is smaller than prior cost
         {
           // Update the cell cost, save it's parent, and add it to the queue
-          cost[nidx] = ncost;       // Update the cost value
-          point pt_n(x, y, ncost);  // Create the node 
-          parent[nidx] = pidx;      // Set the explored cell parent (current cell)
-          pq.push(pt_n);            // Store the node (minimum value will automatically come to top)
-          exploredCells++;          // Increment the explored cells counter
+          cost[nidx] = ncost;      // Update the cost value
+          point pt_n(x, y, ncost); // Create the node
+          parent[nidx] = pidx;     // Set the explored cell parent (current cell)
+          pq.push(pt_n);           // Store the node (minimum value will automatically come to top)
+          exploredCells++;         // Increment the explored cells counter
         }
       }
 
