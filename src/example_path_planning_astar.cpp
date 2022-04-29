@@ -53,8 +53,7 @@ bool frame2map(const tf::TransformListener &li, geometry_msgs::PointStamped &pt,
 }
 
 void map_cb(const nav_msgs::OccupancyGrid::ConstPtr &msg) {
-  ROS_INFO("Map: %d x %d @ %0.3f m/px", msg->info.width, msg->info.height,
-           msg->info.resolution);
+  ROS_INFO("Map: %d x %d @ %0.3f m/px", msg->info.width, msg->info.height, msg->info.resolution);
   g.setMap(msg);
 }
 
