@@ -16,9 +16,9 @@ AStar::AStar() {}
 AStar::~AStar() {}
 
 /**
- * @brief The start point for the path. The point is assumed to be in the map frame.
+ * @brief Set the start point for the path. The point is assumed to be in the map frame.
  * 
- * @param s 
+ * @param s geometry_msgs::PointStamped 
  */
 void AStar::setStartPoint(geometry_msgs::PointStamped &s) {
   start.header = s.header;
@@ -28,9 +28,9 @@ void AStar::setStartPoint(geometry_msgs::PointStamped &s) {
 }
 
 /**
- * @brief The end point for the path. The point is assumed to be in the map frame.
+ * @brief set the end point for the path. The point is assumed to be in the map frame.
  * 
- * @param g 
+ * @param g geometry_msgs::PointStamped
  */
 void AStar::setGoalPoint(geometry_msgs::PointStamped &g) {
   goal.header = g.header;
@@ -40,9 +40,9 @@ void AStar::setGoalPoint(geometry_msgs::PointStamped &g) {
 }
 
 /**
- * @brief Store the map memory pointer.
+ * @brief Store the occupancy grid map memory pointer.
  * 
- * @param m 
+ * @param m const nav_msgs::OccupancyGrid::ConstPt
  */
 void AStar::setMap(const nav_msgs::OccupancyGrid::ConstPtr &m) { map = m; }
 
