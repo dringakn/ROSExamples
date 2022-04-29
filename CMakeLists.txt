@@ -39,8 +39,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   dynamic_reconfigure
   nodelet
-  ufomap_msgs
-  ufomap_ros
+  # ufomap_msgs
+  # ufomap_ros
 )
 
 generate_dynamic_reconfigure_options(cfg/example_node_parameters.cfg)
@@ -504,6 +504,9 @@ target_link_libraries(example_rrt ${catkin_LIBRARIES})
 add_executable(example_visulization_marker_line_strip src/example_visulization_marker_line_strip.cpp)
 target_link_libraries(example_visulization_marker_line_strip ${catkin_LIBRARIES})
 
+add_executable(example_visulization_marker_box src/example_visulization_marker_box.cpp)
+target_link_libraries(example_visulization_marker_box ${catkin_LIBRARIES})
+
 add_executable(example_bresenhem_raster_line src/example_bresenhem_raster_line.cpp)
 target_link_libraries(example_bresenhem_raster_line ${catkin_LIBRARIES})
 
@@ -545,5 +548,5 @@ target_link_libraries(example_rosbag_read ${catkin_LIBRARIES})
 add_executable(example_octomap_basics src/example_octomap_basics.cpp)
 target_link_libraries(example_octomap_basics ${catkin_LIBRARIES})
 
-add_executable(example_ufomap_basics src/example_ufomap_basics.cpp)
-target_link_libraries(example_ufomap_basics ${catkin_LIBRARIES} UFO::Map)
+# add_executable(example_ufomap_basics src/example_ufomap_basics.cpp)
+# target_link_libraries(example_ufomap_basics ${catkin_LIBRARIES} UFO::Map)

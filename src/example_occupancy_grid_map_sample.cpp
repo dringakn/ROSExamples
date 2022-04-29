@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
 
   nav_msgs::OccupancyGrid map;                          // Create OGM message
   const int8_t UNKNOWN = -1, FREE = 0, OCCUPIED = 100; // constant definations
-  const float COLS = 10, ROWS = 5, RES = 0.1;           // in meters
+  const float COLS = 1000, ROWS = 1000, RES = 0.25;           // in meters
 
   map.info.width = COLS / RES;  // number of cells along the x-axis (width)
   map.info.height = ROWS / RES; // number of cells along the y-axis (height)
@@ -160,10 +160,10 @@ int main(int argc, char *argv[])
   map.info.map_load_time = ros::Time::now(); // map load/creation time
 
   // set the position of the cell(0,0) with respect to the origin
-  // map.info.origin.position.x = -(((COLS / (2 * RES)) + 0.5) * RES); // Width in meters, considering discretization
-  // map.info.origin.position.y = -(((ROWS / (2 * RES)) + 0.5) * RES); // Height in meters, considering discretization
-  map.info.origin.position.x = -9; // Width in meters, considering discretization
-  map.info.origin.position.y = -4; // Height in meters, considering discretization
+  map.info.origin.position.x = -(((COLS / (2 * RES)) + 0.5) * RES); // Width in meters, considering discretization
+  map.info.origin.position.y = -(((ROWS / (2 * RES)) + 0.5) * RES); // Height in meters, considering discretization
+  // map.info.origin.position.x = -9; // Width in meters, considering discretization
+  // map.info.origin.position.y = -4; // Height in meters, considering discretization
   map.info.origin.orientation.x = map.info.origin.orientation.y = map.info.origin.orientation.z = 0;
   map.info.origin.orientation.w = 1;
   ROS_INFO("origin: %5.2f, %5.2f", map.info.origin.position.x, map.info.origin.position.y);
@@ -188,7 +188,8 @@ int main(int argc, char *argv[])
 
   // Test set/get occupancy using cartesian coordinates (wrt origin)
   geometry_msgs::Point pt;                                                            // location with in the map wrt origin [meters]
-  pt.x = pt.y = 0.5;                                                                  // set cartesian coordinates
+  pt.x = 1;
+  pt.y = 1;                                                                  // set cartesian coordinates
   ROS_INFO("set_occupancy_wrt_origin: %d", set_occupancy_wrt_origin(map, pt, value)); // set occupancy value at location
   ROS_INFO("get_occupancy_wrt_origin: %d", get_occupancy_wrt_origin(map, pt, value)); // get occupancy value at location
   ROS_INFO("%d", value);                                                              // display value
@@ -214,7 +215,8 @@ int main(int argc, char *argv[])
   // ROS_INFO("%d", value);                                                              // display value
 
   // Test set horizontal/vertical occupancy using cartesian coordinates (wrt origin)
-  pt.x = pt.y = 0;                                                                                             // set cartesian coordinates, wrt cell(0,0)
+  pt.x = atof(argv[1]); 
+  pt.y = atof(argv[2]);                                                                                             // set cartesian coordinates, wrt cell(0,0)
   ROS_INFO("set_horziontal_occupancy_wrt_origin: %d", set_horziontal_occupancy_wrt_origin(map, pt, OCCUPIED)); // draw horizontal line passing through pt
   ROS_INFO("set_vertical_occupancy_wrt_origin: %d", set_vertical_occupancy_wrt_origin(map, pt, OCCUPIED));     // draw vertical line passing through pt
   // pt.x = pt.y = -2;                                                                                             // set cartesian coordinates, wrt cell(0,0)
