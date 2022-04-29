@@ -11,7 +11,8 @@
         (*) Use the RViz InitialPose and GoalPosition tool to specifiy the start and end position.
     -->
 
-    <<node pkg="ros_examples" type="example_occupancy_grid_map" name="example_occupancy_grid_map">
+    <!-- Create Random map: width height resolution no_random_location -->
+    <node pkg="ros_examples" type="example_occupancy_grid_map" name="example_occupancy_grid_map" args="50 50 1 0">
         
     </node>
 

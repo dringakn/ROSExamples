@@ -6,6 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /TF1/Frames1
+        - /Path1
       Splitter Ratio: 0.5264706015586853
     Tree Height: 894
   - Class: rviz/Selection
@@ -92,13 +93,13 @@ Visualization Manager:
       Head Diameter: 0.30000001192092896
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
-      Line Style: Lines
-      Line Width: 0.029999999329447746
+      Line Style: Billboards
+      Line Width: 0.25
       Name: Path
       Offset:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 0.5
+        Y: 0.5
+        Z: 0.5
       Pose Color: 255; 85; 255
       Pose Style: None
       Queue Size: 10
@@ -106,11 +107,11 @@ Visualization Manager:
       Shaft Diameter: 0.10000000149011612
       Shaft Length: 0.10000000149011612
       Topic: /path
-      Unreliable: false
+      Unreliable: true
       Value: true
   Enabled: true
   Global Options:
-    Background Color: 0; 0; 0
+    Background Color: 114; 159; 207
     Default Light: true
     Fixed Frame: map
     Frame Rate: 30
@@ -145,10 +146,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 118.96549224853516
+      Scale: 64.52640533447266
       Target Frame: map
-      X: 18.201255798339844
-      Y: 25.06540298461914
+      X: 7.073586463928223
+      Y: 3.1373541355133057
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 106.41262817382812
