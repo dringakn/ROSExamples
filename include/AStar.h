@@ -46,6 +46,7 @@ private:
   geometry_msgs::PointStamped goal;
   nav_msgs::OccupancyGrid::ConstPtr map;
   nav_msgs::Path path;
+  float gcost[3][3];
 
 public:
   AStar();

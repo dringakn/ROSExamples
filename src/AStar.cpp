@@ -11,7 +11,12 @@
 
 #include "AStar.h"
 
-AStar::AStar() {}
+AStar::AStar() : gcost{
+                     {INF, 1, INF}, // Initialize the cost matrix, Manhatten style move
+                     {1, 0, 1},
+                     {INF, 1, INF}}
+{
+}
 
 AStar::~AStar() {}
 
@@ -107,23 +112,25 @@ int AStar::shortestPath()
       Find the neighbouring cells (3x3)
       Generating all the 8 successor of this cell
 
-          N.W   N   N.E
-            \   |   /
-            \  |  /
-          W----Cell----E
-              / | \
-            /   |  \
-          S.W    S   S.E
+          NW[0]   N[1]     NE[2]
+            \      |      /
+              \    |    /
+                \  |  /
+          W[3]----Cell[4]----E[5]
+                /  |  \
+              /    |    \
+            /      |      \
+          SW[6]   S[7]     SE[8]
 
-      Cell-->Popped Cell (i, j)
-      N -->  North       (i-1, j)
-      S -->  South       (i+1, j)
-      E -->  East        (i, j+1)
-      W -->  West        (i, j-1)
-      N.E--> North-East  (i-1, j+1)
-      N.W--> North-West  (i-1, j-1)
-      S.E--> South-East  (i+1, j+1)
-      S.W--> South-West  (i+1, j-1)
+      Cell--> Popped Cell (r,   c) --> index:4
+      N --> North       (r-1, c)   --> index:1
+      S --> South       (r+1, c)   --> index:7
+      E --> East        (r,   c+1) --> index:5
+      W --> West        (r,   c-1) --> index:3
+      NE--> North-East  (r-1, c+1) --> index:2
+      NW--> North-West  (r-1, c-1) --> index:0
+      SE--> South-East  (r+1, c+1) --> index:8
+      SW--> South-West  (r+1, c-1) --> index:6
     */
     for (int r = -1; r <= 1; r++)
       for (int c = -1; c <= 1; c++)
@@ -146,13 +153,13 @@ int AStar::shortestPath()
 
         // Weighted cost in all direction, Diagonal are most costlier
         // newcost = previouscost + motioncost (Euclidean distance) + heuristic
-        // motioncast: cost to move from current to the neighbour
+        // motioncast: cost to move from current to the neighbour; sqrt(r * r + c * c) or gcost(r,c)
         // heuristic: approximate cost to move from neighbour to the target
         // Note: The Euclidean distance for diagonal is more than the longitudinal/lateral
         //       <<< A 3x3 matrix can also be used for custom cost >>>
         //       The difference between Dijkstra and AStar is only the second term (heuristic).
         int pidx = pt.x + pt.y * height;
-        float ncost = pt.cost + sqrt(r * r + c * c) + sqrt(pow(x - goal.point.x, 2) + pow(y - goal.point.y, 2));
+        float ncost = pt.cost + gcost[r+1][c+1] + sqrt(pow(x - goal.point.x, 2) + pow(y - goal.point.y, 2));
         if (ncost < cost[nidx]) // Add the cell to the queue if new cost is smaller than prior cost
         {
           // Update the cell cost, save it's parent, and add it to the queue
