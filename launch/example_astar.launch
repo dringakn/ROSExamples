@@ -12,14 +12,17 @@
     -->
 
     <!-- Create Random map: width height resolution no_random_location -->
-    <node pkg="ros_examples" type="example_occupancy_grid_map" name="example_occupancy_grid_map" args="50 50 1 0">
+    <!-- <node pkg="ros_examples" type="example_occupancy_grid_map" name="example_occupancy_grid_map" args="771 729 1 0">
         
-    </node>
+    </node> -->
 
-    <!-- <node pkg="map_server" type="map_server" name="map_server" args="$(dirname)/../map/sample_map.yaml" output="screen">
+    <!-- Load existing map and publish static tf world->map -->
+    <node pkg="map_server" type="map_server" name="map_server" args="$(dirname)/../map/sample_map.yaml" output="screen">
         <remap from="map" to="/map"/>
         <param name="frame_id" value="map"/>
-    </node> -->
+    </node>
+    <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher_world_map" args="0 0 0 0 0 0 world map 100"/>
+
 
     <node pkg="ros_examples" type="example_path_planning_astar" name="example_path_planning_astar" required="true" output="screen" ns="/">
     </node>
