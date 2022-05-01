@@ -189,7 +189,7 @@ int AStar::shortestPath()
 
       // Covert current grid cell index to caresian coordinate
       pos.pose.position.x = (idx % width) * resolution;
-      pos.pose.position.y = (idx / height) * resolution;
+      pos.pose.position.y = (idx / width) * resolution;
       pos.pose.position.z = 0;
       path.poses.push_back(pos);
       idx = parent[idx];
