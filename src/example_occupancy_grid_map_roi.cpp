@@ -1,9 +1,12 @@
 /*
     Author: Dr. Ing. Ahmad Kamal Nasir
     Email: dringakn@gmail.com
-    Description: Save a region of the interest specified by the RViz.
-    Usage: roslaunch ros_examples example_occupancy_grid_map_roi.launch
-    Note: modify find_packages(... geometry_msgs nav_msgs ...)
+    Description: 
+      Save a region of the interest specified by the RViz.
+    Usage: 
+      roslaunch ros_examples example_occupancy_grid_map_roi.launch
+    Note: 
+      modify find_packages(... geometry_msgs nav_msgs ...)
 */
 
 #include <costmap_2d/costmap_2d.h>       // Costmap
@@ -83,8 +86,7 @@ int main(int argc, char* argv[])
   ros::init(argc, argv, "example_occupancy_grid_map_roi");
   ros::NodeHandle nh;
 
-  //*
-  // Set the log level of the node to display messages
+  //* Set the log level of the node to display messages
   ros::console::set_logger_level(ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Debug);
   ros::console::notifyLoggerLevelsChanged();
   //*/
