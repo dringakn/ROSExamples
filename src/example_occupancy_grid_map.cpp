@@ -4,13 +4,13 @@
     Description:
       Create and publisha a random occupancy grid map.
       Furthermore, publisha a transformation from "world" to "map"
-      Four parameters can be passed as command line. 
+      Four parameters can be passed as command line.
       The first parameter is the width of the map as number of cells.
       The second parameter is the height of the map as number of cells.
       The third parameter is the resolution of map as number of grid cells per meter.
-      The fourth parameter is a boolean flag, if 1 then the map frame position (x,y,z) 
+      The fourth parameter is a boolean flag, if 1 then the map frame position (x,y,z)
       is set to random location between -5 to 5 (Uniform distributation).
-      
+
     Usage: rosrun examples example_occupancy_grid_map 10 10 1 0
            modify find_packages(... geometry_msgs nav_msgs ...)
 */
@@ -55,20 +55,23 @@ int main(int argc, char *argv[])
   map.data.resize(map.info.width * map.info.height);
   //-1=Unknown, 0=Free, 100=Occupied
   for (size_t idx = 0; idx < map.data.size(); idx++)
-    map.data[idx] = 100 * rng.uniformInteger(0, 1);
+  {
+    int temp = rng.uniformInteger(0, 1);
+    map.data[idx] = temp * ((temp == -1) ? 1 : 100);
+  }
 
   map_pub.publish(map);
 
   tf::TransformBroadcaster br;
+  tf::Transform t;
+  t.setOrigin(tf::Vector3(0, 0, 0));
+  t.setRotation(tf::createQuaternionFromRPY(0, 0, 0));
+
+  ros::Rate rate(10);
   while (ros::ok())
   {
-  t.setOrigin(tf::Vector3(0, 0, 0));
-    br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "world", map.header.frame_id));
-  ros::Rate rate(10);
-  while (ros::ok()) {
     // parent, child: broadcast map to world
-    br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "world",
-                                          map.header.frame_id));
+    br.sendTransform(tf::StampedTransform(t, ros::Time::now(), "world", map.header.frame_id));
     ros::spinOnce();
     rate.sleep();
   }
