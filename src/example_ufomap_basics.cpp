@@ -7,6 +7,7 @@
  * Note:
  *      IMPORTANT:  
  *      To use UFOMap in your package you need to add at the begining:
+ *          - Clone the UFOMapping to ~/*_ws/src folder (git clone https://github.com/UnknownFreeOccupied/ufomap.git)
  *          - Add the following to your CMakeLists.txt
  *              - find_package(ufomap REQUIRED)
  *              - target_link_libraries(YOUR_NODE ${catkin_LIBRARIES} UFO::Map)
