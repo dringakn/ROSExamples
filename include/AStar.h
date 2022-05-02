@@ -47,6 +47,7 @@ private:
   nav_msgs::OccupancyGrid::ConstPtr map;
   nav_msgs::Path path;
   float gcost[3][3];
+  bool skip_unknown;
 
 public:
   AStar();

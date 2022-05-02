@@ -11,11 +11,14 @@
 
 #include "AStar.h"
 
-AStar::AStar() : gcost{
-                     {INF, 1, INF}, // Initialize the cost matrix, Manhatten style move
-                     {1, 0, 1},
-                     {INF, 1, INF}}
+AStar::AStar()
 {
+
+  this->skip_unknown = false;
+  // Initialize the cost matrix, Manhatten style move
+  this->gcost[0][0] = this->gcost[0][2] = this->gcost[2][0] = this->gcost[2][2] = INF; // Corners
+  this->gcost[0][1] = this->gcost[1][0] = this->gcost[1][2] = this->gcost[2][1] = 1;   // Along Up,Left,Right,Down
+  this->gcost[1][1] = 0;                                                               // Center
 }
 
 AStar::~AStar() {}
@@ -157,7 +160,10 @@ int AStar::shortestPath()
 
         // Skip if it's a non-reachable cell, 0=free, -1=unknown, 100=occupied
         int nidx = x + y * width;
-        if ((map->data[nidx] == 100) || (map->data[nidx] == -1))
+        if ((map->data[nidx] == 100)) // Skip obstacle
+          continue;
+
+        if ((skip_unknown == true) && (map->data[nidx] == -1)) // Skip unknown
           continue;
 
         // Weighted cost in all direction, Diagonal are most costlier
@@ -169,7 +175,7 @@ int AStar::shortestPath()
         //       The difference between Dijkstra and AStar is only the second term (heuristic).
         float ncost = pt.cost + gcost[r + 1][c + 1] + sqrt(pow(x - goal.point.x, 2) + pow(y - goal.point.y, 2));
         int pidx = pt.x + pt.y * width;
-        if (ncost < cost[nidx])         // Add the cell to the queue if new cost is smaller than prior cost
+        if (ncost < cost[nidx]) // Add the cell to the queue if new cost is smaller than prior cost
         {
           // Update the cell cost, save it's parent, and add it to the queue
           cost[nidx] = ncost;      // Update the cost value
@@ -182,7 +188,6 @@ int AStar::shortestPath()
 
   } // While the queue is not empty
 
-  
   int gidx = goal.point.x + goal.point.y * width;
   if (cost[gidx] < INF) // the path is found if it's cost has been changed
   {
