@@ -550,3 +550,9 @@ target_link_libraries(example_octomap_basics ${catkin_LIBRARIES})
 
 add_executable(example_ufomap_basics src/example_ufomap_basics.cpp)
 target_link_libraries(example_ufomap_basics ${catkin_LIBRARIES} UFO::Map)
+
+add_executable(example_ufomap_basic src/example_ufomap_basic.cpp)
+target_link_libraries(example_ufomap_basic ${catkin_LIBRARIES} UFO::Map)
+
+add_executable(example_ufomap_load_ply_file src/example_ufomap_load_ply_file.cpp)
+target_link_libraries(example_ufomap_load_ply_file ${catkin_LIBRARIES} UFO::Map)

@@ -5,7 +5,7 @@
  * Description: UFOMap is an extension to the octomapping.
  *      It provides the explicit handling of unknown, free, and occupied space in a map.
  * Note:
- *      IMPORTANT:  
+ *      IMPORTANT:
  *      To use UFOMap in your package you need to add at the begining:
  *          - Add the following to your CMakeLists.txt
  *              - find_package(ufomap REQUIRED)
@@ -28,11 +28,11 @@
  *          - mkdir build
  *          - cd build
  *          - cmake ..
- *          - make 
+ *          - make
  *          - sudo make install
  *          - In the CMakeLists.txt: find_package(ufomap REQUIRED)
- * 
- *      
+ *
+ *
  * Requirements:
  *      - sudo apt install libtbb-dev
  *      - sudo apt install python3-catkin-tools python3-osrf-pycommon
@@ -55,13 +55,12 @@
 #include <bits/stdc++.h>
 
 /*
-	Modifications: Load pointcloud map file (ply)
+    Modifications: Load pointcloud map file (ply)
     Notes: Add pcl_ros to the CMakeLists.txt
 */
 #include <pcl/io/ply_io.h>
 typedef pcl::PointXYZI Point3D;
 typedef pcl::PointCloud<Point3D> PointCloud;
-
 
 using namespace std;
 
@@ -152,22 +151,22 @@ int main(int argc, char *argv[])
             std::cout << "\t Value:" << it.getOccupancy();
             std::cout << std::endl;
         }
+    }
 
-        /*
-            Load pointcloud file (ply) into the UFOMap
-        */
-        std::string map_file_name = "/home/ahmad/catkin_ws/src/gap_detection/map/map.ply";
-        PointCloud *pc = new PointCloud();
-        if (pcl::io::loadPLYFile(map_file_name.c_str(), *pc) != -1)
-        {
-            for (auto &&pt : pc->points)
-                map.updateOccupancy(map.toCode(pt.x, pt.y, pt.z, 0), map.getClampingThresMax());
-            ROS_INFO("Pointcloud file (%s) loaded %d x %d", map_file_name.c_str(), pc->height, pc->width);
-        }
-        else
-        {
-            ROS_INFO("Map file (%s) doesn't exist!", map_file_name.c_str());
-        }
+    /*
+        Load pointcloud file (ply) into the UFOMap
+    */
+    std::string map_file_name = "/home/ahmad/catkin_ws/src/gap_detection/map/map.ply";
+    PointCloud *pc = new PointCloud();
+    if (pcl::io::loadPLYFile(map_file_name.c_str(), *pc) != -1)
+    {
+        for (auto &&pt : pc->points)
+            map.updateOccupancy(map.toCode(pt.x, pt.y, pt.z, 0), map.getClampingThresMax());
+        ROS_INFO("Pointcloud file (%s) loaded %d x %d", map_file_name.c_str(), pc->height, pc->width);
+    }
+    else
+    {
+        ROS_INFO("Map file (%s) doesn't exist!", map_file_name.c_str());
     }
 
     return 0;
