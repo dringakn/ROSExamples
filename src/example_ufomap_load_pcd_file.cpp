@@ -5,8 +5,8 @@
  * Description:
  *      UFOMap is an extension to the octomapping.
  *      It provides the explicit handling of unknown, free, and occupied space in a map.
- *      The following example loads an existing point cloud from a ply file.
- *      Modifications: Load pointcloud map file (ply) [Add pcl_ros to the CMakeLists.txt]
+ *      The following example loads an existing point cloud from a pcd file.
+ *      Modifications: Load pointcloud map file (pcd) [Add pcl_ros to the CMakeLists.txt]
  * Note:
  *      IMPORTANT:
  *      To use UFOMap in your package you need to add at the begining:
@@ -60,7 +60,7 @@
 #include <ufomap_msgs/conversions.h>     // To convert between UFO and ROS
 #include <ufomap_ros/conversions.h>      // To convert between UFO and ROS
 #include <bits/stdc++.h>                 // C++ stuff
-#include <pcl/io/ply_io.h>               // PCL stuff
+#include <pcl/io/pcd_io.h>               // PCL stuff
 
 typedef pcl::PointXYZI Point3D;
 typedef pcl::PointCloud<Point3D> PointCloud;
@@ -71,17 +71,17 @@ int main(int argc, char *argv[])
 {
     std::cout.precision(5);
     std::cout.setf(std::cout.showpos | std::cout.showpoint);
-    ros::init(argc, argv, "example_ufomap_load_ply_file");
+    ros::init(argc, argv, "example_ufomap_load_pcd_file");
     ros::NodeHandle nh;
 
     /*
-        Load pointcloud file (ply) into the UFOMap
+        Load pointcloud file (pcd) into the UFOMap
     */
     ros::Publisher pub_ufo = nh.advertise<ufomap_msgs::UFOMapStamped>("/ufomap", 10, true);
 
-    std::string map_file_name = "/home/ahmad/catkin_ws/src/gap_detection/map/map.ply";
+    std::string map_file_name = "/home/ahmad/catkin_ws/src/gap_detection/map/height_avgd_pc_rammelsberg_raw_version.pcd";
     PointCloud *pc = new PointCloud();
-    if (pcl::io::loadPLYFile(map_file_name.c_str(), *pc) != -1)
+    if (pcl::io::loadPCDFile(map_file_name.c_str(), *pc) != -1)
     {
         ROS_INFO("Loading (%s) %d points ...", map_file_name.c_str(), pc->width);
         ufo::map::OccupancyMap map(0.5, 16); // OccupancyMapColor: Create a colored UFOMap

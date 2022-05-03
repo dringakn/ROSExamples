@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Load and display an octomap.
+    -->
+
+    <!-- Load PLY file -->
+    <!-- <node pkg="ros_examples" type="example_ufomap_load_ply_file" name="example_ufomap_load_ply_file" output="screen"/> -->
+    
+    <!-- Load PCD file -->
+    <node pkg="ros_examples" type="example_ufomap_load_pcd_file" name="example_ufomap_load_pcd_file" output="screen"/>
+
+    <!-- Adjust the tree depth in RViz for visulization. -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_ufomap_load_file.rviz" required="true"/>
+
+</launch>
