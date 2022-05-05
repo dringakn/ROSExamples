@@ -53,15 +53,6 @@
 #include <ros/ros.h>
 #include <ufo/map/occupancy_map.h>
 #include <bits/stdc++.h>
-
-/*
-    Modifications: Load pointcloud map file (ply)
-    Notes: Add pcl_ros to the CMakeLists.txt
-*/
-#include <pcl/io/ply_io.h>
-typedef pcl::PointXYZI Point3D;
-typedef pcl::PointCloud<Point3D> PointCloud;
-
 using namespace std;
 
 void printPoint3(ufo::map::Point3 pt, std::string prefix)
@@ -108,25 +99,35 @@ void ufomap_stats(ufo::map::OccupancyMap &map)
     std::cout << " ================================================= " << std::endl;
 }
 
-void ufomap_node_stats()
-{
-    std::cout << " <<<<<<<<<<<<<<<<< UFOMap Stats >>>>>>>>>>>>>>>>> " << std::endl;
-
-    std::cout << " ================================================= " << std::endl;
-}
-
 int main(int argc, char *argv[])
 {
     std::cout.precision(5);
     std::cout.setf(std::cout.showpos | std::cout.showpoint);
 
-    ufo::map::OccupancyMap map(0.25, 16); // Resolution, levels, prune?, th_occ, th_free, p_hit, p_miss, clamp_th_min, clm_th_max
-    map.updateOccupancy(1, 1, 1, 1);
-    map.updateOccupancy(1, 1, -1, 1);
-    map.updateOccupancy(100, 100, 100, 1);
-    map.updateOccupancy(100, 100, -100, 1);
-    ufomap_stats(map);
+    /*
+        Create a non colored UFO map with minimum resolution of 0.25m and with 16 levels (Max: 21).
+        Each level has double the size of voxel. Thus the extreme size of the enviornment can be 
+        from (-8192m, -8192m, -8192m) to (8192m, 8192m, 8192m). 
+    */
+    float res = 0.25;
+    unsigned int nlevels = 16;
+    ufo::map::OccupancyMap map(res, nlevels); // Resolution, levels, prune?, th_occ, th_free, p_hit, p_miss, clamp_th_min, clm_th_max
+
+    /*
+        Set the occupancy value
+    */
+    for (float z = -5; z < 5; z += res)
+        for (float x = -5; x < 5; x += res)
+            for (float y = -5; y < 5; y += res)
+                map.updateOccupancy(x, y, z, 1, 0); // xyz, occupancy=1, depth=0
+
+    map.getOccupancy(1, 1, 1); // Get value: code/xyz, depth=0
+    map.containsFree(1, 1, 1); // check state: code/xyz, depth=0
+    
+    ufomap_stats(map);         // Print stats
+    
     int i = 0;
+    // begin(xyz, occ, free, unkown, contain, depth)
     // for (auto it = map.beginNNLeaves(ufo::map::Point3(1, 1, 1), false, false, true, false, 0); it != map.endNNLeaves(); ++it)
     // {
     //     cout << ++i << " - ";
@@ -134,10 +135,11 @@ int main(int argc, char *argv[])
     // }
 
     unsigned int entryopy;
+    i = 0;
     for (auto it = map.beginTree(true, true, true, false, 0); it != map.endTree(); ++it)
     // for (auto it = map.beginLeaves(true, true, true, false, 0); it != map.endLeaves(); ++it)
     {
-        
+
         entryopy = it.containsUnknown() + it.containsFree() + it.containsOccupied();
         if (it.getSize() >= 4 && it.getSize() <= 5 && it.hasChildren() && entryopy > 1)
         {
@@ -148,26 +150,10 @@ int main(int argc, char *argv[])
             std::cout << "\t PureLeaf?:" << it.isPureLeaf();
             std::cout << "\t Unknown?:" << it.containsUnknown();
             std::cout << "\t Free?:" << it.containsFree();
-            std::cout << "\t Occupked?:" << it.containsOccupied();
+            std::cout << "\t Occupied?:" << it.containsOccupied();
             std::cout << "\t Value:" << it.getOccupancy();
             std::cout << std::endl;
         }
-    }
-
-    /*
-        Load pointcloud file (ply) into the UFOMap
-    */
-    std::string map_file_name = "/home/ahmad/catkin_ws/src/gap_detection/map/map.ply";
-    PointCloud *pc = new PointCloud();
-    if (pcl::io::loadPLYFile(map_file_name.c_str(), *pc) != -1)
-    {
-        for (auto &&pt : pc->points)
-            map.updateOccupancy(map.toCode(pt.x, pt.y, pt.z, 0), map.getClampingThresMax());
-        ROS_INFO("Pointcloud file (%s) loaded %d x %d", map_file_name.c_str(), pc->height, pc->width);
-    }
-    else
-    {
-        ROS_INFO("Map file (%s) doesn't exist!", map_file_name.c_str());
     }
 
     return 0;
