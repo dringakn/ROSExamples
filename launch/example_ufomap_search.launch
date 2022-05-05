@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Test the UFO map search node.
+    -->
+    <node pkg="ros_examples" type="example_ufomap_search" name="example_ufomap_search" output="screen"/>
+</launch>
