@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
     // }
 
     unsigned int entryopy;
-    for (auto it = map.beginTree(true, true, true, false, 0); it != map.endTree(); ++it)
+    for (auto it = map.beginTree(true, true, true, false, 0); it != map.endTree(); ++it) // voxels at all levels
     // for (auto it = map.beginLeaves(true, true, true, false, 0); it != map.endLeaves(); ++it)
     {
         
