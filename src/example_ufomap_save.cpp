@@ -144,14 +144,14 @@ int main(int argc, char *argv[])
             std::cout << "Saving PCD ... " << cloud.width << std::endl;
             pcl::io::savePCDFile("/home/ahmad/personal_ws/src/ROSExamples/map/ufomap.pcd", cloud, false); // file_name, pointcloud, save_binary
         }
-        else if (cmdOptionExists(argv, argv + argc, "-pcl"))
+        else if (cmdOptionExists(argv, argv + argc, "-ply"))
         {
-            std::cout << "Saving PCL ... " << cloud.width << std::endl;
+            std::cout << "Saving PLY ... " << cloud.width << std::endl;
             pcl::io::savePLYFile("/home/ahmad/personal_ws/src/ROSExamples/map/ufomap.ply", cloud, false); // file_name, pointcloud, save_binary
         }
         else
         {
-            std::cout << "Syntex: rosrun ros_examples example_ufomap_save -pcd or -pcl " << map.getResolution() << std::endl;
+            std::cout << "Syntex: rosrun ros_examples example_ufomap_save -pcd or -ply ufomap:=/ufomap_mapping_server_node/map" << map.getResolution() << std::endl;
         }
     }
     else
