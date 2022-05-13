@@ -106,55 +106,75 @@ int main(int argc, char *argv[])
 
     /*
         Create a non colored UFO map with minimum resolution of 0.25m and with 16 levels (Max: 21).
-        Each level has double the size of voxel. Thus the extreme size of the enviornment can be 
-        from (-8192m, -8192m, -8192m) to (8192m, 8192m, 8192m). 
+        Each level has double the size of voxel. Thus the extreme size of the enviornment can be
+        from (-8192m, -8192m, -8192m) to (8192m, 8192m, 8192m).
     */
     float res = 0.25;
     unsigned int nlevels = 16;
     ufo::map::OccupancyMap map(res, nlevels); // Resolution, levels, prune?, th_occ, th_free, p_hit, p_miss, clamp_th_min, clm_th_max
 
     /*
-        Set the occupancy value
+        Set the occupancy value at specified level (convert the prob to log odds): log(p/(1-p))
     */
     for (float z = -5; z < 5; z += res)
         for (float x = -5; x < 5; x += res)
             for (float y = -5; y < 5; y += res)
-                map.updateOccupancy(x, y, z, 1, 0); // xyz, occupancy=1, depth=0
+                map.updateOccupancy(x, y, z, 1, 1); // xyz, prob=1, depth=0
 
-    map.getOccupancy(1, 1, 1); // Get value: code/xyz, depth=0
-    map.containsFree(1, 1, 1); // check state: code/xyz, depth=0
+    /*
+        Get the occupancy value at specified level (convert the logodds to the prob): 1 / 1 + e(-lo)
+    */
+    float prob = map.getOccupancy(1, 1, 1); // Get value: code/xyz, depth=0
     
-    ufomap_stats(map);         // Print stats
-    
-    int i = 0;
-    // begin(xyz, occ, free, unkown, contain, depth)
-    // for (auto it = map.beginNNLeaves(ufo::map::Point3(1, 1, 1), false, false, true, false, 0); it != map.endNNLeaves(); ++it)
-    // {
-    //     cout << ++i << " - ";
-    //     printPoint3(it.getCenter(), "Center:");
-    // }
+    /*
+        Check the state of the voxel at specified level.
+    */
+    map.containsFree(1, 1, 1, 0); // check state: code/xyz, depth=0
 
+    /*
+        Print the UFO map information.
+    */
+    ufomap_stats(map); // Print stats
+
+    int ctr;
     unsigned int entryopy;
-    i = 0;
-    for (auto it = map.beginTree(true, true, true, false, 0); it != map.endTree(); ++it)
-    // for (auto it = map.beginLeaves(true, true, true, false, 0); it != map.endLeaves(); ++it)
-    {
 
-        entryopy = it.containsUnknown() + it.containsFree() + it.containsOccupied();
-        if (it.getSize() >= 4 && it.getSize() <= 5 && it.hasChildren() && entryopy > 1)
-        {
-            std::cout << ++i << "-(" << it.getX() << "," << it.getY() << "," << it.getZ() << ")\t";
-            std::cout << "\t Depth:" << it.getDepth();
-            std::cout << "\t Size:" << it.getSize();
-            std::cout << "\t Children?:" << it.hasChildren();
-            std::cout << "\t PureLeaf?:" << it.isPureLeaf();
-            std::cout << "\t Unknown?:" << it.containsUnknown();
-            std::cout << "\t Free?:" << it.containsFree();
-            std::cout << "\t Occupied?:" << it.containsOccupied();
-            std::cout << "\t Value:" << it.getOccupancy();
-            std::cout << std::endl;
-        }
+    // map.beginTree: iterate over specified types of nodes at specified depth in complete tree.
+    // It iterates over all the inner nodes
+    // for (auto it = map.beginTree(ufo::map::Point3(1, 1, 1), i=0, false, false, true, false, 0); it != map.endNNLeaves(); ++it,++i) // begin(xyz, occ, free, unkown, contain, depth)
+    ctr = 0;
+    for (auto it = map.beginTree(true, true, true, false, 0); it != map.endTree(); ++it, ++ctr); // begin(xyz, occ, free, unkown, contain, depth)
+    cout << " Nodes traversed: " << ctr << endl;
+
+    // map.beginLeaves(): iterate over specified types of leaf nodes at specified depth
+    // map.beginLeavesBounding: iterate over specified types of leaf nodes at specified depth within specified bounding shape
+    // map.beginTreeBounding: 
+    // map.beginNNLeaves: iterate over specified types of leaf nodes at specified depth near the specified point
+    // map.beginNNTree: iterate over specified types of nodes at specified depth near the specified point
+    // map.changesBegin
+
+
+    // for (auto it = map.beginTree(true, true, true, false, 0); it != map.endTree(); ++it) // begin(xyz, occ, free, unkown, contain, depth)
+    // // for (auto it = map.beginLeaves(true, true, true, false, 0); it != map.endLeaves(); ++it) // begin(xyz, occ, free, unkown, contain, depth)
+    // {
+
+    //     //     entryopy = it.containsUnknown() + it.containsFree() + it.containsOccupied();
+    //     //     if (it.getSize() >= 4 && it.getSize() <= 5 && it.hasChildren() && entryopy > 1)
+    //     //     {
+                // cout << ++i << " - ";
+                // printPoint3(it.getCenter(), "Center:");
+    //     //         std::cout << ++i << "-(" << it.getX() << "," << it.getY() << "," << it.getZ() << ")\t";
+    //     //         std::cout << "\t Depth:" << it.getDepth();
+    //     //         std::cout << "\t Size:" << it.getSize();
+    //     //         std::cout << "\t Children?:" << it.hasChildren();
+    //     //         std::cout << "\t PureLeaf?:" << it.isPureLeaf();
+    //     //         std::cout << "\t Unknown?:" << it.containsUnknown();
+    //     //         std::cout << "\t Free?:" << it.containsFree();
+    //     //         std::cout << "\t Occupied?:" << it.containsOccupied();
+    //     //         std::cout << "\t Value:" << it.getOccupancy();
+    //     //         std::cout << std::endl;
+    //     //     }
+    //     // }
+
+        return 0;
     }
-
-    return 0;
-}
