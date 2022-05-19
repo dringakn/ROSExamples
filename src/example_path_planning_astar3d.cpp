@@ -25,7 +25,7 @@
 
 #include "AStar3D.h"
 
-AStar3D g;
+AStar3D g(false, true, false, 0);
 ros::Publisher path_pub;
 
 bool frame2map(const tf::TransformListener &li, geometry_msgs::PointStamped &pt,
@@ -45,10 +45,18 @@ bool frame2map(const tf::TransformListener &li, geometry_msgs::PointStamped &pt,
   }
 }
 
-void map_cb(const nav_msgs::OccupancyGrid::ConstPtr &msg)
+void map_cb(ufomap_msgs::UFOMapStamped::ConstPtr const &msg)
 {
-  // ROS_INFO("Map: %d x %d @ %0.3f m/px", msg->info.width, msg->info.height, msg->info.resolution);
-  // g.setMap(msg);
+  // Convert ROS message to UFOMap
+  if (ufomap_msgs::msgToUfo(msg->map, g.map))
+  {
+    // Conversion was successful
+    ROS_INFO("UFOMap conversion successful");
+  }
+  else
+  {
+    ROS_WARN("UFOMap conversion failed");
+  }
 }
 
 void initpose_cb(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr &msg, const tf::TransformListener &li)
@@ -95,8 +103,9 @@ int main(int argc, char *argv[])
 
   ros::Subscriber goalPose_sub = nh.subscribe<geometry_msgs::PoseStamped>("move_base_simple/goal", 1, boost::bind(&goalpose_cb, _1, boost::ref(li)));
 
-  ros::Subscriber map_sub = nh.subscribe<nav_msgs::OccupancyGrid>("map", 1, map_cb);
+  ros::Subscriber map_sub = nh.subscribe<ufomap_msgs::UFOMapStamped>("map", 1, map_cb);
 
   ros::spin();
+
   return 0;
 }

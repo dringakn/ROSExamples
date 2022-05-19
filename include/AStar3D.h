@@ -47,19 +47,24 @@ public:
 class AStar3D
 {
 private:
-    geometry_msgs::PointStamped start;
-    geometry_msgs::PointStamped goal;
-    ufo::map::OccupancyMap::ConstPtr map;
-    nav_msgs::Path path;
-    float gcost[3][3][3]; // Depth x Rows x Cols
-    bool skip_unknown;
+    geometry_msgs::PointStamped start;              // Starting location
+    geometry_msgs::PointStamped goal;               // Goal location
+    nav_msgs::Path path;                            // Resultant path
+    bool occupied_space, free_space, unknown_space; // UFO search flags
+    ufo::map::DepthType min_depth;                  // UFO depth level for search
+    ufo::geometry::BoundingVar bounding_volume;     // Bounding geometry for search
+    float gcost[3][3][3];                           // Depth x Rows x Cols
+
+protected:
+    bool findNearestVoxel(ufo::map::Point3 position, ufo::map::Point3 *result); // Internal use
 
 public:
-    AStar3D();
-    virtual ~AStar3D();
-    void setStartPoint(geometry_msgs::PointStamped &);
-    void setGoalPoint(geometry_msgs::PointStamped &);
-    void setMap(const nav_msgs::OccupancyGrid::ConstPtr &);
-    int shortestPath();
-    nav_msgs::Path getPath();
+    ufo::map::OccupancyMap map;                        // The UFO map
+    AStar3D(bool, bool, bool, ufo::map::DepthType);    // Constructor (occ, free, unknown, depth)
+    virtual ~AStar3D();                                // Destructor
+    void setStartPoint(geometry_msgs::PointStamped &); // Set starting locatoin
+    void setGoalPoint(geometry_msgs::PointStamped &);  // Set goal location
+    void setBounds(ufo::geometry::BoundingVar *);      // Set bounding geometry for search
+    int shortestPath();                                // Search path
+    nav_msgs::Path getPath();                          // Get the previous calculated path
 };
