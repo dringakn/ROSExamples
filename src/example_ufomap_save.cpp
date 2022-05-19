@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
 
     if (ufomap_msgs::msgToUfo(msg->map, map))
     {
-        std::cout << "[[[UFOMAP]]]"<< std::endl;
+        std::cout << "[[[UFOMAP]]]" << std::endl;
         std::cout << "Resolution: " << map.getResolution() << std::endl;
         std::cout << "Levels: " << map.getTreeDepthLevels() << std::endl;
         // beginTree: nodes from specified levels to maxlevels
@@ -142,16 +142,21 @@ int main(int argc, char *argv[])
         if (cmdOptionExists(argv, argv + argc, "-pcd"))
         {
             std::cout << "Saving PCD ... " << cloud.width << std::endl;
-            pcl::io::savePCDFile("/home/ahmad/personal_ws/src/ROSExamples/map/ufomap.pcd", cloud, false); // file_name, pointcloud, save_binary
+            pcl::io::savePCDFile("/home/ahmad/catkin_ws/src/ROSExamples/map/ufomap.pcd", cloud, false); // file_name, pointcloud, save_binary
         }
         else if (cmdOptionExists(argv, argv + argc, "-ply"))
         {
             std::cout << "Saving PLY ... " << cloud.width << std::endl;
-            pcl::io::savePLYFile("/home/ahmad/personal_ws/src/ROSExamples/map/ufomap.ply", cloud, false); // file_name, pointcloud, save_binary
+            pcl::io::savePLYFile("/home/ahmad/catkin_ws/src/ROSExamples/map/ufomap.ply", cloud, false); // file_name, pointcloud, save_binary
+        }
+        else if (cmdOptionExists(argv, argv + argc, "-ufo"))
+        {
+            std::cout << "Saving UFO ... " << cloud.width << std::endl;
+            map.write("/home/ahmad/catkin_ws/src/ROSExamples/map/ufomap.ufo", false, 0); // file_name, compress, depth level
         }
         else
         {
-            std::cout << "Syntex: rosrun ros_examples example_ufomap_save -pcd or -ply ufomap:=/ufomap_mapping_server_node/map" << map.getResolution() << std::endl;
+            std::cout << "Syntex: rosrun gap_detection save_ufomap -pcd | -ply | -ufo ufomap:=/ufomap_mapping_server_node/map" << map.getResolution() << std::endl;
         }
     }
     else
