@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
     bool compress = false;
     ufo::map::DepthType pub_depth = 0;
 
-    std::string file_name = "/home/ahmad/catkin_ws/src/ROSExamples/map/ufomap.ufo";
+    std::string file_name = "/home/ahmad/personal_ws/src/ROSExamples/map/ufomap.ufo";
     if (cmdOptionExists(argv, argv + argc, "-f"))
         file_name = getCmdOption(argv, argv + argc, "-f");
 
