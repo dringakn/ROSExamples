@@ -137,7 +137,6 @@ int main(int argc, char *argv[])
     for (auto it = map.beginTree(true, true, true, false, 0); it != map.endTree(); ++it) // voxels at all levels
     // for (auto it = map.beginLeaves(true, true, true, false, 0); it != map.endLeaves(); ++it)
     {
-        
         entryopy = it.containsUnknown() + it.containsFree() + it.containsOccupied();
         if (it.getSize() >= 4 && it.getSize() <= 5 && it.hasChildren() && entryopy > 1)
         {
