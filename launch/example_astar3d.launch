@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- 
+        Author: Dr. -Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Desciption: Test the AStart (A*) path planner.
+        (*) Launch the map server with the specified OGM.
+        (*) Launch the AStar planning node.
+        (*) Launch the RViz for visulizatoin.
+        (*) Use the RViz InitialPose and GoalPosition tool to specifiy the start and end position.
+    -->
+
+    <!-- Create Random map: width height resolution no_random_location -->
+    <!-- <node pkg="ros_examples" type="example_occupancy_grid_map" name="example_occupancy_grid_map" args="771 729 1 0">
+        
+    </node> -->
+
+
+    <!-- <node pkg="ros_examples" type="example_ufomap_random" name="example_ufomap_random" args=" 1 100 100 100 10000 1" required="true"/> -->
+    <!-- <node pkg="tf" type="static_transform_publisher" name="static_transform_publisher_world_map" args="0 0 0 0 0 0 world map 100"/> -->
+    <node pkg="ros_examples" type="example_ufomap_load" name="example_ufomap_load" args="" required="true"/>
+
+    <!-- <node pkg="ros_examples" type="example_path_planning_astar3d" name="example_path_planning_astar3d" required="true" output="screen" ns="/"/> -->
+
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(dirname)/../rviz/example_astar3d.rviz" required="true"/>
+
+</launch>
