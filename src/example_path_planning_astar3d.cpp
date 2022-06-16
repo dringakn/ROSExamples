@@ -23,10 +23,11 @@
 
 */
 
-#include "AStar3D.h"
+#include "AStar3D.hpp"
 
-AStar3D g(false, true, false, 0);
+AStar3D<unsigned long int, double> g(false, true, true, false, 3, 2.00); // 0=0.25, 1=0.5, 2=1, 3=2
 ros::Publisher path_pub;
+// ufo::map::OccupancyMapColor cmap(0.1);
 
 bool frame2map(const tf::TransformListener &li, geometry_msgs::PointStamped &pt,
                geometry_msgs::PointStamped &pt_m)
@@ -45,13 +46,32 @@ bool frame2map(const tf::TransformListener &li, geometry_msgs::PointStamped &pt,
   }
 }
 
-void map_cb(ufomap_msgs::UFOMapStamped::ConstPtr const &msg)
+void map_cb(const ufomap_msgs::UFOMapStamped::ConstPtr &msg)
 {
   // Convert ROS message to UFOMap
   if (ufomap_msgs::msgToUfo(msg->map, g.map))
   {
-    // Conversion was successful
-    ROS_INFO("UFOMap conversion successful");
+    ROS_INFO("Recieved Resolution: %5.2f",msg->map.info.resolution);
+    ROS_INFO("GetResolution: %5.2f",g.map.getResolution());
+
+    // g.printUFOPoint(msg->map.info., "Half Size: ");
+    // Testing
+    // geometry_msgs::PointStamped start, goal;
+    // start.point.x = -90;
+    // start.point.y = -90;
+    // start.point.z = -90;
+    // g.setStartPoint(start);
+    // goal.point.x = 90;
+    // goal.point.y = 90;
+    // goal.point.z = 90;
+    // g.setGoalPoint(goal);
+
+    // int pathSteps = g.shortestPath();
+    // if (pathSteps > 0)
+    // {
+    //   cout << "Path length:" << pathSteps << endl;
+    //   path_pub.publish(g.getPath());
+    // }
   }
   else
   {
@@ -65,7 +85,8 @@ void initpose_cb(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr &msg, 
   pt.header = msg->header;
   pt.header.stamp = ros::Time();
   pt.point = msg->pose.pose.position;
-  if (frame2map(li, pt, pt_m))
+  // if (frame2map(li, pt, pt_m))
+  pt_m.point = msg->pose.pose.position;
     g.setStartPoint(pt_m);
 }
 
@@ -75,18 +96,19 @@ void goalpose_cb(const geometry_msgs::PoseStamped::ConstPtr &msg, const tf::Tran
   pt.header = msg->header;
   pt.header.stamp = ros::Time();
   pt.point = msg->pose.position;
-  if (frame2map(li, pt, pt_m))
+  // if (frame2map(li, pt, pt_m))
+  pt_m.point = msg->pose.position;
   {
     g.setGoalPoint(pt_m);
     int pathSteps = g.shortestPath();
-    if (pathSteps != 0)
+    if (pathSteps > 0)
     {
-      cout << "Path Found, Steps:" << pathSteps << endl;
+      cout << "Path Found, Length:" << pathSteps << endl;
       path_pub.publish(g.getPath());
     }
     else
     {
-      cout << "Path 'Not' Found, Steps:" << pathSteps << endl;
+      cout << "Path 'Not' Found, " << endl;
     }
   }
 }
@@ -103,9 +125,15 @@ int main(int argc, char *argv[])
 
   ros::Subscriber goalPose_sub = nh.subscribe<geometry_msgs::PoseStamped>("move_base_simple/goal", 1, boost::bind(&goalpose_cb, _1, boost::ref(li)));
 
-  ros::Subscriber map_sub = nh.subscribe<ufomap_msgs::UFOMapStamped>("map", 1, map_cb);
+  ros::Subscriber map_sub = nh.subscribe<ufomap_msgs::UFOMapStamped>("ufomap", 1, map_cb);
 
-  ros::spin();
+  ros::Rate rate(10);
+  while (ros::ok())
+  {
+    ros::spinOnce();
+    rate.sleep();
+  }
 
+  std::cout << "Shutting down.." << std::endl;
   return 0;
 }

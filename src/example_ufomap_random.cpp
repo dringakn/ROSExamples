@@ -82,9 +82,24 @@ int main(int argc, char *argv[])
     double maxy = (argc > 3) ? atoi(argv[3]) : 10;           // Maximum/Minimum value of the random number along-y
     double maxz = (argc > 4) ? atoi(argv[4]) : 10;           // Maximum/Minimum value of the random number along-z
     unsigned int n_points = (argc > 5) ? atoi(argv[5]) : 10; // Number of random points
+    unsigned int prob = (argc > 6) ? atoi(argv[6]) : 1;      // Occupancy 1=Occupied, 0=Free
+    unsigned int inv_prob = (prob == 0) ? 1 : 0;
     unsigned int nlevels = 16;
-    ufo::map::OccupancyMap map(res, nlevels);                                        // Resolution, levels, prune?, th_occ, th_free, p_hit, p_miss, clamp_th_min, clm_th_max
+    ufo::map::OccupancyMap map(res, nlevels);                                               // Resolution, levels, prune?, th_occ, th_free, p_hit, p_miss, clamp_th_min, clm_th_max
     ros::Publisher map_pub = nh.advertise<ufomap_msgs::UFOMapStamped>("/ufomap", 10, true); // UFO map published topic (latched)
+
+    /*
+        Fill/Clear the space.
+    */
+    size_t ctr = 0, total = 8 * maxx * maxy * maxz;
+    for (double x = -maxx; x < maxx; x += res)
+        for (double y = -maxy; y < maxy; y += res)
+            for (double z = -maxz; z < maxz; z += res)
+            {
+                map.updateOccupancy(x, y, z, inv_prob, 0); // xyz, prob=1, depth=0
+                ctr++;
+                ROS_INFO_THROTTLE(5, "Filled percentage: %d", (100 * ctr / total));
+            }
 
     /*
         Set the occupancy value at specified level (convert the prob to log odds): log(p/(1-p))
@@ -95,7 +110,7 @@ int main(int argc, char *argv[])
         x = rng.uniformReal(-maxx, maxx);
         y = rng.uniformReal(-maxy, maxy);
         z = rng.uniformReal(-maxz, maxz);
-        map.updateOccupancy(x, y, z, 1, 0); // xyz, prob=1, depth=0
+        map.updateOccupancy(x, y, z, prob, 0); // xyz, prob=1, depth=0
         // cout << "Point " << i << ": " << x << "," << y << "," << z << endl;
     }
 
@@ -103,11 +118,11 @@ int main(int argc, char *argv[])
         If the UFOMap should be compressed using LZ4. Good if you are sending the UFOMap between computers.
         Lowest depth to publish.Higher value means less data to transfer, good in situation where the data rate is low.
     */
-    cout << "Publishing UFOmap [Res, MaxX, MaxY, MaxZ, NPoints] " << res << "," << maxx << "," << maxy << "," << maxz << "," << n_points << endl;
+    cout << "Publishing UFOmap [Res, MaxX, MaxY, MaxZ, NPoints, Prob] " << res << "," << maxx << "," << maxy << "," << maxz << "," << n_points << "," << prob << endl;
     bool compress = false;
     ufo::map::DepthType pub_depth = 0;
 
-    ros::Rate rate(1);
+    ros::Rate rate(0.00001);
     while (ros::ok())
     {
         // This is the UFOMap message object.
