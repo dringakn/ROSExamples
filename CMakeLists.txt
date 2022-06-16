@@ -574,12 +574,18 @@ add_executable(example_ufomap_load src/example_ufomap_load.cpp)
 add_dependencies(example_ufomap_load ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_ufomap_load ${catkin_LIBRARIES} UFO::Map)
 
+add_executable(example_path_planning_astar3d src/example_path_planning_astar3d.cpp)
+add_dependencies(example_path_planning_astar3d ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_path_planning_astar3d  ${catkin_LIBRARIES} UFO::Map)
 
-# add_executable(example_path_planning_astar3d  include/AStar.h  src/AStar3D.cpp  src/example_path_planning_astar3d.cpp)
-# add_dependencies(example_path_planning_astar3d ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-# target_link_libraries(example_path_planning_astar3d  ${catkin_LIBRARIES} UFO::Map)
+add_executable(example_set src/example_set.cpp)
+target_link_libraries(example_set ${catkin_LIBRARIES})
 
-# add_executable(example_path_planning_astar3d  include/AStar3D.h  src/AStar3D.cpp  src/example_path_planning_astar3d.cpp)
-# add_dependencies(example_path_planning_astar3d ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-# target_link_libraries(example_path_planning_astar3d  ${catkin_LIBRARIES} UFO::Map)
+add_executable(example_map src/example_map.cpp)
+target_link_libraries(example_map ${catkin_LIBRARIES})
+
+add_executable(example_priority_queue src/example_priority_queue.cpp)
+target_link_libraries(example_priority_queue ${catkin_LIBRARIES})
+
+
 
