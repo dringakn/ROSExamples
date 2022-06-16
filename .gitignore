@@ -40,7 +40,7 @@ CMakeLists.txt.user
 srv/_*.py
 *.pcd
 *.pyc
-*.ufo
+map/*.ufo
 qtcreator-*
 *.user
 
