@@ -581,9 +581,6 @@ target_link_libraries(example_path_planning_astar3d  ${catkin_LIBRARIES} UFO::Ma
 add_executable(example_set src/example_set.cpp)
 target_link_libraries(example_set ${catkin_LIBRARIES})
 
-add_executable(example_map src/example_map.cpp)
-target_link_libraries(example_map ${catkin_LIBRARIES})
-
 add_executable(example_priority_queue src/example_priority_queue.cpp)
 target_link_libraries(example_priority_queue ${catkin_LIBRARIES})
 
