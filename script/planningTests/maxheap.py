@@ -92,7 +92,6 @@ class MaxHeap:
             parent = idx >> 1
             if self.heap[idx] > self.heap[parent]:
                 self.__swap(idx, parent)
-                # self.__shift_up(parent)  # Avoid recursion
             idx = parent
 
     def __shift_down(self, idx):
@@ -107,7 +106,6 @@ class MaxHeap:
                 m_idx = right
             if m_idx != idx:
                 self.__swap(idx, m_idx)
-                # self.__shift_down(m_idx) # Avoid recursion
             else:  # No more swap required
                 break
             idx = m_idx
