@@ -3,7 +3,6 @@ from unittest import TestCase
 
 from minheap import MinHeap
 
-
 class TestMinHeap(TestCase):
 
     def test_push(self):
