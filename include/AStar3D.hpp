@@ -1,6 +1,7 @@
 /**
  *    Author: Dr. Ing. Ahmad Kamal Nasir
  *    Email: dringakn@gmail.com
+ *    Date: 14 June 2022
  *    Description:
  *      Given a start point, end point and an UFO (Unknown, Free, Occupied) map find the shortest path using A* algorithm.
  *      The input points are of standard ROS message type geometry_msgs::PointStamped and the UFO is of type
@@ -8,34 +9,26 @@
  *
  *      The output path is of type nav_msgs::Path.
  **/
-#include <cstddef>                                   // nullptr
-#include <geometry_msgs/Point.h>                     // Start/Goal Point
-#include <geometry_msgs/Pose.h>                      // Map origin
-#include <geometry_msgs/PoseStamped.h>               // Goal point: move_base/goal
+#include <bits/stdc++.h>                             // C++ functionality
+#include <ros/ros.h>                                 // ros functionality
+#include <geometry_msgs/PointStamped.h>              // Goal point: move_base/goal
 #include <geometry_msgs/PoseWithCovarianceStamped.h> // Start point: /initialpose
-#include <iostream>                                  // cout, cin
+#include <nav_msgs/Path.h>                           // Resultant path
 #include <ufo/map/occupancy_map.h>                   // ufo map
 #include <ufo/map/occupancy_map_color.h>             // ufo color map
 #include <ufomap_msgs/UFOMapMetaData.h>              // ufo map meta data
 #include <ufomap_msgs/UFOMapStamped.h>               // UFOMap ROS msg
 #include <ufomap_msgs/conversions.h>                 // To convert between UFO and ROS
 #include <ufomap_ros/conversions.h>                  // To convert between UFO and ROS
-#include <nav_msgs/Path.h>                           // Resultant path
-#include <queue>                                     // priority_queue
-#include <random_numbers/random_numbers.h>           // random number
-#include <ros/ros.h>                                 // ros functionality
-#include <tf/transform_listener.h>                   // Transform listener
 
 using namespace std;
-
 #define INF FLT_MAX
+
 /**
  * @brief Intermediate data structure to store voxel cell or node information.
- *        The members includes x(int), y(int), z(int), cost(float). Overloaded with
- *        ">" and "<" operators to compare cost value.
+ *        Overloaded with ">" and "<" operators to compare cost value.
  *
  */
-
 template <typename Key, typename Priority>
 class MyNode
 {
@@ -74,6 +67,9 @@ public:
     }
 };
 
+/**
+ * @brief Datastructure designed for the AStar calculations.
+ */
 template <typename Key, typename Priority>
 class MyQueue
 {
@@ -89,8 +85,21 @@ public:
     bool empty() const { return heap.empty(); }
     std::size_t size() const { return heap.size(); }
     const MyNode<Key, Priority> &top() const { return heap.front(); }
+
+    /**
+     * @brief To Check if the the Node is already visited.
+     *
+     * @param key NodeID
+     * @return true if already visited
+     * @return false otherwise
+     */
     bool isVisited(Key key) { return visited.find(key) != visited.end(); }
 
+    /**
+     * @brief Add the node to the data.
+     *
+     * @param node
+     */
     void push(MyNode<Key, Priority> &node)
     {
         size_t n = heap.size();
@@ -99,6 +108,11 @@ public:
         shiftUp(n);
     }
 
+    /**
+     * @brief Remove the next node to be processed
+     *
+     * @return MyNode<Key, Priority>
+     */
     MyNode<Key, Priority> pop()
     {
         if (size() == 0)
@@ -115,6 +129,12 @@ public:
         return ret;
     }
 
+    /**
+     * @brief Add or update the node in the data.
+     *
+     * @param node the node to be processed.
+     * @return int 1 if inserted, 2 if updated, 0 otherwise.
+     */
     int pushOrUpdate(MyNode<Key, Priority> &node)
     {
         // Add if doesn't exist
@@ -146,29 +166,6 @@ public:
         {
             return 0;
         }
-    }
-
-    bool set_priority(const Key &key, const Priority &new_priority)
-    {
-        bool result = false;
-        if (id.find(key) == id.end())
-            return result;
-
-        size_t heappos = id[key];
-        Priority &priority = heap[heappos].priority;
-        if (new_priority > priority)
-        {
-            priority = new_priority;
-            shiftUp(heappos);
-            result = true;
-        }
-        else if (new_priority < priority)
-        {
-            priority = new_priority;
-            shiftDown(heappos);
-            result = true;
-        }
-        return result;
     }
 
 private:
@@ -230,22 +227,101 @@ private:
     }
 };
 
+/**
+ * @brief The 3D AStar path planning object.
+ */
 template <typename Key, typename Priority>
 class AStar3D
 {
 private:
-    nav_msgs::Path path;                                      // Resultant path
-    MyNode<Key, Priority> start;                              // Starting location
-    MyNode<Key, Priority> goal;                               // Goal location
-    ufo::map::DepthType min_depth;                            // UFO depth level for search
-    bool occupied_space, free_space, unknown_space, contains; // UFO search flags
-    double search_distance;                                   // Nearest neighbourhood distance [m]
-    MyQueue<Key, Priority> queue;                             // Customized priority queue, smallest element on the top.
+    nav_msgs::Path path;
+    MyNode<Key, Priority> start;
+    MyNode<Key, Priority> goal;
+    ufo::map::DepthType search_depth;
+    bool occupied_space, free_space, unknown_space, contains, abort;
+    double search_distance;
+    double min_z;
+    MyQueue<Key, Priority> queue;
 
 public:
-    ufo::map::OccupancyMap map; // The UFO map
+    /**
+     * @brief The UFO map.
+     *
+     */
+    ufo::map::OccupancyMap map;
+    std::string map_frame;
 
-    bool findNearestVoxel(ufo::map::Point3 position, MyNode<Key, Priority> *result)
+    /**
+     * @brief Set the Minimum Z value for search
+     *
+     * @param depth new minimum search value [-Inf to +Inf]
+     */
+    void setSearchMinZ(double minZ)
+    {
+        this->min_z = minZ;
+    }
+
+    /**
+     * @brief Set the Search Depth object
+     *
+     * @param depth new depth value [0-21]
+     */
+    void setSearchDepth(ufo::map::DepthType depth)
+    {
+        this->search_depth = depth;
+        this->search_distance = map.getNodeSize(this->search_depth);
+        ROS_INFO("Occ[%d], Free[%d], Unknown[%d], Depth[%d][%f]", this->occupied_space, this->free_space, this->unknown_space, this->search_depth, this->search_distance);
+    }
+
+    /**
+     * @brief Abort the search if it's in prgoress.
+     */
+    void abortSearch()
+    {
+        this->abort = true;
+    }
+
+    /**
+     * @brief Find the nearest neighbour of the specified node.
+     *
+     * @param position input location
+     * @return std::vector<std::pair<Key, ufo::map::Point3>> list of neighbours
+     */
+    std::vector<std::pair<Key, ufo::map::Point3>> findNeighbours(MyNode<Key, Priority> position)
+    {
+        std::vector<std::pair<Key, ufo::map::Point3>> result;
+        double res = map.getNodeSize(this->search_depth);
+        for (double x = position.pos.x() - this->search_distance; x <= position.pos.x() + this->search_distance; x += res)
+            for (double y = position.pos.y() - this->search_distance; y <= position.pos.y() + this->search_distance; y += res)
+                for (double z = position.pos.z() - this->search_distance; z <= position.pos.z() + this->search_distance; z += res)
+                {
+                    if (z <= this->min_z)
+                        continue;
+
+                    ufo::map::Point3 pt(x, y, z);
+                    ufo::map::Code code = map.toCode(pt, this->search_depth);
+                    Key key = code.getCode();
+                    if (key == position.key)
+                        continue;
+
+                    if (this->free_space && map.isFree(code))
+                        result.push_back(make_pair(key, pt));
+                    else if (this->unknown_space && map.isUnknown(code))
+                        result.push_back(make_pair(key, pt));
+                }
+
+        return result;
+    }
+
+    /**
+     * @brief Get the Nearest Node object
+     *
+     * @param position input location
+     * @param result output node
+     * @return true if a nearest point is found
+     * @return false otherwise
+     */
+    bool getNearestNode(ufo::map::Point3 position, MyNode<Key, Priority> *result)
     {
         bool success = false; // No neighbour found.
         double dist = INF, temp;
@@ -265,51 +341,50 @@ public:
         return success;
     }
 
-    std::vector<std::pair<Key, ufo::map::Point3>> findNeighbours(MyNode<Key, Priority> position)
-    {
-        std::vector<std::pair<Key, ufo::map::Point3>> result;
-        double res = map.getNodeSize(this->min_depth);
-        for (double x = position.pos.x() - this->search_distance; x <= position.pos.x() + this->search_distance; x += res)
-            for (double y = position.pos.y() - this->search_distance; y <= position.pos.y() + this->search_distance; y += res)
-                for (double z = position.pos.z() - this->search_distance; z <= position.pos.z() + this->search_distance; z += res)
-                {
-                    ufo::map::Point3 pt(x, y, z);
-                    ufo::map::Code code = map.toCode(pt, this->min_depth);
-                    Key key = code.getCode();
-                    if (key == position.key)
-                        continue;
-
-                    if (this->free_space && map.isFree(code))
-                        result.push_back(make_pair(key, pt));
-                    else if (this->unknown_space && map.isUnknown(code))
-                        result.push_back(make_pair(key, pt));
-                }
-
-        return result;
-    }
-
+    /**
+     * @brief print the UFO location.
+     *
+     * @param pt UFO map locatoin
+     * @param prefix Prefix to be printed
+     */
     void printUFOPoint(ufo::map::Point3 &pt, std::string prefix = "")
     {
         ROS_INFO("%s[%+5.2f, %+5.2f, %+5.2f]", prefix.c_str(), pt.x(), pt.y(), pt.z());
     }
 
+    /**
+     * @brief print the Node
+     *
+     * @param pt Input node
+     * @param prefix Prefix to be printed
+     */
     void printNode(MyNode<Key, Priority> &pt, std::string prefix = "")
     {
-        ROS_INFO("%s %015lu[%+5.2f, %+5.2f, %+5.2f] -> %+5.2f [%5.2f]", prefix.c_str(), pt.key, pt.pos.x(), pt.pos.y(), pt.pos.z(), pt.priority, pt.g);
+        ROS_INFO("%s %015lu[%+5.2f, %+5.2f, %+5.2f]", prefix.c_str(), pt.key, pt.pos.x(), pt.pos.y(), pt.pos.z());
     }
 
-    AStar3D(bool occupied_space, bool free_space, bool unknown_space, bool contains, ufo::map::DepthType min_depth, double nn_distance) : map(1) // Constructor (occ, free, unknown, depth)
+    /**
+     * @brief Construct a new AStar3D object
+     *
+     * @param occupied_space enable/disable occupied voxel to be searched.
+     * @param free_space enable/disable free voxel to be searched.
+     * @param unknown_space enable/disable unknown voxel to be searched.
+     * @param depth search depth
+     */
+    AStar3D(bool occupied_space, bool free_space, bool unknown_space, ufo::map::DepthType depth) : map(1)
     {
-        this->contains = contains;             // Bounding box with contains
-        this->search_distance = nn_distance;   // Nearest neighbourhood distance [m]
-        this->occupied_space = occupied_space; // Flag to enable/disable to include occupied voxels in the search.
-        this->free_space = free_space;         // Flag to enable/disable to include free voxels in the search.
-        this->unknown_space = unknown_space;   // Flag to enable/disable to include unknown voxels in the search.
-        this->min_depth = min_depth;           // UFO depth level for search
-        std::cout << "Occ, Free, Unknown, Depth <-> " << this->occupied_space << "," << this->free_space << "," << this->unknown_space << "," << this->min_depth << std::endl;
+        this->abort = false;
+        this->contains = false;
+        this->occupied_space = occupied_space;
+        this->free_space = free_space;
+        this->unknown_space = unknown_space;
+        this->min_z = 0;
+        this->map_frame = "map";
+        this->setSearchDepth(depth);
+        ROS_INFO("Occ[%d], Free[%d], Unknown[%d], Depth[%d][%f]", this->occupied_space, this->free_space, this->unknown_space, this->search_depth, this->search_distance);
     }
 
-    virtual ~AStar3D() {} // Destructor
+    virtual ~AStar3D() {}
 
     /**
      * @brief Set the start point for the path. The point is assumed to be in the map frame.
@@ -324,12 +399,23 @@ public:
         ufo::map::Point3 in(pt.point.x, pt.point.y, pt.point.z);
         MyNode<Key, Priority> out;
         bool result = false;
-        if (findNearestVoxel(in, &out))
+        if (getNearestNode(in, &out))
         {
-            this->printUFOPoint(in, "Start point: ");
-            this->printNode(out, "Nearest voxel to start point: ");
-            this->start = out;
-            result = true;
+            if (out.pos.z() > this->min_z)
+            {
+                this->printUFOPoint(in, "Start point: ");
+                this->printNode(out, "Nearest voxel to start point: ");
+                this->start = out;
+                result = true;
+            }
+            else
+            {
+                this->printNode(out, "Failed to set start voxel, it's below minimum z.");
+            }
+        }
+        else
+        {
+            this->printUFOPoint(in, "Failed to set start point: ");
         }
         return result;
     }
@@ -347,12 +433,23 @@ public:
         ufo::map::Point3 in(pt.point.x, pt.point.y, pt.point.z);
         MyNode<Key, Priority> out;
         bool result = false;
-        if (findNearestVoxel(in, &out))
+        if (getNearestNode(in, &out))
         {
-            this->printUFOPoint(in, "Goal point: ");
-            this->printNode(out, "Nearest voxel to goal point: ");
-            this->goal = out;
-            result = true;
+            if (out.pos.z() > this->min_z)
+            {
+                this->printUFOPoint(in, "Goal point: ");
+                this->printNode(out, "Nearest voxel to goal point: ");
+                this->goal = out;
+                result = true;
+            }
+            else
+            {
+                this->printNode(out, "Failed to set goal voxel, it's below minimum z.");
+            }
+        }
+        else
+        {
+            this->printUFOPoint(in, "Failed to set goal point: ");
         }
         return result;
     }
@@ -364,28 +461,41 @@ public:
      */
     nav_msgs::Path getPath() // Get the previous calculated path
     {
+        path.header.seq = path.header.seq + 1;
         path.header.stamp = ros::Time();
+        path.header.frame_id = this->map_frame;
         return path;
     }
 
+    /**
+     * @brief Reconstruct the path
+     *
+     * @param current current node
+     * @return size_t number of nodes to be traversed
+     */
     size_t reconstuctPath(Key &current)
     {
         path.header.seq = path.header.seq + 1;
         path.header.stamp = ros::Time();
-        path.header.frame_id = "map"; // map->header.frame_id;
-        path.poses.clear();           // reset previous poses
+        path.header.frame_id = this->map_frame;
+        path.poses.clear();
         geometry_msgs::PoseStamped pos;
         pos.header = path.header;
+        pos.pose.orientation.x = pos.pose.orientation.y = pos.pose.orientation.z = 0;
+        pos.pose.orientation.w = 1;
         Key predecessor = current;
         do
         {
-            ufo::map::Point3 pt = map.toCoord(ufo::map::Code(predecessor, this->min_depth));
+            ufo::map::Point3 pt = map.toCoord(ufo::map::Code(predecessor, this->search_depth));
             pos.pose.position.x = pt.x();
             pos.pose.position.y = pt.y();
             pos.pose.position.z = pt.z();
             path.poses.push_back(pos);
             predecessor = queue.parent[predecessor];
         } while (predecessor != 0);
+
+        // Reverse the path: start to end.
+        std::reverse(path.poses.begin(), path.poses.end());
 
         return path.poses.size();
     }
@@ -433,21 +543,24 @@ public:
 
         while (!queue.empty())
         {
-            // Get the top value from the pirority queue to explore it's neighbour
             current = queue.pop();
 
-            // If the current cell is the goal, stop searching
             if (current.key == goal.key)
             {
-                // this->printNode(current, "GOAL            : ");
                 ROS_INFO("<<<FOUND>>> Iterations:%d, Visited:%d, Discarded:%d, NeighboursFound:%d, CostUpdated:%d, CostUnchanged:%d", ctr, visitedNodes, discardedNodes, neighbourNodes, updatedNodes, unchangedNodes);
                 return this->reconstuctPath(current.key);
             }
 
-            queue.visited[current.key] = true; // Add to the visited queue
+            if (this->abort)
+            {
+                this->abort = false;
+                ROS_INFO("<<<ABORT>>> Iterations:%d, Visited:%d, Discarded:%d, NeighboursFound:%d, CostUpdated:%d, CostUnchanged:%d", ctr, visitedNodes, discardedNodes, neighbourNodes, updatedNodes, unchangedNodes);
+                return this->reconstuctPath(current.key);
+            }
+
+            queue.visited[current.key] = true;
             visitedNodes++;
 
-            // Find the nearest voxel by Expansion
             for (const auto &n : this->findNeighbours(current))
             {
                 ctr++;
@@ -456,7 +569,7 @@ public:
                 if (queue.isVisited(neighbour.key))
                 {
                     discardedNodes++;
-                    continue; // Neighbour is the current node or already visited
+                    continue;
                 }
 
                 neighbour.pos = n.second;
@@ -465,19 +578,16 @@ public:
                 int ret = queue.pushOrUpdate(neighbour);
                 if (ret == 1)
                 {
-                    queue.parent[neighbour.key] = current.key; // Set parent Parent
-                    // this->printNode(neighbour, "QUEUED          : ");
+                    queue.parent[neighbour.key] = current.key;
                     neighbourNodes++;
                 }
                 else if (ret == 2)
                 {
-                    queue.parent[neighbour.key] = current.key; // Set parent Parent
-                    // this->printNode(neighbour, "COST UPDATED    : ");
+                    queue.parent[neighbour.key] = current.key;
                     updatedNodes++;
                 }
                 else
                 {
-                    // this->printNode(neighbour, "COST NOT UPDATED: ");
                     unchangedNodes++;
                 }
             }

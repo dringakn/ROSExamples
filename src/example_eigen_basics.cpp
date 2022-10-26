@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     std::cout << "Block of size " << i << "x" << i << std::endl;
     std::cout << mat.block(0, 0, i, i) << std::endl;
   }
-  // Eigen Rotation Matrices
+  // Eigen Rotation Matricespitch
   double roll = M_PI / 3, pitch = M_PI / 4, yaw = M_PI / 6;
   Eigen::AngleAxisd rAng(roll, Eigen::Vector3d::UnitX());
   Eigen::AngleAxisd pAng(pitch, Eigen::Vector3d::UnitY());

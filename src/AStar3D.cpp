@@ -201,11 +201,12 @@ int AStar3D::shortestPath()
 
         path.poses.clear(); // reset previous poses
         int idx = gidx, steps = 0;
+        geometry_msgs::PoseStamped pos;
+        pos.header = path.header;
+        pos.pose.orientation.x = pos.pose.orientation.y = pos.pose.orientation.z = 0;
+        pos.pose.orientation.w = 1;
         while (idx != -1)
         {
-            geometry_msgs::PoseStamped pos;
-            pos.header = path.header;
-
             // Covert current grid cell index to caresian coordinate
             pos.pose.position.x = (idx % width) * resolution;
             pos.pose.position.y = (idx / width) * resolution;
