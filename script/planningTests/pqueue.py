@@ -20,10 +20,16 @@ class QNode:
         self.key = hash(self.pos)
 
     def __lt__(self, other):
-        return self.p > other.p  # NOTE: Invert the logic for descending order
+        return self.p < other.p
+
+    def __le__(self, other):
+        return self.p <= other.p
 
     def __gt__(self, other):
-        return self.p < other.p  # NOTE: Invert the logic for descending order
+        return self.p > other.p
+
+    def __ge__(self, other):
+        return self.p >= other.p
 
     def __repr__(self):
         return f"{self.p:0.2f}(pos:{self.pos}[{self.key}])"
@@ -42,154 +48,136 @@ class QNode:
 class PQueue:
     def __init__(self):
         self.heap = list()  # List of nodes in the list
-        self.heap_ids = dict()  # For quick access, index of nodes in the heap based on node hash value.
+        self.heap_idx = dict()  # For quick access, index of nodes in the heap based on node hash value.
+        self.size = len(self.heap)
 
     def __repr__(self):
         return f"{self.heap}"
 
     def __len__(self):
-        return len(self.heap_ids)
+        return self.size
+
+    def __contains__(self, n: QNode):
+        return n.key in self.heap_idx
 
     def clear(self):
         self.heap.clear()
-        self.heap_ids.clear()
+        self.heap_idx.clear()
+        self.size = 0
 
     def peek(self):
-        if len(self.heap) == 0:
-            return None
-        else:
-            return self.heap[0]
-
-    def contains(self, node: QNode):
-        return node.key in self.heap_ids  # Fast access due to dict()
+        result = None
+        if self.size:
+            result = self.heap[0]
+        return result
 
     def push(self, node: QNode):
         result = False
-        if node.key not in self.heap_ids:
+        if node not in self:
             self.heap.append(node)  # Add the node to the end of heap
-            pos = len(self.heap) - 1  # idx of last position
-            self.heap_ids[node.key] = pos  # Add the node key:id to the dictionary for faster access.
-            self._shift_up(pos)  # Move it to the appropriate position and update heap_idx
+            self.size += 1  # Increment the number of elements
+            idx = self.size - 1  # zero offset, last element
+            self.heap_idx[node.key] = idx  # Add the node key:id to the dictionary for faster access.
+            self._shift_up(idx)  # Move it to the appropriate position and update heap_idx
             result = True
-
-        if len(self.heap) != len(self.heap_ids):
-            raise AssertionError("Something wrong!!!")
         return result
 
     def pop(self):
         result = None
-        if len(self.heap) == 1:
+        n = self.size
+        if n == 1:  # very last element
             result = self.heap.pop()  # Remove the last element
-            self.heap_ids.pop(result.key)  # Remove also from cached dictionary
-            if len(self.heap) != len(self.heap_ids):
-                raise AssertionError("Something wrong!!!")
-        elif len(self.heap) >= 2:
-            result = self.heap[0]  # Retrieve the first element
-            last_elem = self.heap.pop()  # Remove the last element
-            self.heap_ids.pop(last_elem.key)  # Remove it also from cache
-            self.heap[0] = last_elem  # Replace the first element with last
-            self.heap_ids[last_elem.key] = 0  # Change also it's heap_idx
+            self.heap_idx.pop(result.key)  # Remove also from cached dictionary
+            self.size -= 1  # Decrement size
+        elif n >= 2:  # Two or more elements
+            self._swap(0, self.size - 1)  # swap first and last element
+            result = self.heap.pop()  # Remove the last element
+            self.heap_idx.pop(result.key)  # Remove it also from cache
+            self.size -= 1 # Adjust the size
             self._shift_down(0)  # move it to appropriate position and update heap_idx
-            if len(self.heap) != len(self.heap_ids):
-                raise AssertionError("Something wrong!!!")
-
         return result
 
     def remove(self, node: QNode):
         result = False
-        if node.key in self.heap_ids:
-            node.p = float('inf')
-            self.update(node)
+        if node in self:
+            idx = self.heap_idx[node.key]
+            self._swap(idx, self.size - 1)
             self.heap.pop()
-            self.heap_ids.pop(node.key)
-            # index = self.heap_ids[node.key] # Quickly find the index of the node
-            # last_elem = self.heap.pop() # Remove the element at index with last element on heap.
-            # self.heap_ids.pop(last_elem.key) # Remove it also from the cache
-            # self.heap[index] = last_elem # Copy last element at the removed index
-            # self.heap_ids[last_elem.key] = index  # update the heap_idx accordingly
-            # self._shift_down(index)  # Update it's location accordingly
-            # # Will the heap_ids are still valid???
+            self.heap_idx.pop(node.key)
+            self.size -= 1
+            self._shift_up(idx)  # The combination of up/down make heap invariant, instead of O(n)
+            self._shift_down(idx)
             result = True
-
-        if len(self.heap) != len(self.heap_ids):
-            raise AssertionError("Something wrong!!!")
-
         return result
 
     def update(self, node: QNode):
         result = False
-        try:
-            if node.key in self.heap_ids:
-                index = self.heap_ids[node.key]  # Quickly find the index of the item
-                if node.p < self.heap[index].p:  # if new priority is less than existing priority
-                    self.heap[index] = node  # Update the node
-                    self._shift_up(index)  # Move it to appropriate place
-                    result = True
-                elif node.p > self.heap[index].p:  # if the new priority is greater than existing priority?
-                    self.heap[index] = node  # Update the node
-                    self._shift_down(index)  # Move it to appropriate place
-                    result = True
-        except:
-            pass
-
-        if len(self.heap) != len(self.heap_ids):
-            raise AssertionError("Something wrong!!!")
-
+        if node in self:
+            index = self.heap_idx[node.key]  # Quickly find the index of the item
+            if node < self.heap[index]:  # if new priority is less than existing priority
+                self.heap[index] = node  # Update the node
+                self._shift_up(index)  # Move it to appropriate place
+                result = True
+            elif node > self.heap[index]:  # if the new priority is greater than existing priority?
+                self.heap[index] = node  # Update the node
+                self._shift_down(index)  # Move it to appropriate place
+                result = True
         return result
 
-    def _shift_up(self, pos):
-        n = len(self.heap)
+    def _shift_up(self, idx):
+        parent = (idx - 1) >> 1
+        while (parent >= 0) and (self.heap[parent] > self.heap[idx]):
+            self._swap(parent, idx)
+            idx = parent
+            parent = (idx - 1) >> 1
 
-        if (n < 2) or (pos <= 0):
-            return  # return because, no or one element in the heap or idx<=0
+    def _shift_down(self, idx):
+        n = self.size
+        while True:
+            m_idx = idx  # Smaller child index
+            left = (idx << 1) + 1
+            right = left + 1
+            if left < n: # Left child exists
+                if self.heap[m_idx] > self.heap[left]: # parent is greater than left child
+                    m_idx = left # set minimum as left
 
-        parent = (pos - 1) >> 1
+            if right < n: # Right child exists
+                if self.heap[m_idx] > self.heap[right]: # parent or left is greater then right
+                    m_idx = right # set minimum as right
 
-        if not (self.heap[pos] > self.heap[parent]):
-            return  # node is less than it's parent (Note inverted logic in overload!)
-
-        val = self.heap[pos]  # Get the new item
-
-        while val > self.heap[parent]:
-            self.heap[pos] = self.heap[parent]
-            self.heap_ids[self.heap[pos].key] = pos
-            pos = parent
-            if pos <= 0:
-                break
-            parent = (parent - 1) >> 1
-
-        self.heap[pos] = val  # Save the new-item
-        self.heap_ids[val.key] = pos  # Cache new-item's heap_idx
-
-    def _shift_down(self, pos):
-        n = len(self.heap)
-        child = (pos << 1) + 1
-        if (n < 2) or (child >= n):
-            return  # return because, no or one element in the heap or child index is outside heap
-
-        if (child + 1) < n:
-            if self.heap[child + 1] > self.heap[child]:
-                child = child + 1  # Switch child
-
-        if not (self.heap[child] > self.heap[pos]):
-            return  # node is less than it's parent (Note inverted logic in overload!)
-
-        val = self.heap[pos]  # Get the new item
-
-        while self.heap[child] > val:
-            self.heap[pos] = self.heap[child]
-            self.heap_ids[self.heap[pos].key] = pos
-            pos = child
-            child = (child << 1) + 1
-            if child >= n:
+            if m_idx != idx:
+                self._swap(idx, m_idx)
+            else:  # No more swap required
                 break
 
-            if (child + 1) < n:
-                if self.heap[child + 1] > self.heap[child]:
-                    child = child + 1  # Switch child
+            idx = m_idx
 
-        self.heap[pos] = val  # Save the new-item
-        self.heap_ids[val.key] = pos  # Cache new-item's heap_idx
+    def _swap(self, idx1, idx2):
+        self.heap[idx1], self.heap[idx2] = self.heap[idx2], self.heap[idx1]
+        self.heap_idx[self.heap[idx1].key], self.heap_idx[self.heap[idx2].key] = idx1, idx2
+
+    def _is_min_heap(self, idx, n):
+
+        if idx > n:  # complete binary tree: out of valid index range
+            return True
+
+        left = (idx << 1) + 1  # left node index
+        if left < n:  # check if left node exists
+            if self.heap[left] < self.heap[idx]:  # check if left node value is smaller then parent
+                print(f"L[{left}]P[{idx}]: {self.heap[left]} < {self.heap[idx]}")
+                return False
+
+        right = left + 1  # right node index
+        if right < n:  # check if right node exists
+            if self.heap[right] < self.heap[idx]:  # check if right node value is smaller then parent
+                print(f"R[{right}]P[{idx}]: {self.heap[right]} < {self.heap[idx]}")
+                return False
+
+        # check for left and right subtrees
+        return self._is_min_heap(left, n) and self._is_min_heap(right, n)
+
+    def _is_heap(self):
+        return self._is_min_heap(0, self.size)
 
     def _build_heap(self):
         """Transform list into a heap, in-place, in O(len(x)) time."""

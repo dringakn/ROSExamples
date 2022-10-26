@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, uniform, choice
 from unittest import TestCase
 
 from pqueue import QNode, PQueue
@@ -25,7 +25,6 @@ class TestQNode(TestCase):
         self.assertEqual(len(s), 4)
         self.assertIn(n1, s)
 
-
 class TestPQueue(TestCase):
 
     def setUp(self) -> None:
@@ -42,7 +41,7 @@ class TestPQueue(TestCase):
         self.assertIsInstance(self.q, PQueue)
         self.assertIsInstance(self.n1, QNode)
         self.assertEqual(len(self.q), 4)
-        for k, v in self.q.heap_ids.items():
+        for k, v in self.q.heap_idx.items():
             self.assertEqual(self.q.heap[v].key, k)
 
     def test_clear(self):
@@ -59,7 +58,7 @@ class TestPQueue(TestCase):
         self.assertEqual(self.n1, self.q.peek())  # n1 should be at the top
 
     def test_contains(self):
-        self.assertTrue(self.q.contains(self.n2))
+        self.assertTrue(self.n2 in self.q)
 
     def test_push(self):
         q = PQueue()
@@ -83,26 +82,26 @@ class TestPQueue(TestCase):
 
     def test_remove(self):
         q = PQueue()
-        for i in range(100):
-            n = QNode((randint(1, 10), randint(1, 10)), randint(1, 100))
-            if q.contains(n):
-                if n.p > 50:
-                    q.remove(n)
-                    # pass
-                else:
-                    q.update(n)
-            else:
-                q.push(n)
+        while len(q) < 100000:
+            n = QNode((randint(1, 1000), randint(1, 1000)), randint(1, 100000))
+            q.push(n)
+
+        for i in range(1000):
+            n = choice(q.heap)
+            x = QNode(n.pos, n.p)
+            # q.remove(n)
+            x.p -= 999
+            q.update(x)
+
+        self.assertTrue(len(set(q.heap_idx.values())) == len(q.heap_idx)) # No duplicated index
         print(f"Size: {len(q)}")
+        self.assertTrue(q._is_heap())
+
         last_val = QNode((0, 0), float('-inf'))
         for i in range(len(q)):
-            try:
-                x = q.pop()
-                self.assertLessEqual(last_val.p, x.p)
-                last_val = x
-                print(x)
-            except Exception as ex:
-                pass
+            x = q.pop()
+            self.assertLessEqual(last_val.p, x.p)
+            last_val = x
 
     def test_update(self):
         self.q.update(QNode((1, 1), 101, 101))
