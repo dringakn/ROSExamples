@@ -55,7 +55,7 @@ class MaxHeap:
             result = self.heap.pop()
             self.heap_idx.pop(result)
         elif n >= 2:
-            self.__swap(0, len(self.heap)-1)
+            self.__swap(0, len(self.heap) - 1)
             result = self.heap.pop()
             self.heap_idx.pop(result)
             self.__shift_down(0)
@@ -82,11 +82,10 @@ class MaxHeap:
     def remove(self, item):
         if item in self.heap_idx:
             idx = self.heap_idx[item]
-            self.__swap(idx, len(self.heap)-1)
+            self.__swap(idx, len(self.heap) - 1)
             result = self.heap.pop()
             self.heap_idx.pop(result)
             self.__shift_down(idx)
-
 
     def __shift_up(self, idx):
         parent = idx >> 1

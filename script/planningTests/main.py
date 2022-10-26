@@ -1,26 +1,24 @@
-from ogm import OGM
-from astar import AStar, QNode
-
 def list_dict_lookup_performance():
     import time
     ll = [i for i in range(100_000_000)]
-    dd = {i:i for i in range(100_000_000)}
+    dd = {i: i for i in range(100_000_000)}
 
     start = time.time()
     print(99_999_999 in dd)
-    print(f"DD Exec. time: {time.time()-start}")
+    print(f"DD Exec. time: {time.time() - start}")
 
     start = time.time()
     print(99_999_999 in ll)
-    print(f"LL Exec. time: {time.time()-start}")
+    print(f"LL Exec. time: {time.time() - start}")
+
 
 def test_pqueue():
     from pqueue import PQueue, QNode
     q = PQueue()
-    n1 = QNode((1,1), 100)
-    n2 = QNode((2,2), 200)
-    n3 = QNode((3,3), 300)
-    n4 = QNode((4,4), 400)
+    n1 = QNode((1, 1), 100)
+    n2 = QNode((2, 2), 200)
+    n3 = QNode((3, 3), 300)
+    n4 = QNode((4, 4), 400)
     q.push(n4)
     q.push(n3)
     q.push(n2)
@@ -48,6 +46,7 @@ def test_pqueue():
     q.remove(n3)
     q.remove(n1)
     q.contains(n4)
+
 
 if __name__ == '__main__':
     # list_dict_lookup_performance()

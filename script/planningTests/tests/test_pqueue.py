@@ -1,6 +1,8 @@
-from unittest import TestCase
-from pqueue import QNode, PQueue
 from random import randint
+from unittest import TestCase
+
+from pqueue import QNode, PQueue
+
 
 class TestQNode(TestCase):
     def test_dist(self):
@@ -40,7 +42,7 @@ class TestPQueue(TestCase):
         self.assertIsInstance(self.q, PQueue)
         self.assertIsInstance(self.n1, QNode)
         self.assertEqual(len(self.q), 4)
-        for k,v in self.q.heap_ids.items():
+        for k, v in self.q.heap_ids.items():
             self.assertEqual(self.q.heap[v].key, k)
 
     def test_clear(self):
@@ -62,15 +64,14 @@ class TestPQueue(TestCase):
     def test_push(self):
         q = PQueue()
         for i in range(100000):
-            n = QNode((randint(1,100), randint(1,100)), randint(1,100))
+            n = QNode((randint(1, 100), randint(1, 100)), randint(1, 100))
             q.push(n)
 
-        last_val = QNode((0,0), float('-inf'))
+        last_val = QNode((0, 0), float('-inf'))
         for i in range(len(q)):
             x = q.pop()
             self.assertLessEqual(last_val.p, x.p)
             last_val = x
-
 
     def test_pop(self):
         q = PQueue()
@@ -83,7 +84,7 @@ class TestPQueue(TestCase):
     def test_remove(self):
         q = PQueue()
         for i in range(100):
-            n = QNode((randint(1,10), randint(1,10)), randint(1,100))
+            n = QNode((randint(1, 10), randint(1, 10)), randint(1, 100))
             if q.contains(n):
                 if n.p > 50:
                     q.remove(n)
@@ -93,7 +94,7 @@ class TestPQueue(TestCase):
             else:
                 q.push(n)
         print(f"Size: {len(q)}")
-        last_val = QNode((0,0), float('-inf'))
+        last_val = QNode((0, 0), float('-inf'))
         for i in range(len(q)):
             try:
                 x = q.pop()
@@ -104,16 +105,16 @@ class TestPQueue(TestCase):
                 pass
 
     def test_update(self):
-        self.q.update(QNode((1,1), 101, 101))
+        self.q.update(QNode((1, 1), 101, 101))
         self.assertEqual(self.n1, self.q.peek())
-        self.q.update(QNode((1,1), 201, 201))
+        self.q.update(QNode((1, 1), 201, 201))
         self.assertEqual(self.n2, self.q.peek())
-        self.q.update(QNode((1,1), 101, 101))
+        self.q.update(QNode((1, 1), 101, 101))
         self.assertEqual(self.n1, self.q.peek())
-        self.q.update(QNode((1,1), 901, 901))
-        self.q.update(QNode((2,2), 902, 902))
-        self.q.update(QNode((3,3), 903, 903))
-        self.q.update(QNode((4,4), 904, 904))
+        self.q.update(QNode((1, 1), 901, 901))
+        self.q.update(QNode((2, 2), 902, 902))
+        self.q.update(QNode((3, 3), 903, 903))
+        self.q.update(QNode((4, 4), 904, 904))
         self.assertEqual(self.n1, self.q.peek())
 
         for i in range(len(self.q)):

@@ -1,18 +1,21 @@
-from unittest import TestCase
-from maxheap import MaxHeap
 from random import randint, uniform
+from unittest import TestCase
+
+from maxheap import MaxHeap
+
+
 class TestMaxHeap(TestCase):
     def test_push(self):
         mh = MaxHeap()
         for i in range(100000):
-            item = (randint(-10000,10000), randint(-10000,10000))
+            item = (randint(-10000, 10000), randint(-10000, 10000))
             mh.push(item)
             self.assertEqual(mh.heap[mh.heap_idx[item]], item)
 
     def test_pop(self):
         mh = MaxHeap()
         for i in range(10000):
-            mh.push((uniform(-10000,10000), uniform(-10000,10000)))
+            mh.push((uniform(-10000, 10000), uniform(-10000, 10000)))
 
         last_val = (float('inf'), float('inf'))
         for i in range(len(mh.heap)):

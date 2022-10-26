@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class OGM:
     def __init__(self, width, height):
         self.OBSTACLE = 1
@@ -12,7 +13,7 @@ class OGM:
         return f"{self.map.astype(int)}"
 
     def within_map(self, pos: tuple):
-        (x,y) = (round(pos[0]), round(pos[1]))
+        (x, y) = (round(pos[0]), round(pos[1]))
         return (0 <= x < self.width) and (0 <= y < self.height)
 
     def set_map(self, map: np.array):
@@ -70,11 +71,10 @@ class OGM:
             return False
 
     def get_neighbours(self, pos: tuple, free_only=True):
-        (x,y) = (round(pos[0]), round(pos[1]))
-        neighbours = {(x+1, y):1, (x+1, y+1):1.414, (x, y+1):1, (x-1, y+1):1.414, (x-1, y):1, (x-1, y-1):1.414, (x, y-1):1, (x+1, y-1):1.414}
+        (x, y) = (round(pos[0]), round(pos[1]))
+        neighbours = {(x + 1, y): 1, (x + 1, y + 1): 1.414, (x, y + 1): 1, (x - 1, y + 1): 1.414, (x - 1, y): 1,
+                      (x - 1, y - 1): 1.414, (x, y - 1): 1, (x + 1, y - 1): 1.414}
         return {k: v for k, v in neighbours.items() if self.is_free(k)}
 
     def successors(self, pos: tuple):
         return self.get_neighbours(pos)
-
-

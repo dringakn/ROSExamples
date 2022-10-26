@@ -4,15 +4,15 @@ h(x): estimated cost to move from current->goal
 U: Open list, list of nodes to be examined, sorted by f(x)
 V: Closed list, list of nodes which has been already visited, also contains parent info.
 """
-from pqueue import PQueue, QNode
 from ogm import OGM
-from math import sqrt
+from pqueue import PQueue, QNode
+
 
 class AStar:
     def __init__(self):
-        self.map = OGM(0,0)
-        self.start = QNode((0,0))
-        self.goal = QNode((0,0))
+        self.map = OGM(0, 0)
+        self.start = QNode((0, 0))
+        self.goal = QNode((0, 0))
         self.U = PQueue()  # Openlist
         self.V = set()  # Closedlist, Visited, is it really required due to keys??
 
@@ -55,4 +55,3 @@ class AStar:
                     self.U.push(x)  # Add the node only if not already visited
                 else:
                     self.U.update(x, new_p)
-
