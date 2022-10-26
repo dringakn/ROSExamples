@@ -88,25 +88,29 @@ class MaxHeap:
             self.__shift_down(idx)
 
     def __shift_up(self, idx):
-        parent = idx >> 1
-        if idx <= 0:
-            return
-        elif self.heap[idx] > self.heap[parent]:
-            self.__swap(idx, parent)
-            self.__shift_up(parent)
+        while idx > 0:
+            parent = idx >> 1
+            if self.heap[idx] > self.heap[parent]:
+                self.__swap(idx, parent)
+                # self.__shift_up(parent)  # Avoid recursion
+            idx = parent
 
     def __shift_down(self, idx):
-        left = idx << 1
-        right = left + 1
-        m_idx = idx
         n = len(self.heap)
-        if n > left and self.heap[m_idx] < self.heap[left]:
-            m_idx = left
-        if n > right and self.heap[m_idx] < self.heap[right]:
-            m_idx = right
-        if m_idx != idx:
-            self.__swap(idx, m_idx)
-            self.__shift_down(m_idx)
+        while True:
+            m_idx = idx
+            left = idx << 1
+            right = left + 1
+            if n > left and self.heap[m_idx] < self.heap[left]:
+                m_idx = left
+            if n > right and self.heap[m_idx] < self.heap[right]:
+                m_idx = right
+            if m_idx != idx:
+                self.__swap(idx, m_idx)
+                # self.__shift_down(m_idx) # Avoid recursion
+            else:  # No more swap required
+                break
+            idx = m_idx
 
     def __swap(self, idx1, idx2):
         self.heap[idx1], self.heap[idx2] = self.heap[idx2], self.heap[idx1]

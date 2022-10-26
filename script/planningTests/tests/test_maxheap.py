@@ -11,7 +11,6 @@ class TestMaxHeap(TestCase):
             item = (randint(-10000, 10000), randint(-10000, 10000))
             mh.push(item)
             self.assertEqual(mh.heap[mh.heap_idx[item]], item)
-
     def test_pop(self):
         mh = MaxHeap()
         for i in range(10000):
