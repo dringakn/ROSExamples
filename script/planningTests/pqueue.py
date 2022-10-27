@@ -13,9 +13,9 @@ from math import sqrt
 
 
 class QNode:
-    def __init__(self, pos, p=float('inf'), g=float('inf')):
+    def __init__(self, pos, p=float('inf')):
+        self.g = float('inf')
         self.p = p
-        self.g = g
         self.pos = pos
         self.key = hash(self.pos)
 
@@ -72,15 +72,11 @@ class PQueue:
         return result
 
     def push(self, node: QNode):
-        result = False
-        if node not in self:
-            self.heap.append(node)  # Add the node to the end of heap
-            self.size += 1  # Increment the number of elements
-            idx = self.size - 1  # zero offset, last element
-            self.heap_idx[node.key] = idx  # Add the node key:id to the dictionary for faster access.
-            self._shift_up(idx)  # Move it to the appropriate position and update heap_idx
-            result = True
-        return result
+        self.heap.append(node)  # Add the node to the end of heap
+        self.size += 1  # Increment the number of elements
+        idx = self.size - 1  # zero offset, last element
+        self.heap_idx[node.key] = idx  # Add the node key:id to the dictionary for faster access.
+        self._shift_up(idx)  # Move it to the appropriate position and update heap_idx
 
     def pop(self):
         result = None
@@ -111,18 +107,27 @@ class PQueue:
         return result
 
     def update(self, node: QNode):
-        result = False
-        if node in self:
+        # Assuming node is present
+        index = self.heap_idx[node.key]  # Quickly find the index of the item
+        if node < self.heap[index]:  # if new priority is less than existing priority
+            self.heap[index] = node  # Update the node
+            self._shift_up(index)  # Move it to appropriate place
+        elif node > self.heap[index]:  # if the new priority is greater than existing priority?
+            self.heap[index] = node  # Update the node
+            self._shift_down(index)  # Move it to appropriate place
+
+    def push_or_update(self, node: QNode):
+        result = 0
+        if node not in self:
+            self.push(node)
+            result = 1
+        else:
             index = self.heap_idx[node.key]  # Quickly find the index of the item
-            if node < self.heap[index]:  # if new priority is less than existing priority
-                self.heap[index] = node  # Update the node
-                self._shift_up(index)  # Move it to appropriate place
-                result = True
-            elif node > self.heap[index]:  # if the new priority is greater than existing priority?
-                self.heap[index] = node  # Update the node
-                self._shift_down(index)  # Move it to appropriate place
-                result = True
+            if node.g < self.heap[index].g:
+                self.update(node)
+                result = 2
         return result
+
 
     def _shift_up(self, idx):
         parent = (idx - 1) >> 1

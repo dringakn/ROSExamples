@@ -14,7 +14,8 @@ class AStar:
         self.start = QNode((0, 0))
         self.goal = QNode((0, 0))
         self.U = PQueue()  # Openlist
-        self.V = set()  # Closedlist, Visited, is it really required due to keys??
+        self.V = set()  # Closed/Visited
+        self.P = dict() # Store parent information
 
     def set_start(self, start: QNode):
         self.start = start
@@ -32,26 +33,45 @@ class AStar:
         self.U.clear()
         self.V.clear()
         self.start.g = 0
-        self.start.p = self._calculate_priority(self.start)
-        self.U.push(self.start)
+        self.start.p = self.start.g + self._calculate_priority(self.start)
+        self.U.push(self.start) # Add to the pqueue
+        self.P[self.start.key] = (None, self.start.pos)  # Add to the parent list
         while True:
-            if len(self.U) == 0:
+            if len(self.U) == 0: # Is the pqueue empty?
                 print(f"No path found!!!")
                 break
-            else:
-                u = self.U.pop()
-                # self.V.add(u) # Add the popped node to the visited
 
-            if u == self.goal:
-                print(f"Path found")
+            u = self.U.pop()  # Pop the next smallest p-val from the pqueue
+            self.V.add(u.key)  # Add the popped node to the visited set
+            if u == self.goal:  # Is popped node is the goal?
+                print(self.reconstruct_path(u))
                 break
 
-            # Keep finding by checking neighbours of popped node
-            for p, c in self.map.get_neighbours(u.pos).items():
-                x = QNode(p)
-                x.g = u.data.g + c  # Movement cost
-                x.p = x.g + x.dist(self.goal)  # Heuristic cost
-                if not self.U.contains(x):
-                    self.U.push(x)  # Add the node only if not already visited
-                else:
-                    self.U.update(x, new_p)
+            # Find the free neighbours of popped node
+            for pos, cost in self.map.get_neighbours(u.pos).items():
+
+                x = QNode(pos)
+                if x.key in self.V:
+                    continue  # Skip if neighbour is already visited
+
+                x.g = u.g + cost  # Add cost to move to the neighbour
+                x.p = x.g + x.dist(self.goal)  # Add the goal's heuristic cost from neighnour locaiton
+
+                # Add the neighbour only if it doesn't exist
+                # Otherwise, if the neighbour already exist, replace it only if new g-val is smaller then prior
+                result = self.U.push_or_update(x)
+                if result != 0:
+                    self.P[x.key] = (u.key, u.pos)  # If pushed or update, keep track of its parent.
+
+    def reconstruct_path(self, node: QNode):
+        path = [node.pos]
+        predecessor = node.key
+        while predecessor is not None:
+            next = self.P[predecessor]
+            if next[0] is None:
+                break
+            path.append(next[1])   # Append the path with the position value
+            predecessor = next[0]  # Get the parent of the node
+
+        path.reverse()
+        return path

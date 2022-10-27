@@ -6,18 +6,18 @@ from pqueue import QNode, PQueue
 
 class TestQNode(TestCase):
     def test_dist(self):
-        n1 = QNode((1, 1), 100, 100)
-        n2 = QNode((2, 2), 200, 200)
-        n3 = QNode((3, 3), 300, 300)
-        n4 = QNode((4, 4), 400, 400)
-        n5 = QNode((1, 1), 999, 999)
+        n1 = QNode((1, 1), 100)
+        n2 = QNode((2, 2), 200)
+        n3 = QNode((3, 3), 300)
+        n4 = QNode((4, 4), 400)
+        n5 = QNode((1, 1), 999)
         self.assertIsInstance(n1, QNode)
         self.assertEqual(n1.key, n5.key)
         self.assertNotEqual(n1, n2)
         self.assertTupleEqual(n3.pos, (3, 3))
-        self.assertAlmostEqual(n5.g, 999)
         self.assertAlmostEqual(n2.p, 200)
-        self.assertLess(n2, n1)  # Note for the inverted logic to compare priority
+        self.assertGreater(n2, n1)
+        self.assertLess(n2, n3)
         self.assertAlmostEqual(n1.dist(n2), 1.4142135623730951)
         self.assertAlmostEqual(n2.dist(n1), 1.4142135623730951)
         self.assertAlmostEqual(n4.dist(n1), 4.242640687119285)
@@ -29,11 +29,11 @@ class TestPQueue(TestCase):
 
     def setUp(self) -> None:
         self.q = PQueue()
-        self.n1 = QNode((1, 1), 100, 100)
-        self.n2 = QNode((2, 2), 200, 200)
-        self.n3 = QNode((3, 3), 300, 300)
-        self.n4 = QNode((4, 4), 400, 400)
-        self.n5 = QNode((1, 1), 999, 999)
+        self.n1 = QNode((1, 1), 100)
+        self.n2 = QNode((2, 2), 200)
+        self.n3 = QNode((3, 3), 300)
+        self.n4 = QNode((4, 4), 400)
+        self.n5 = QNode((1, 1), 999)
         self.q.push(self.n4)
         self.q.push(self.n3)
         self.q.push(self.n2)
@@ -94,7 +94,6 @@ class TestPQueue(TestCase):
             q.update(x)
 
         self.assertTrue(len(set(q.heap_idx.values())) == len(q.heap_idx)) # No duplicated index
-        print(f"Size: {len(q)}")
         self.assertTrue(q._is_heap())
 
         last_val = QNode((0, 0), float('-inf'))
@@ -104,17 +103,14 @@ class TestPQueue(TestCase):
             last_val = x
 
     def test_update(self):
-        self.q.update(QNode((1, 1), 101, 101))
+        self.q.update(QNode((1, 1), 101))
         self.assertEqual(self.n1, self.q.peek())
-        self.q.update(QNode((1, 1), 201, 201))
+        self.q.update(QNode((1, 1), 201))
         self.assertEqual(self.n2, self.q.peek())
-        self.q.update(QNode((1, 1), 101, 101))
+        self.q.update(QNode((1, 1), 101))
         self.assertEqual(self.n1, self.q.peek())
-        self.q.update(QNode((1, 1), 901, 901))
-        self.q.update(QNode((2, 2), 902, 902))
-        self.q.update(QNode((3, 3), 903, 903))
-        self.q.update(QNode((4, 4), 904, 904))
+        self.q.update(QNode((1, 1), 901))
+        self.q.update(QNode((2, 2), 902))
+        self.q.update(QNode((3, 3), 903))
+        self.q.update(QNode((4, 4), 904))
         self.assertEqual(self.n1, self.q.peek())
-
-        for i in range(len(self.q)):
-            print(self.q.pop())
