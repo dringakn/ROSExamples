@@ -16,6 +16,7 @@ class AStar:
         self.U = PQueue()  # Openlist
         self.V = set()  # Closed/Visited
         self.P = dict() # Store parent information
+        self._path_found = False
 
     def set_start(self, start: QNode):
         self.start = start
@@ -30,6 +31,7 @@ class AStar:
         return node.g + node.dist(self.goal)
 
     def search_path(self):
+        self._path_found = False
         self.U.clear()
         self.V.clear()
         self.start.g = 0
@@ -39,13 +41,15 @@ class AStar:
         while True:
             if len(self.U) == 0: # Is the pqueue empty?
                 print(f"No path found!!!")
-                break
+                return False
 
             u = self.U.pop()  # Pop the next smallest p-val from the pqueue
             self.V.add(u.key)  # Add the popped node to the visited set
             if u == self.goal:  # Is popped node is the goal?
-                print(self.reconstruct_path(u))
-                break
+                self.goal = u
+                self._path_found = True
+                print(f"Path found.")
+                return True
 
             # Find the free neighbours of popped node
             for pos, cost in self.map.get_neighbours(u.pos).items():
@@ -75,3 +79,7 @@ class AStar:
 
         path.reverse()
         return path
+
+    def get_path(self):
+        if self._path_found:
+            return self.reconstruct_path(self.goal)
