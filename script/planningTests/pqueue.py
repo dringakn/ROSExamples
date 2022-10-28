@@ -19,6 +19,7 @@ class QNode:
         self.p = p
         self.pos = pos
         self.key = hash(self.pos)
+        self.parent = None
 
     def __lt__(self, other):
         return self.p < other.p
