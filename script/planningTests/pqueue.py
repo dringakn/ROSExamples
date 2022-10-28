@@ -15,6 +15,7 @@ from math import sqrt
 class QNode:
     def __init__(self, pos, p=float('inf')):
         self.g = float('inf')
+        self.rhs = float('inf')  # For D* algorithm
         self.p = p
         self.pos = pos
         self.key = hash(self.pos)

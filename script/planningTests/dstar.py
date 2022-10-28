@@ -7,76 +7,62 @@ V: Closed list, list of nodes which has been already visited, also contains pare
 from math import sqrt
 
 from ogm import OGM
-from pqueue import PQueue
-
-
-class DStarNode:
-    def __init__(self, x, y):
-        self.g = float('inf')
-        self.rhs = float('inf')
-        self.x = x
-        self.y = y
-        self.key = hash((self.x, self.y))
-
-    def __repr__(self):
-        return f"pos: ({self.x}, {self.y}), g: {self.g}, rhs: {self.rhs}"
-
-    def dist(self, other):
-        return sqrt((self.x - other.x) ** 2 + (self.y - other.y) ** 2)
-
-    def __eq__(self, other):
-        # return (self.x, self.y) == (other.x, other.y)
-        return self.key == other.key
-
-    def __hash__(self):
-        return self.key  # Create hash for tuple
+from pqueue import PQueue, QNode
 
 
 class DStar:
     def __init__(self, width, height):
         self.map = OGM(width, height)
-        self.start = DStarNode(0, 0)
-        self.goal = DStarNode(0, 0)
+        self.start = QNode((0, 0))
+        self.goal = QNode((0, 0))
         self.U = PQueue()  # Openlist
         self.V = set()  # Closedlist, Visited
+        self.BP = dict() # Store parent(BackPointer) information
+        self._path_found = False
+        self.km = 0;
+    def calculate_key(self, node: QNode):
+        k = min(node.g, node.rhs)
+        return (k + node.dist(self.start) + self.km, k)
 
-    def CalculatePriority(self, ds_node):
-        k = min(ds_node.g, ds_node.rhs)
-        return (k + ds_node.dist(self.start), k)
+    def update_vertex(self, u: QNode):
+        if (u.g != u.rhs) and (u in self.U):
+            u.p = self.calculate_key(u)
+            self.U.update(u)
+            # u.rhs = min([s.g + s.dist(u) for s in self.map.successors(u)])
+        elif (u.g != u.rhs) and (u not in self.U):
+            u.p = self.calculate_key(u)
+            self.U.push(u)
+        elif (u.g == u.rhs) and (u in self.U):
+            self.U.remove(u)
 
-    def UpdateVertex(self, u):
-        if u != self.goal and self.U.contains(u):
-            u.rhs = min([s.g + s.dist(u) for s in self.map.successors(u)])
-        if u not in self.V:
-            self.V[u] = True  # TODO: Use key instead of (x,y)
-        if u.g != u.rhs:
-            self.U.push((self.CalculatePriority(u), u))
-
-    def ComputeSortestPath(self):
-        while (self.start.rhs != self.start.g) | (self.U.queue[0][0] < self.CalculatePriority(self.start)):
-            u = self.U.pop()
+    def compute_sortest_path(self):
+        while (self.U.peek() < self.start) | (self.start.rhs > self.start.g):
+            u = self.U.peek()
+            k_old = u.p
+            k_new = self.calculate_key(u)
             if u.g > u.rhs:
                 u.g = u.rhs
                 for s in Pred(u):
-                    self.UpdateVertex(s)
+                    self.update_vertex(s)
             else:
                 u.g = float('inf')
                 for s in Pred(u):  # TODO: Pred(u)Union{u}
-                    self.UpdateVertex(s)
+                    self.update_vertex(s)
 
-    def SetStart(self, start):
+    def set_start(self, start: QNode):
         self.start = start
 
-    def SetGoal(self, goal):
+    def set_goal(self, goal: QNode):
         self.goal = goal
 
-    def DStar(self, start, goal):
-        self.U.clear()  # Clear the open list
-        self.V.clear()  # Clear the closed list
-        # TODO: the g and rhs should be set to 'inf'
-        self.start.rhs = 0
-        self.U.push((self.CalculatePriority(self.start), self.start))
-        self.ComputeSortestPath()
+    def DStar(self, start: QNode, goal: QNode):
+        # Swap start and goal
+        self.U.clear() # Clear the open list and cache
+        self.V.clear()  # Clear the visited/closed list
+        self.goal.rhs = 0
+        self.goal.p = (self.goal.dist(self.start), 0)
+        self.U.push(self.goal)
+        self.compute_sortest_path()
         while start != self.goal:
             start = min([s.g + s.dist(start) for s in Succ(start)])
             # Move the robot to start
