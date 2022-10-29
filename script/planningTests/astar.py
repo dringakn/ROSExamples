@@ -11,8 +11,8 @@ from pqueue import PQueue, QNode
 class AStar:
     def __init__(self):
         self.map = OGM(0, 0)
-        self.start = QNode((0, 0))
-        self.goal = QNode((0, 0))
+        self.start = QNode((0, 0), float('inf'))
+        self.goal = QNode((0, 0), float('inf'))
         self.U = PQueue()  # Openlist
         self.V = dict()  # Closed/Visited also used for backtraking path
         self._path_found = False
@@ -52,7 +52,7 @@ class AStar:
             # Find the free neighbours of popped node
             for pos, cost in self.map.get_neighbours(u.pos).items():
 
-                x = QNode(pos)
+                x = QNode(pos, float('inf'))
                 if x.key in self.V:
                     continue  # Skip if neighbour is already visited
 

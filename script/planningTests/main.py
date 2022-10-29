@@ -72,8 +72,8 @@ if __name__ == '__main__':
     m.set_obstacle((5, 5))
     astar = AStar()
     astar.set_map(m)
-    astar.set_start(QNode((0, 0)))
-    astar.set_goal(QNode((ROWS-1, COLS-1)))
+    astar.set_start(QNode((0, 0), float('inf')))
+    astar.set_goal(QNode((ROWS-1, COLS-1), float('inf')))
     path = []
     if astar.search_path():
         path = astar.get_path()
