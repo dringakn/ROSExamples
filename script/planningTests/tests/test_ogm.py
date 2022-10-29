@@ -51,6 +51,3 @@ class TestOGM(TestCase):
         map.set_free((4, 4))
         result3 = map.get_neighbours((5, 5))
         self.assertDictEqual(result3, expected1)
-
-    def test_successors(self):
-        self.test_get_neighbours()

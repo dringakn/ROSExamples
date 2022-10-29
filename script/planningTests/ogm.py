@@ -76,5 +76,3 @@ class OGM:
                       (x - 1, y): 1, (x - 1, y - 1): 1.414, (x, y - 1): 1, (x + 1, y - 1): 1.414}
         return {k: v for k, v in neighbours.items() if self.is_free(k)}
 
-    def successors(self, pos: tuple):
-        return self.get_neighbours(pos)
