@@ -99,12 +99,17 @@ class PQueue:
         result = False
         if node in self:
             idx = self.heap_idx[node.key]
-            self._swap(idx, self.size - 1)
-            self.heap.pop()
-            self.heap_idx.pop(node.key)
-            self.size -= 1
-            self._shift_up(idx)  # The combination of up/down make heap invariant, instead of O(n)
-            self._shift_down(idx)
+            if idx == self.size-1:
+                self.heap.pop()
+                self.heap_idx.pop(node.key)
+                self.size -= 1
+            else:
+                self._swap(idx, self.size - 1)
+                self.heap.pop()
+                self.heap_idx.pop(node.key)
+                self.size -= 1
+                self._shift_up(idx)  # The combination of up/down make heap invariant, instead of O(n)
+                self._shift_down(idx)
             result = True
         return result
 

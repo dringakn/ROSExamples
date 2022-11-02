@@ -26,8 +26,8 @@ WHITE = (255, 255, 255)
 GRAY = (128, 128, 128)
 
 BACKGROUND = WHITE
-WINDOW_WIDTH = 1400
-WINDOW_HEIGHT = 1400
+WINDOW_WIDTH = 800
+WINDOW_HEIGHT = 800
 
 ROWS = 5  # Along x-axis, OGM Width
 COLS = 5  # Along y-axis, OGM Height
@@ -102,8 +102,8 @@ if __name__ == '__main__':
     if len(path):
         pygame.display.set_caption(f"DStar: Path length {len(path)}")
 
-    print(planner.map.get_neighbours((3,0)))
-    print(planner.map.get_neighbours((3,1)))
+    print(planner.map.get_predecessors((3,0)))
+    print(planner.map.get_predecessors((3,1)))
 
     while running:
         main_window.fill(BACKGROUND)
@@ -144,7 +144,7 @@ if __name__ == '__main__':
                     pos = pygame.mouse.get_pos()  # (col, row)
                     pos = get_grid_pos(main_window, pos)  # x, y
                     if planner.map.is_free(pos):
-                        neighbors_with_old_cost = planner.map.get_neighbours(pos)
+                        neighbors_with_old_cost = planner.map.get_successors(pos)
                         changed_cells[pos] = neighbors_with_old_cost
                         planner.map.set_obstacle(pos)
 
@@ -152,20 +152,22 @@ if __name__ == '__main__':
                     pos = pygame.mouse.get_pos()  # (col, row)
                     pos = get_grid_pos(main_window, pos)  # x, y
                     if planner.map.is_obstacle(pos):
-                        neighbors_with_old_cost = planner.map.get_neighbours(pos)
+                        neighbors_with_old_cost = planner.map.get_successors(pos)
                         changed_cells[pos] = neighbors_with_old_cost
                         planner.map.set_free(pos)
 
             elif event.type == pygame.MOUSEBUTTONUP:  # Mouse button is released
                 # replan
+                if len(path) == 0:
+                    continue
                 planner.re_plan(path[0], changed_cells)  # use current location and stored cells
                 _path = planner.get_path()
                 if len(_path):
                     path = _path
                     pygame.display.set_caption(f"Planner: Path length {len(path)}")
-                    print(path)
-                    print(planner.G)
-                    print(planner.RHS)
+                    print("G:\n", planner.G)
+                    print("RHS:\n", planner.RHS)
+                    print("Path:", path)
                 else:
                     pygame.display.set_caption(f"Planner: Path not found!!!")
 
