@@ -1,4 +1,5 @@
-from astar import AStar, QNode, OGM
+import astar
+import dstar
 import time
 import pygame
 
@@ -28,14 +29,14 @@ BACKGROUND = WHITE
 WINDOW_WIDTH = 1400
 WINDOW_HEIGHT = 1400
 
-ROWS = 40  # Along x-axis, OGM Width
-COLS = 40  # Along y-axis, OGM Height
+ROWS = 5  # Along x-axis, OGM Width
+COLS = 5  # Along y-axis, OGM Height
 
 GRID_XSIZE = WINDOW_WIDTH // ROWS
 GRID_YSIZE = WINDOW_HEIGHT // COLS
 
 
-def draw_ogm(surface, map: OGM):
+def draw_ogm(surface, map: dstar.OGM):
     row, col = 0, 0
     for x in range(0, WINDOW_WIDTH, GRID_XSIZE):
         for y in range(0, WINDOW_HEIGHT, GRID_YSIZE):
@@ -64,56 +65,116 @@ def get_grid_pos(surface, pos, rows=ROWS, cols=COLS):
 
 if __name__ == '__main__':
     # list_dict_lookup_performance()
+
+    ### DStar planner ###
+    planner = dstar.DStar()
+    planner.set_map(dstar.OGM(ROWS, COLS))
+    planner.set_start(dstar.QNode((0, 0), (float('inf'), float('inf'))))
+    planner.set_goal(dstar.QNode((ROWS-1, COLS-1), (float('inf'), float('inf'))))
+    for y in range(0, ROWS, 4):
+        if y + 1 < ROWS:
+            for x in range(0, COLS - 1):
+                planner.map.set_obstacle((y + 1, x))
+        if y + 3 < ROWS:
+            for x in range(1, COLS):
+                planner.map.set_obstacle((y + 3, x))
+
+    planner.initialize()
+    print(planner.get_path())  # print the path
+    # planner.update_start((24, 20))  # Change start location
+    # print(planner.get_path()) # For retesting
+    # planner.update_goal((1, 1))  # Change goal location
+    # print(planner.get_path()) # For retesting
+
+    ### AStar planner ###
+    # planner = astar.AStar()
+    # planner.set_map(astar.OGM(ROWS, COLS))
+    # planner.set_start(astar.QNode((0, 0), float('inf')))
+    # planner.set_goal(astar.QNode((ROWS-1, COLS-1), float('inf')))
+
     pygame.init()
     pygame.display.set_caption("DStar")
     main_window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     running = True
-    m = OGM(ROWS, COLS)
-    m.set_obstacle((5, 5))
-    astar = AStar()
-    astar.set_map(m)
-    astar.set_start(QNode((0, 0), float('inf')))
-    astar.set_goal(QNode((ROWS-1, COLS-1), float('inf')))
-    path = []
-    if astar.search_path():
-        path = astar.get_path()
+    path = planner.get_path()
+    changed_cells = {}
+
+    if len(path):
         pygame.display.set_caption(f"DStar: Path length {len(path)}")
+
+    print(planner.map.get_neighbours((3,0)))
+    print(planner.map.get_neighbours((3,1)))
 
     while running:
         main_window.fill(BACKGROUND)
-        draw_ogm(main_window, astar.map)
+        draw_ogm(main_window, planner.map)
         draw_path(main_window, path)
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT:  # Exit program
                 running = False
+
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE:  # Exit program
                     running = False
-                if event.key == pygame.K_SPACE:
-                    if astar.search_path():
-                        path = astar.get_path()
-                        pygame.display.set_caption(f"DStar: Path length {len(path)}")
-                    else:
-                        path = []
-                        pygame.display.set_caption(f"DStar: Path not found!!!")
-            elif pygame.mouse.get_pressed()[0]:  # LEFT BUTTON DOWN
-                pos = pygame.mouse.get_pos()  # (col, row)
-                astar.map.set_obstacle(get_grid_pos(main_window, pos))
-            elif pygame.mouse.get_pressed()[2]:  # RIGHT BUTTON DOWN
-                pos = pygame.mouse.get_pos()  # (col, row)
-                astar.map.set_free(get_grid_pos(main_window, pos))
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == pygame.BUTTON_MIDDLE:
-                    if astar.search_path():
-                        path = astar.get_path()
-                        pygame.display.set_caption(f"DStar: Path length {len(path)}")
-                    else:
-                        path = []
-                        pygame.display.set_caption(f"DStar: Path not found!!!")
+
+                if event.key == pygame.K_SPACE:  # Move to next path location
+                    if len(path) > 1:
+                        path.pop(0)
+                        planner.re_plan(path[0], changed_cells)
+                        _path = planner.get_path()
+                        if len(_path):
+                            path = path
+                            pygame.display.set_caption(f"Planner: Path length {len(path)}")
+                            print(path)
+                        else:
+                            pygame.display.set_caption(f"Planner: Path not found!!!")
+
+            # elif pygame.mouse.get_pressed()[0]:  # Left mouse button is being pressed
+            #     pos = pygame.mouse.get_pos()  # (col, row)
+            #     pos = get_grid_pos(main_window, pos)  # x, y
+            #     changed_cells[pos] = planner.map.OBSTACLE  # store to use on button release
+            #
+            # elif pygame.mouse.get_pressed()[2]:  # Right mouse button is being pressed
+            #     pos = pygame.mouse.get_pos()  # (col, row)
+            #     pos = get_grid_pos(main_window, pos)  # x, y
+            #     changed_cells[get_grid_pos(main_window, pos)] = planner.map.FREE  # store to use on button release
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:  # Mouse button is pressed, change to obstacle if free
+                if event.button == pygame.BUTTON_LEFT:  # Left-button is pressed
+                    pos = pygame.mouse.get_pos()  # (col, row)
+                    pos = get_grid_pos(main_window, pos)  # x, y
+                    if planner.map.is_free(pos):
+                        neighbors_with_old_cost = planner.map.get_neighbours(pos)
+                        changed_cells[pos] = neighbors_with_old_cost
+                        planner.map.set_obstacle(pos)
+
+                elif event.button == pygame.BUTTON_RIGHT:  # Right-button is pressed, change to free if obstacle
+                    pos = pygame.mouse.get_pos()  # (col, row)
+                    pos = get_grid_pos(main_window, pos)  # x, y
+                    if planner.map.is_obstacle(pos):
+                        neighbors_with_old_cost = planner.map.get_neighbours(pos)
+                        changed_cells[pos] = neighbors_with_old_cost
+                        planner.map.set_free(pos)
+
+            elif event.type == pygame.MOUSEBUTTONUP:  # Mouse button is released
+                # replan
+                planner.re_plan(path[0], changed_cells)  # use current location and stored cells
+                _path = planner.get_path()
+                if len(_path):
+                    path = _path
+                    pygame.display.set_caption(f"Planner: Path length {len(path)}")
+                    print(path)
+                    print(planner.G)
+                    print(planner.RHS)
+                else:
+                    pygame.display.set_caption(f"Planner: Path not found!!!")
+
+                # print(modified_cells)
+                changed_cells.clear() # Clear stored cells list, during mouse being pressed
 
 
-        # pygame.display.update()
-        pygame.display.flip()
+
+        pygame.display.update()
         # print(f"Time [mSec]: {pygame.time.get_ticks()}")
         pygame.time.wait(1)  # 50 Hz
 

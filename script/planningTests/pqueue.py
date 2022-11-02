@@ -14,8 +14,7 @@ from math import sqrt
 
 class QNode:
     def __init__(self, pos, p):
-        self.g = float('inf')
-        self.rhs = float('inf')  # For D* algorithm
+        self.g = float('inf')  # Not used for DStar, instead lookup table is used
         self.p = p
         self.pos = pos
         self.key = hash(self.pos)
@@ -34,7 +33,8 @@ class QNode:
         return self.p >= other.p
 
     def __repr__(self):
-        return f"{self.p:0.2f}(pos:{self.pos}[{self.key}])"
+        # return f"{self.p:0.2f}(pos:{self.pos}[{self.key}])"  # For AStar
+        return f"({self.p[0]:0.2f}, {self.p[1]:0.2f})pos:{self.pos}"  # For DStar
 
     def dist(self, other):
         return sqrt((self.pos[0] - other.pos[0]) ** 2 + (self.pos[1] - other.pos[1]) ** 2)

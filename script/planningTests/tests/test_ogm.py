@@ -45,7 +45,8 @@ class TestOGM(TestCase):
         map.set_obstacle((6, 5))
         map.set_obstacle((4, 4))
         result2 = map.get_neighbours((5, 5))
-        expected2 = {(6, 6): 1.414, (5, 6): 1, (4, 6): 1.414, (4, 5): 1, (5, 4): 1, (6, 4): 1.414}
+        expected2 = {(6, 5): float('inf'), (6, 6): 1.414, (5, 6): 1, (4, 6): 1.414, (4, 5): 1, (4, 4): float('inf'), (5, 4): 1, (6, 4): 1.414}
+        # expected2 = {(6, 6): 1.414, (5, 6): 1, (4, 6): 1.414, (4, 5): 1, (5, 4): 1, (6, 4): 1.414}
         self.assertDictEqual(result2, expected2)
         map.set_free((6, 5))
         map.set_free((4, 4))

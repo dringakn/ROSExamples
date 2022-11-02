@@ -1,4 +1,5 @@
 import numpy as np
+np.set_printoptions(precision=2)
 
 
 class OGM:
@@ -70,9 +71,10 @@ class OGM:
         else:
             return False
 
-    def get_neighbours(self, pos: tuple, free_only=True):
+    def get_neighbours(self, pos: tuple):
         (x, y) = (round(pos[0]), round(pos[1]))
         neighbours = {(x + 1, y): 1, (x + 1, y + 1): 1.414, (x, y + 1): 1, (x - 1, y + 1): 1.414,
                       (x - 1, y): 1, (x - 1, y - 1): 1.414, (x, y - 1): 1, (x + 1, y - 1): 1.414}
-        return {k: v for k, v in neighbours.items() if self.is_free(k)}
+        # return {k: v for k, v in neighbours.items() if self.is_free(k)}
+        return {k: v if self.is_free(k) else float('inf') for k, v in neighbours.items() if self.within_map(k)}
 

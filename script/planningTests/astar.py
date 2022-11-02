@@ -77,3 +77,5 @@ class AStar:
     def get_path(self):
         if self._path_found:
             return self.reconstruct_path(self.goal)
+        else:
+            return []
