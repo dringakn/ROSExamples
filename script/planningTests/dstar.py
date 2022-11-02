@@ -91,20 +91,22 @@ class DStar:
         elif (g == rhs) and (u in self.U):  # consistent node already present
             self.U.remove(u)  # Remove or pop?
 
-    def _process_successors(self, node: QNode, n_g):
+    def _process_successors(self, node: QNode):
+        n_g, n_rhs = self._get_g_rhs(node.key)
         for pos, cost in self.map.get_successors(node.pos).items():
             s = QNode(pos, (float('inf'), float('inf')))
-            s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
             if s != self.goal:
+                s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
                 s_rhs = min(s_rhs, cost + n_g)
                 self._set_g_rhs(s, s_g, s_rhs)
-            self._process_node(s, s_g, s_rhs)
+            self._process_node(s)
 
-    def _process_predecessors(self, node: QNode, n_g):
+    def _process_predecessors(self, node: QNode):
+        n_g, n_rhs = self._get_g_rhs(node.key)
         for pos, cost in self.map.get_predecessors(node.pos).items():
             s = QNode(pos, (float('inf'), float('inf')))
-            s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
             if s != self.goal:
+                s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
                 s_rhs = min(s_rhs, cost + n_g)
                 self._set_g_rhs(s, s_g, s_rhs)
             self._process_node(s)
@@ -137,18 +139,18 @@ class DStar:
                 u.p = p_new  # update new priority
                 self.U.update(u)  # update node
 
-            elif u_rhs < u_g:  # needs update (better node, but over-consistent)
+            elif u_g > u_rhs:  # needs update (better node, but over-consistent)
                 u_g = u_rhs
                 self._set_g_rhs(u, u_g, u_rhs)  # update the g-value to rhs
                 self.U.pop()  # self.U.remove(u)  or self.U.pop()
-                self._process_predecessors(u, u_g)  # Explore neighbors
+                self._process_successors(u)  # Explore neighbors predecessors or successors
 
             else:  # g <= rhs, state has got worse
                 g_old = u_g  # store previous g-value
                 u_g = float('inf')  # set new value
                 self._set_g_rhs(u, u_g, u_rhs)  # update g-value
-                pred = self.map.get_predecessors(u.pos)  # Find neighbours
-                pred[u.pos] = 0  # Append current node: pred(u) UNION u
+                pred = self.map.get_successors(u.pos)  # Find neighbours, predecessors or successors
+                pred[u.pos] = self.map.move_cost(u.pos, u.pos)  # Append current node: pred(u) UNION u
 
                 for pos, cost in pred.items():  # Explore neighbours
                     s = QNode(pos, (float('inf'), float('inf')))
@@ -172,12 +174,12 @@ class DStar:
                 u_g, u_rhs = self._get_g_rhs(u.key)  # Get g and rhs values from lookup table
                 new_cost = self.map.move_cost(pos, pos_)
 
-                if old_cost > new_cost:  # if dist(v,u) < old_dist(v,u), cleared cell!!!
+                if old_cost > new_cost:  # if dist(v,u) < old_dist(v,u), obstacle cell cleared !
                     if u != self.goal:  # if neighbour is not the goal cell
                         u_rhs = min(u_rhs, v_g + new_cost)  # minimum of current rhs or new rhs
                         self._set_g_rhs(u, u_g, u_rhs)  # update u's g and rhs lookup table values
 
-                elif u_rhs == v_g + old_cost:  # if current rhs is equal to old!!!
+                elif u_rhs == v_g + old_cost:  # if current rhs is equal to old, obstacle will remain obstacle!!!
                     if u != self.goal:
                         u_rhs = self._min_successors(u) # minimum of u's neighbors
                         self._set_g_rhs(u, u_g, u_rhs)  # update u's g and rhs lookup table values
@@ -185,6 +187,7 @@ class DStar:
                 self._process_node(u)
 
     def re_plan(self, new_start_pos, changed_cells = None):
+        self._compute_path()  # TODO: delete it
         self.update_start(new_start_pos)
         if changed_cells is not None:
             self.update_map(changed_cells)
@@ -224,22 +227,16 @@ class DStar:
                 break
 
             c_min = float('inf')  # minimum cost
-            t_min = c_min  # used for straight line path
             s_min = None  # neighbour with minimum value
-            for pos, cost in self.map.get_successors(curr.pos).items():  # Explore neighbours
+            for pos, cost in succ.items():  # Explore neighbours
                 s = QNode(pos, (float('inf'), float('inf')))
                 s_g, s_rhs = self._get_g_rhs(s.key)
                 temp = s_g + cost
-                temp2 = s.dist(self.start) + s.dist(self.goal)  # straight line path
                 if temp < c_min:
                     c_min = temp
-                    t_min = temp2
                     s_min = s
-                elif temp == c_min:
-                    if temp2 < t_min:
-                        c_min = temp
-                        t_min = temp2
-                        s_min = s
+
+            assert (s_min is not None)
 
             curr = s_min
 

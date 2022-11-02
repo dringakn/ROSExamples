@@ -15,22 +15,26 @@ from math import sqrt
 class QNode:
     def __init__(self, pos, p):
         self.g = float('inf')  # Not used for DStar, instead lookup table is used
-        self.p = p
+        self.p = p # Tuple for DStar, override comparision for tuple
         self.pos = pos
         self.key = hash(self.pos)
-        self.parent = None
+        self.parent = None # Not used for DStar
 
     def __lt__(self, other):
-        return self.p < other.p
+        # return self.p < other.p # AStar
+        return (self.p[0] < other.p[0]) or ((self.p[0] == other.p[0]) and (self.p[1] < other.p[1])) # DStar
 
     def __le__(self, other):
-        return self.p <= other.p
+        # return self.p <= other.p # AStar
+        return (self.p[0] < other.p[0]) or ((self.p[0] == other.p[0]) and (self.p[1] <= other.p[1])) # DStar
 
     def __gt__(self, other):
-        return self.p > other.p
+        # return self.p > other.p  # AStar
+        return (self.p[0] > other.p[0]) or ((self.p[0] == other.p[0]) and (self.p[1] > other.p[1])) # DStar
 
     def __ge__(self, other):
-        return self.p >= other.p
+        # return self.p >= other.p  # AStar
+        return (self.p[0] > other.p[0]) or ((self.p[0] == other.p[0]) and (self.p[1] >= other.p[1])) # DStar
 
     def __repr__(self):
         # return f"{self.p:0.2f}(pos:{self.pos}[{self.key}])"  # For AStar

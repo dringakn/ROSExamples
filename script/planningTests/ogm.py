@@ -8,7 +8,7 @@ SQRT2 = 1.414213562
 
 class OGM:
     def __init__(self, width, height):
-        self.OBSTACLE = 1
+        self.OBSTACLE = 255
         self.FREE = 0
         self.width = width
         self.height = height
@@ -103,14 +103,14 @@ class OGM:
         """
         (x, y) = (round(pos[0]), round(pos[1]))
         if self.is_obstacle((x,y)):
-            return {}
-            # neighbours = {(x + 1, y): INF, (x + 1, y + 1): INF, (x, y + 1): INF, (x - 1, y + 1): INF,
-            #               (x - 1, y): INF, (x - 1, y - 1): INF, (x, y - 1): INF, (x + 1, y - 1): INF}
+            # return {}
+            neighbours = {(x + 1, y): INF, (x + 1, y + 1): INF, (x, y + 1): INF, (x - 1, y + 1): INF,
+                          (x - 1, y): INF, (x - 1, y - 1): INF, (x, y - 1): INF, (x + 1, y - 1): INF}
         else:
             neighbours = {(x + 1, y): 1, (x + 1, y + 1): SQRT2, (x, y + 1): 1, (x - 1, y + 1): SQRT2,
                           (x - 1, y): 1, (x - 1, y - 1): SQRT2, (x, y - 1): 1, (x + 1, y - 1): SQRT2}
 
-        return {k: INF if (self.map[k] == self.OBSTACLE) else v for k, v in neighbours.items() if self.within_map(k)}
+        return {k: (INF if (self.map[k] == self.OBSTACLE) else v) for k, v in neighbours.items() if self.within_map(k)}
         # return {k: v for k, v in neighbours.items() if self.is_free(k)}
 
     def get_predecessors(self, pos: tuple):
@@ -122,10 +122,12 @@ class OGM:
         """
         (x, y) = (round(pos[0]), round(pos[1]))
         if self.is_obstacle((x,y)):
-            return {}
+            # return {}
+            neighbours = {(x + 1, y): INF, (x + 1, y + 1): INF, (x, y + 1): INF, (x - 1, y + 1): INF,
+                          (x - 1, y): INF, (x - 1, y - 1): INF, (x, y - 1): INF, (x + 1, y - 1): INF}
+        else:
+            neighbours = {(x + 1, y): 1, (x + 1, y + 1): SQRT2, (x, y + 1): 1, (x - 1, y + 1): SQRT2,
+                          (x - 1, y): 1, (x - 1, y - 1): SQRT2, (x, y - 1): 1, (x + 1, y - 1): SQRT2}
 
-        neighbours = {(x + 1, y): 1, (x + 1, y + 1): SQRT2, (x, y + 1): 1, (x - 1, y + 1): SQRT2,
-                      (x - 1, y): 1, (x - 1, y - 1): SQRT2, (x, y - 1): 1, (x + 1, y - 1): SQRT2}
-
-        return {k: INF if (self.map[k] == self.OBSTACLE) else v for k, v in neighbours.items() if self.within_map(k)}
+        return {k: (INF if (self.map[k] == self.OBSTACLE) else v) for k, v in neighbours.items() if self.within_map(k)}
         # return {k: v for k, v in neighbours.items() if self.is_free(k)}
