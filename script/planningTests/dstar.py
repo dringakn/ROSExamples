@@ -13,8 +13,8 @@ from pqueue import PQueue, QNode, sqrt
 class DStar:
     def __init__(self):
         self.map = OGM(0, 0)
-        self.start = QNode((0, 0), (float('inf'), float('inf')))
-        self.goal = QNode((0, 0), (float('inf'), float('inf')))
+        self.start = QNode((0, 0), (ogm.INF, ogm.INF))
+        self.goal = QNode((0, 0), (ogm.INF, ogm.INF))
         self.U = PQueue()  # Open list
         self.LT = dict()  # Lookup table to store (g, rhs)
         self.path = []
@@ -26,44 +26,24 @@ class DStar:
     def set_start(self, start: QNode):
         self.start = start
 
-    def update_start(self, new_pos):
-        new_pos = QNode(new_pos, (float('inf'), float('inf')))  # Create a node
-        new_pos.p = self._calculate_priority(new_pos)  # Calculate new priority
-        self.km += self.map.move_cost(self.start.pos, new_pos.pos)  # offset for heap re-ordring wrt last position
-        self.start = new_pos  # Should we update the node in pqueue???
-
     def set_goal(self, goal: QNode):
         self.goal = goal
 
-    def update_goal(self, new_pos):
-        """
-        This is somewhat of a hack, to change the position of the goal we
-        first save all of the non-empty on the map, clear the map, move the
-        goal, and re-add all of non-empty cells. Since most of these cells
-        are not between the start and goal this does not seem to hurt
-        performance too much. Also it free's up a good deal of memory we
-        likely no longer use.
-
-        :param new_pos:
-        :return:
-        """
-        pass
-
     def set_map(self, _map: OGM):
         self.map = _map
-        self.G = ogm.np.ones((_map.width, _map.height), dtype=ogm.np.uint8)*ogm.np.inf
-        self.RHS = self.G.copy()
+        self.G = ogm.np.ones((_map.width, _map.height), dtype=ogm.np.uint8)*ogm.np.inf  # TODO: delete
+        self.RHS = self.G.copy()  # TODO: delete
 
     def _get_g_rhs(self, key):
         if key in self.LT:
             return self.LT[key]
         else:
-            return float('inf'), float('inf') # g, rhs
+            return ogm.INF, ogm.INF # g, rhs
 
     def _set_g_rhs(self, node: QNode, g, rhs):
         self.LT[node.key] = (g, rhs)
-        self.G[node.pos] = g
-        self.RHS[node.pos] = rhs
+        self.G[node.pos] = g  # TODO: delete
+        self.RHS[node.pos] = rhs  # TODO: delete
 
     def _calculate_priority(self, node: QNode):
         g, rhs, = self._get_g_rhs(node.key)
@@ -75,10 +55,10 @@ class DStar:
         self.U.clear()  # Clear the open list
         self.LT.clear()  # Clear the look-up table
         self.km = 0
-        self.LT[self.goal.key] = (float('inf'), 0)  # set the initial value of goal (g, rhs)
+        self.LT[self.goal.key] = (ogm.INF, 0)  # set the initial value of goal (g, rhs)
         self.goal.p = self._calculate_priority(self.goal)  # [goal.dist(start), 0]
         self.U.push(self.goal)
-        self.RHS[self.goal.pos] = 0
+        self.RHS[self.goal.pos] = 0 # TODO: delete
 
     def _process_node(self, u: QNode):
         g, rhs = self._get_g_rhs(u.key)
@@ -94,7 +74,7 @@ class DStar:
     def _process_successors(self, node: QNode):
         n_g, n_rhs = self._get_g_rhs(node.key)
         for pos, cost in self.map.get_successors(node.pos).items():
-            s = QNode(pos, (float('inf'), float('inf')))
+            s = QNode(pos, (ogm.INF, ogm.INF))
             if s != self.goal:
                 s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
                 s_rhs = min(s_rhs, cost + n_g)
@@ -104,7 +84,7 @@ class DStar:
     def _process_predecessors(self, node: QNode):
         n_g, n_rhs = self._get_g_rhs(node.key)
         for pos, cost in self.map.get_predecessors(node.pos).items():
-            s = QNode(pos, (float('inf'), float('inf')))
+            s = QNode(pos, (ogm.INF, ogm.INF))
             if s != self.goal:
                 s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
                 s_rhs = min(s_rhs, cost + n_g)
@@ -112,9 +92,9 @@ class DStar:
             self._process_node(s)
 
     def _min_successors(self, node: QNode):
-        min_s = float('inf')
+        min_s = ogm.INF
         for pos, cost in self.map.get_successors(node.pos).items():
-            s = QNode(pos, (float('inf'), float('inf')))
+            s = QNode(pos, (ogm.INF, ogm.INF))
             s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
             temp = cost + s_g
             if temp < min_s:
@@ -147,13 +127,13 @@ class DStar:
 
             else:  # g <= rhs, state has got worse
                 g_old = u_g  # store previous g-value
-                u_g = float('inf')  # set new value
+                u_g = ogm.INF  # set new value
                 self._set_g_rhs(u, u_g, u_rhs)  # update g-value
                 pred = self.map.get_successors(u.pos)  # Find neighbours, predecessors or successors
                 pred[u.pos] = self.map.move_cost(u.pos, u.pos)  # Append current node: pred(u) UNION u
 
                 for pos, cost in pred.items():  # Explore neighbours
-                    s = QNode(pos, (float('inf'), float('inf')))
+                    s = QNode(pos, (ogm.INF, ogm.INF))
                     s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
                     if s_rhs == g_old + cost:  # ???
                         if s != self.goal:  # if the current node is not a goal
@@ -167,10 +147,10 @@ class DStar:
     def update_map(self, vertices):
         # For all directed edges (u, v) with changed edge costs
         for pos, pred in vertices.items():  # Iterate over all changed cells
-            v = QNode(pos, (float('inf'), float('inf')))
+            v = QNode(pos, (ogm.INF, ogm.INF))
             v_g, v_rhs = self._get_g_rhs(v.key)
             for pos_, old_cost in pred.items():  # Explore neighbours of changed cell
-                u = QNode(pos_, (float('inf'), float('inf')))  # Create as node
+                u = QNode(pos_, (ogm.INF, ogm.INF))  # Create as node
                 u_g, u_rhs = self._get_g_rhs(u.key)  # Get g and rhs values from lookup table
                 new_cost = self.map.move_cost(pos, pos_)
 
@@ -187,58 +167,65 @@ class DStar:
                 self._process_node(u)
 
     def re_plan(self, new_start_pos, changed_cells = None):
-        self._compute_path()  # TODO: delete it
-        self.update_start(new_start_pos)
-        if changed_cells is not None:
-            self.update_map(changed_cells)
-        print(f"compute path: {self._compute_path()}")
 
-    def get_path(self):
-
-        self.path.clear()  # Clear previous contents
-        if not self._compute_path():  # is path found?
+        self.path.clear()  # Clear previous contents if any.
+        self.path.append(new_start_pos)  # Add start location to the list
+        new_pos = QNode(new_start_pos, (ogm.INF, ogm.INF))  # Create a node
+        new_pos.p = self._calculate_priority(new_pos)  # Calculate priority
+        self.start = new_pos  # update start location
+        self.last = self.start # Save start location to be used for calculating km
+        if not self._compute_path():  # Run to update pqueue and costs containers (g, rhs).
             print(f"There is no path!!!")
             return self.path
 
-        curr = self.start  # Start from start location as current
-        s_g, s_rhs = self._get_g_rhs(curr.key)  # Get the g and rhs values of the current location
-        if s_rhs == float('inf'):  # is it still infinity after search?
-            print(f"There is no path!!!")
-            return self.path
+        while self.start != self.goal: # Start iterating unless we reached goal location
+            s_g, s_rhs = self._get_g_rhs(self.start.key)  # Get the g and rhs values of the current location
+            if s_rhs == ogm.INF:  # is it still infinity after search?
+                print(f"There is no path!!!")
+                return self.path
 
-        while curr != self.goal:  # Start iterating unless we reached goal location
-            self.path.append(curr.pos)  # Append current location to the path
-            succ = self.map.get_successors(curr.pos)  # Explore neighbours of current node
-
-            non_inf_values = 0
-            for val in succ.values():
-                if val != float('inf'):  # are there are neighbours?
-                    non_inf_values += 1
-
-            if non_inf_values == 0:
+            succ = self.map.get_successors(self.start.pos)  # Explore neighbours of current location
+            if self.count_valid_successors(succ) == 0:
                 print(f"There is no path!!!")
                 return self.path
 
             if len(self.path) > (self.map.width * self.map.height):
-                print(self.path)
-                print(self.G)
-                print(self.RHS)
+                print("G:\n", self.G)
+                print("RHS:\n", self.RHS)
                 print('Error')
+                print("Path:", self.path)
                 break
 
-            c_min = float('inf')  # minimum cost
-            s_min = None  # neighbour with minimum value
-            for pos, cost in succ.items():  # Explore neighbours
-                s = QNode(pos, (float('inf'), float('inf')))
-                s_g, s_rhs = self._get_g_rhs(s.key)
-                temp = s_g + cost
-                if temp < c_min:
-                    c_min = temp
-                    s_min = s
+            self.start = self.find_nearest_neighbour(succ)  # Find next location
+            self.path.append(self.start.pos)  # Add to path list
 
-            assert (s_min is not None)
+            if changed_cells is not None:
+                self.km = 0 # TODO: delete
+                # self.km += heuristic(self.s_last, self.s_start)
+                self.last = self.start
+                self.update_map(changed_cells)
+                changed_cells = None  # Clear to stop incorporating again
 
-            curr = s_min
+            self._compute_path()  # should it be indented inside if???
 
-        self.path.append(self.goal.pos)  # Append the remaining one
         return self.path
+
+    def find_nearest_neighbour(self, succ):
+        c_min = ogm.INF  # minimum cost
+        s_min = None  # neighbour with minimum value
+        for pos, cost in succ.items():  # Explore neighbours
+            s = QNode(pos, (ogm.INF, ogm.INF))
+            s_g, s_rhs = self._get_g_rhs(s.key)
+            temp = s_g + cost
+            if temp < c_min:
+                c_min = temp
+                s_min = s
+        return s_min
+
+    def count_valid_successors(self, succ):
+        non_inf_values = 0
+        for val in succ.values():
+            if val != ogm.INF:  # are there are neighbours?
+                non_inf_values += 1
+        return non_inf_values
+
