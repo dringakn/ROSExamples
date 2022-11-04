@@ -140,7 +140,7 @@ class DStar:
                             s_rhs = self._min_successors(s)  # find the minimum rhs value from s's neighbours
                             self._set_g_rhs(s, s_g, s_rhs)  # update the g and rhs values of the current node
 
-                    self._process_node(u)  # process the current node
+                    self._process_node(s)  # process the current node, should it be s instead of u?
 
         return result
 
@@ -200,8 +200,7 @@ class DStar:
             self.path.append(self.start.pos)  # Add to path list
 
             if changed_cells is not None:
-                self.km = 0 # TODO: delete
-                # self.km += heuristic(self.s_last, self.s_start)
+                self.km += self.map.move_cost(self.last.pos, self.start.pos)
                 self.last = self.start
                 self.update_map(changed_cells)
                 changed_cells = None  # Clear to stop incorporating again

@@ -92,42 +92,41 @@ class OGM:
                       (x - 1, y): 1, (x - 1, y - 1): SQRT2, (x, y - 1): 1, (x + 1, y - 1): SQRT2}
         return {k: v for k, v in neighbours.items() if self.within_map(k)}
 
-
     def get_successors(self, pos: tuple):
         """
         List of outgoing edges from a vertex.
-        NOTE: If the vertex is an obstacle the movement cost to each of its neighbours is INFINITY.
-        The movement cost from a free vertex to an neighbouring obstacle vertex is also INFINITY.
-        :param pos: vertex
+        NOTE: If the vertex is an obstacle the movement cost to each of its neighbours is INFINITY [Empty list].
+        The movement cost from a free vertex to an neighbouring obstacle vertex is INFINITY otherwise it's distance.
+        :param pos: vertex position (x,y)
         :return: Dictionary with list of successor vertices and movement cost
         """
         (x, y) = (round(pos[0]), round(pos[1]))
         if self.is_obstacle((x,y)):
-            # return {}
-            neighbours = {(x + 1, y): INF, (x + 1, y + 1): INF, (x, y + 1): INF, (x - 1, y + 1): INF,
-                          (x - 1, y): INF, (x - 1, y - 1): INF, (x, y - 1): INF, (x + 1, y - 1): INF}
+            return {}
+            # neighbours = {(x + 1, y): INF, (x + 1, y + 1): INF, (x, y + 1): INF, (x - 1, y + 1): INF,
+            #               (x - 1, y): INF, (x - 1, y - 1): INF, (x, y - 1): INF, (x + 1, y - 1): INF}
         else:
             neighbours = {(x + 1, y): 1, (x + 1, y + 1): SQRT2, (x, y + 1): 1, (x - 1, y + 1): SQRT2,
                           (x - 1, y): 1, (x - 1, y - 1): SQRT2, (x, y - 1): 1, (x + 1, y - 1): SQRT2}
 
-        return {k: (INF if (self.map[k] == self.OBSTACLE) else v) for k, v in neighbours.items() if self.within_map(k)}
-        # return {k: v for k, v in neighbours.items() if self.is_free(k)}
+        # return {k: (INF if (self.map[k] == self.OBSTACLE) else v) for k, v in neighbours.items() if self.within_map(k)}
+        return {k: v for k, v in neighbours.items() if self.is_free(k)}
 
     def get_predecessors(self, pos: tuple):
         """
         List of incoming edges to a vertex.
-        NOTE: The movement cost from an obstacle vertex to pos is INFINITY.
-        :param pos: vertex
+        NOTE: Obstacle vertices are not added to the result.
+        :param pos: vertex position (x,y)
         :return: Dictionary with list of predecessors vertices and movement cost
         """
         (x, y) = (round(pos[0]), round(pos[1]))
         if self.is_obstacle((x,y)):
-            # return {}
-            neighbours = {(x + 1, y): INF, (x + 1, y + 1): INF, (x, y + 1): INF, (x - 1, y + 1): INF,
-                          (x - 1, y): INF, (x - 1, y - 1): INF, (x, y - 1): INF, (x + 1, y - 1): INF}
+            return {}
+            # neighbours = {(x + 1, y): INF, (x + 1, y + 1): INF, (x, y + 1): INF, (x - 1, y + 1): INF,
+            #               (x - 1, y): INF, (x - 1, y - 1): INF, (x, y - 1): INF, (x + 1, y - 1): INF}
         else:
             neighbours = {(x + 1, y): 1, (x + 1, y + 1): SQRT2, (x, y + 1): 1, (x - 1, y + 1): SQRT2,
                           (x - 1, y): 1, (x - 1, y - 1): SQRT2, (x, y - 1): 1, (x + 1, y - 1): SQRT2}
 
-        return {k: (INF if (self.map[k] == self.OBSTACLE) else v) for k, v in neighbours.items() if self.within_map(k)}
-        # return {k: v for k, v in neighbours.items() if self.is_free(k)}
+        # return {k: (INF if (self.map[k] == self.OBSTACLE) else v) for k, v in neighbours.items() if self.within_map(k)}
+        return {k: v for k, v in neighbours.items() if self.is_free(k)}

@@ -1,0 +1,461 @@
+"""
+g(x): cost to move from start->current
+h(x): estimated cost to move from current->goal
+U: Open list, list of nodes to be examined, sorted by f(x)
+Note: There is no closed list
+"""
+import ogm
+from ogm import OGM
+
+INF = float('inf')
+EPS = 1.0e-10
+
+class Node:
+    def __init__(self, pos: tuple):
+        self.pos = pos
+        self.key = hash(self.pos)
+        self.p = (INF, INF)
+
+    def __eq__(self, other):
+        return self.key == other.key
+
+    def __ne__(self, other):
+        return self.key != other.key
+
+    def __gt__(self, other):
+        if self.p[0] > other.p[0]:
+            return True
+        elif self.p[0] < other.p[0]:
+            return False
+        else:
+            return self.p[1] > other.p[1]
+
+    def __lt__(self, other):
+        if self.p[0] < other.p[0]:
+            return True
+        elif self.p[0] > other.p[0]:
+            return False
+        else:
+            return self.p[1] < other.p[1]
+
+    def __repr__(self):
+        return f"[{self.p[0]:0.2f},{self.p[1]:0.2f}]{self.pos}"
+
+class NodeInfo:
+    def __init__(self, g, rhs, cost):
+        self.g = g  # g-value
+        self.rhs = rhs  # one-step look ahead value
+        self.cost = cost  # non-traversable if cost < 0
+
+    def __repr__(self):
+        return f"({self.g:0.2f}, {self.rhs:0.2f}, {self.cost})"
+
+class Path:
+    def __init__(self):
+        self.path = []  # List of map locations
+        self.path_length = INF  # Length of the path
+
+    def __repr__(self):
+        return f"[{len(self.path)}]:{self.path_length}"
+
+    def clear(self):
+        self.path.clear()  # Empty
+        self.path_length = INF  # Length of the path
+
+class PQueue:
+    def __init__(self):
+        self.heap = list()  # List of nodes in the list
+        self.heap_idx = dict()  # For quick access, index of nodes in the heap based on node hash value.
+        self.size = len(self.heap)
+
+    def __repr__(self):
+        return f"{self.heap}"
+
+    def __len__(self):
+        return self.size
+
+    def __contains__(self, n: Node):
+        return n.key in self.heap_idx
+
+    def clear(self):
+        self.heap.clear()
+        self.heap_idx.clear()
+        self.size = 0
+
+    def peek(self):
+        result = None
+        if self.size:
+            result = self.heap[0]
+        return result
+
+    def push(self, node: Node):
+        self.heap.append(node)  # Add the node to the end of heap
+        self.size += 1  # Increment the number of elements
+        idx = self.size - 1  # zero offset, last element
+        self.heap_idx[node.key] = idx  # Add the node key:id to the dictionary for faster access.
+        self._shift_up(idx)  # Move it to the appropriate position and update heap_idx
+
+    def pop(self):
+        result = None
+        n = self.size
+        if n == 1:  # very last element
+            result = self.heap.pop()  # Remove the last element
+            self.heap_idx.pop(result.key)  # Remove also from cached dictionary
+            self.size -= 1  # Decrement size
+        elif n >= 2:  # Two or more elements
+            self._swap(0, self.size - 1)  # swap first and last element
+            result = self.heap.pop()  # Remove the last element
+            self.heap_idx.pop(result.key)  # Remove it also from cache
+            self.size -= 1  # Adjust the size
+            self._shift_down(0)  # move it to appropriate position and update heap_idx
+        return result
+
+    def remove(self, node: Node):
+        result = False
+        if node in self:
+            idx = self.heap_idx[node.key]
+            if idx == self.size - 1:
+                self.heap.pop()
+                self.heap_idx.pop(node.key)
+                self.size -= 1
+            else:
+                self._swap(idx, self.size - 1)
+                self.heap.pop()
+                self.heap_idx.pop(node.key)
+                self.size -= 1
+                self._shift_up(idx)  # The combination of up/down make heap invariant, instead of O(n)
+                self._shift_down(idx)
+            result = True
+        return result
+
+    def update(self, node: Node):
+        # Assuming node is present
+        index = self.heap_idx[node.key]  # Quickly find the index of the item
+        if node < self.heap[index]:  # if new priority is less than existing priority
+            self.heap[index] = node  # Update the node
+            self._shift_up(index)  # Move it to appropriate place
+        elif node > self.heap[index]:  # if the new priority is greater than existing priority?
+            self.heap[index] = node  # Update the node
+            self._shift_down(index)  # Move it to appropriate place
+
+    def _shift_up(self, idx):
+        parent = (idx - 1) >> 1
+        while (parent >= 0) and (self.heap[parent] > self.heap[idx]):
+            self._swap(parent, idx)
+            idx = parent
+            parent = (idx - 1) >> 1
+
+    def _shift_down(self, idx):
+        n = self.size
+        while True:
+            m_idx = idx  # Smaller child index
+            left = (idx << 1) + 1
+            right = left + 1
+            if left < n:  # Left child exists
+                if self.heap[m_idx] > self.heap[left]:  # parent is greater than left child
+                    m_idx = left  # set minimum as left
+
+            if right < n:  # Right child exists
+                if self.heap[m_idx] > self.heap[right]:  # parent or left is greater then right
+                    m_idx = right  # set minimum as right
+
+            if m_idx != idx:
+                self._swap(idx, m_idx)
+            else:  # No more swap required
+                break
+
+            idx = m_idx
+
+    def _swap(self, idx1, idx2):
+        self.heap[idx1], self.heap[idx2] = self.heap[idx2], self.heap[idx1]
+        self.heap_idx[self.heap[idx1].key], self.heap_idx[self.heap[idx2].key] = idx1, idx2
+
+class DStar:
+    def __init__(self):
+
+        self.km = 0  # used for detecting modifications
+        self.C1 = 1  # Cost for unseen cell
+        self.maxSteps = 80000  # Number of node expansion before we give-up
+        self.path = Path()  # Path object
+        self.start = None  # start location
+        self.goal = None  # goal location
+        self.last = None  # last start location
+
+        self.U = PQueue()  # Open list
+        self.LT = dict()  # Lookup table to store grid-cell NodeInfo: key=Node.key, value=NodeInfo
+        self.map = ogm.OGM(5, 5)
+        self.G = ogm.np.ones((self.map.width, self.map.height), dtype=ogm.np.uint8) * ogm.np.inf  # TODO: delete
+        self.RHS = self.G.copy()  # TODO: delete
+
+    def __repr__(self):
+        return f"{self.U.peek()}"
+
+    def _get_node_info(self, node: Node):
+        """
+        Return the node information stored in the hash look-up table.
+        Note: if the node doesn't exist in the table, a default value is added in the table before return
+        :param node: Node with key information.
+        :return: NodeInfo structure
+        """
+        if node.key in self.LT:
+            return self.LT[node.key]
+        else:
+            tmp = NodeInfo(INF, INF, self.C1)  # g, rhs
+            self.LT[node.key] = tmp
+            return tmp
+
+    def _set_node_info(self, node: Node, info: NodeInfo):
+        """
+        Create/Update the node information structure in the lookup table
+        :param node: Node with key information
+        :param info: Node info structure to be updated
+        :return: Nothing.
+        """
+        self.LT[node.key] = info
+        try:
+            self.G[node.pos] = info.g  # TODO: delete it
+            self.RHS[node.pos] = info.rhs  # TODO: delete it
+        except Exception as ex:
+            pass
+
+    def initialize(self, start: tuple, goal: tuple):
+        """
+        Initialize the DStar variables to default value
+        :param start: Start location as (x,y) tuple
+        :param goal: Goal location as (x,y) tuple
+        :return: Nothing
+        """
+        self.path.clear()  # Clear the path list and path length
+        self.U.clear()  # Clear the open list
+        self.LT.clear()  # Clear the look-up table
+        self.km = 0
+        self.start = Node(start)
+        self._set_node_info(self.start, NodeInfo(INF, INF, self.C1))
+        self.start.p = self._calculate_priority(self.start)  # calculate priority before assignment
+        self.last = self.start
+
+        self.goal = Node(goal)
+        self._set_node_info(self.goal, NodeInfo(INF, 0, self.C1))  # set the initial value of goal (g, rhs)
+        self.goal.p = self._calculate_priority(self.goal)  # calculate priority before assignment
+        self.U.push(self.goal)
+
+
+    def _occupied(self, node: Node):
+        """
+        Check if the node is traversable or non-traversable/occupied.
+        Note: New/unknown cells are considered unoccupied. Occupied cells are marked with cost < 0
+        :param node: node with key as hash value
+        :return: True if node is non-traversable/occupied, False otherwise
+        """
+        if node.key in self.LT:
+            return self.LT[node.key].cost < 0
+        else:
+            return False
+
+    def _is_consistent(self, node: Node):
+        """
+        Check if the specified node is consistent i.e. g == rhs
+        :param node: Node with key information.
+        :return: True if consistent, False otherwise
+        """
+        info = self._get_node_info(node)
+        return info.g == info.rhs
+
+    def get_path(self):
+        """
+        Retrieve the pre-computed path object.
+        :return: Path object.
+        """
+        return self.path
+
+    def update_map_node(self, pos: tuple, cost: int):
+        """
+        Add a node to the lookup table if it's not the start or goal location.
+        If the node already exists with same grid cell state(cost) then skip updating.
+        Otherwise, process the node (add/update/remove from the open list).
+        Node priority and rhs values shall be automatically calculated within process_node
+        :param pos: location (x,y)
+        :param cost: ogm.FREE or ogm.OBSTACLE
+        :return: Nothing
+        """
+        node = Node(pos)
+        if (node == self.start) or (node == self.goal):
+            return
+
+        n_info = self._get_node_info(node)
+        if n_info.cost == cost:
+            return
+
+        n_info.cost = cost
+        self._set_node_info(node, n_info)
+        self._process_node(node)
+
+    def update_map(self, _map: OGM):
+        self.map = _map
+        for x in range(self.map.width):
+            for y in range(self.map.height):
+                val = self.map.map[(x, y)]
+                self.update_map_node((x, y), val)
+
+    def _calculate_priority(self, node: Node):
+        info = self._get_node_info(node)
+        tb = min(info.g, info.rhs)  # tie-beaker: min(node.g, node.rhs)
+        return self.map.move_cost(node.pos, self.start.pos) + tb + self.km, tb
+
+    def _process_node(self, u: Node):
+        u_info = self._get_node_info(u)  # get node information (g and rhs values)
+        if u != self.goal:  # if the current node isn't the goal
+            u_info.rhs = self._min_successors(u)  # find minimum rhs value of current node's successors
+            self._set_node_info(u, u_info)  # update the lookup table
+
+        if (u_info.g != u_info.rhs) and (u in self.U):  # in-consistent node already present
+            u.p = self._calculate_priority(u)
+            self.U.update(u)
+        elif (u_info.g != u_info.rhs) and (u not in self.U):  # in-consistent node not present
+            u.p = self._calculate_priority(u)
+            self.U.push(u)
+        elif (u_info.g == u_info.rhs) and (u in self.U):  # consistent node already present
+            self.U.remove(u)
+
+    def _process_predecessors(self, node: Node):
+        for pos, cost in self.map.get_predecessors(node.pos).items():
+            s = Node(pos)
+            self._process_node(s)
+
+    def _min_successors(self, node: Node):
+        """
+        Find the minimum value (c(node,s)+g(s)) of node's successors
+        :param node: Node with key and position information
+        :return: minimum value
+        """
+        min_s = INF
+        for s_pos, s_cost in self.map.get_successors(node.pos).items():
+            s = Node(s_pos)
+            s_info = self._get_node_info(s)  # Get the successor node info
+            temp = s_cost + s_info.g
+            if temp < min_s:
+                min_s = temp
+
+        return min_s
+
+    def _start_priority(self):
+        self.start.p = self._calculate_priority(self.start)
+        return self.start.p
+
+    def _compute_path(self):
+        """
+        Main DStar function to process open list nodes.
+        :return: 0 = Open list exhausted during processing.
+                 1 = Empty open list,
+                 2 = Max. # of iterations reached.
+                 3 = Start node became consistent.
+                 4 = top most node priority became higher than start node priority.
+        """
+        if len(self.U) == 0:
+            return 1  # There is no node present in the priority queue
+
+        k = 0
+        # if open queue is not empty
+        while (len(self.U) > 0) and (self.U.peek().p < self._start_priority()) or (not self._is_consistent(self.start)):
+            k += 1
+            if k > self.maxSteps:
+                print(f"Maximum number of iterations reached.")
+                return -1
+
+            u = self.U.peek()  # Get the smallest priority node from the open list
+
+            p_old = u.p  # Store previous priority
+            p_new = self._calculate_priority(u)  # Calculate new priority
+            u_info = self._get_node_info(u)  # Get the g and rhs values
+
+            if p_old < p_new:  # u is out of date
+                u.p = p_new  # update new priority
+                self.U.update(u)  # update node
+
+            elif u_info.g > u_info.rhs:  # needs update (better node, but over-consistent)
+                u_info.g = u_info.rhs
+                self._set_node_info(u, u_info)  # update the g-value equal to rhs
+                self.U.pop()  # Remove peeked node
+                self._process_predecessors(u)  # Explore neighbors predecessors
+
+            else:  # g <= rhs, state has got worse
+                u_info.g = INF  # set new value
+                self._set_node_info(u, u_info)  # update NodeInfo value
+                self._process_predecessors(u)
+                self._process_node(u)  # predecessors(u) UNION u
+
+        return 0
+
+    def re_plan(self):
+
+        self.path.clear()
+        res = self._compute_path()
+        if res < 0:
+            print(f"Compute Path Result: {res}")
+            return False
+
+        if self._get_node_info(self.start).g == INF:
+            print(f"No path to the goal!!")
+            return False
+
+        curr = self.start
+        prev = self.start
+        while curr != self.goal:
+            self.path.path.append(curr.pos)
+            self.path.path_length += self.map.move_cost(prev.pos, curr.pos)
+            successors = self.map.get_successors(curr.pos)
+            if len(successors) == 0:
+                self.path.path_length = INF
+                print(f"No path to the goal!!")
+                return False
+
+            c_min = INF
+            t_min = INF
+            s_min = None
+            for pos, cost in successors.items():
+                if self.map.is_obstacle(pos):
+                    continue
+
+                s = Node(pos)
+                s_info = self._get_node_info(s)
+                val = cost + s_info.g
+                val2 = self.map.move_cost(s.pos, self.goal.pos) + self.map.move_cost(s.pos, self.start.pos)
+                if val != INF and val == c_min:
+                    # Tiebreak, if current neighbour is equal to current best
+                    # choose the neighbour that has the smallest t_min value
+                    if val2 < t_min:
+                        t_min = val2
+                        c_min = val
+                        s_min = s
+                elif val < c_min:
+                    # if next neighbour s is strictly lower cost than the
+                    # current best, then set it to be the current best
+                    t_min = val2
+                    c_min = val
+                    s_min = s
+            if c_min == INF:
+                break
+            prev = curr
+            curr = s_min
+
+        self.path.path.append(self.goal.pos)
+        self.path.path_length += self.map.move_cost(prev.pos, self.goal.pos)
+        return True
+
+    def update_start(self, new_pos: tuple):
+        """
+        Update the position of the robot, this does not force re-planning.
+        :param new_pos:
+        :return:
+        """
+        self.start.pos = Node(new_pos)
+        self._set_node_info(self.start, NodeInfo(INF, INF, self.C1))  # Create/Update an existing node information
+
+        self.km += self.map.move_cost(self.last, self.start)  # Update km before calculate_priority
+
+        self.start.p = self._calculate_priority(self.start)  # Update start node priority before copying to last
+        self.last = self.start
+
+    def update_goal(self):
+        # TODO:
+        pass
