@@ -73,29 +73,32 @@ class DStar:
 
     def _process_successors(self, node: QNode):
         n_g, n_rhs = self._get_g_rhs(node.key)
-        for pos, cost in self.map.get_successors(node.pos).items():
+        for pos, _ in self.map.get_successors(node.pos).items():
             s = QNode(pos, (ogm.INF, ogm.INF))
             if s != self.goal:
                 s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
+                cost = self.map.move_cost(node.pos, s.pos)
                 s_rhs = min(s_rhs, cost + n_g)
                 self._set_g_rhs(s, s_g, s_rhs)
             self._process_node(s)
 
     def _process_predecessors(self, node: QNode):
         n_g, n_rhs = self._get_g_rhs(node.key)
-        for pos, cost in self.map.get_predecessors(node.pos).items():
+        for pos, _ in self.map.get_predecessors(node.pos).items():
             s = QNode(pos, (ogm.INF, ogm.INF))
             if s != self.goal:
                 s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
+                cost = self.map.move_cost(node.pos, s.pos)
                 s_rhs = min(s_rhs, cost + n_g)
                 self._set_g_rhs(s, s_g, s_rhs)
             self._process_node(s)
 
     def _min_successors(self, node: QNode):
         min_s = ogm.INF
-        for pos, cost in self.map.get_successors(node.pos).items():
+        for pos, _ in self.map.get_successors(node.pos).items():
             s = QNode(pos, (ogm.INF, ogm.INF))
             s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
+            cost = self.map.move_cost(node.pos, s.pos)
             temp = cost + s_g
             if temp < min_s:
                 min_s = temp
@@ -132,9 +135,10 @@ class DStar:
                 pred = self.map.get_successors(u.pos)  # Find neighbours, predecessors or successors
                 pred[u.pos] = self.map.move_cost(u.pos, u.pos)  # Append current node: pred(u) UNION u
 
-                for pos, cost in pred.items():  # Explore neighbours
+                for pos, _ in pred.items():  # Explore neighbours
                     s = QNode(pos, (ogm.INF, ogm.INF))
                     s_g, s_rhs = self._get_g_rhs(s.key)  # Get the g and rhs value
+                    cost = self.map.move_cost(u.pos, s.pos)
                     if s_rhs == g_old + cost:  # ???
                         if s != self.goal:  # if the current node is not a goal
                             s_rhs = self._min_successors(s)  # find the minimum rhs value from s's neighbours
@@ -189,14 +193,15 @@ class DStar:
                 print(f"There is no path!!!")
                 return self.path
 
-            if len(self.path) > (self.map.width * self.map.height):
+            res = self.find_nearest_neighbour(succ, self.start.pos)  # Find next location
+            if res is None:
                 print("G:\n", self.G)
                 print("RHS:\n", self.RHS)
                 print('Error')
                 print("Path:", self.path)
                 break
 
-            self.start = self.find_nearest_neighbour(succ)  # Find next location
+            self.start = res
             self.path.append(self.start.pos)  # Add to path list
 
             if changed_cells is not None:
@@ -209,12 +214,15 @@ class DStar:
 
         return self.path
 
-    def find_nearest_neighbour(self, succ):
+    def find_nearest_neighbour(self, succ, pos):
         c_min = ogm.INF  # minimum cost
         s_min = None  # neighbour with minimum value
-        for pos, cost in succ.items():  # Explore neighbours
-            s = QNode(pos, (ogm.INF, ogm.INF))
+        for s_pos, _ in succ.items():  # Explore neighbours
+            if s_pos in self.path:
+                continue
+            s = QNode(s_pos, (ogm.INF, ogm.INF))
             s_g, s_rhs = self._get_g_rhs(s.key)
+            cost = self.map.move_cost(pos, s.pos)
             temp = s_g + cost
             if temp < c_min:
                 c_min = temp

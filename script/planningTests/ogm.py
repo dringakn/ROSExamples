@@ -5,14 +5,14 @@ np.set_printoptions(precision=2)
 
 INF = float('inf')
 SQRT2 = 1.414213562
+OBSTACLE = -1
+FREE = 1
 
 class OGM:
     def __init__(self, width, height):
-        self.OBSTACLE = 255
-        self.FREE = 0
         self.width = width
         self.height = height
-        self.map = np.zeros((self.width, self.height), dtype=np.uint8)
+        self.map = np.ones((self.width, self.height), dtype=np.int8) * FREE
 
     def __repr__(self):
         return f"{self.map.astype(int)}"
@@ -36,7 +36,7 @@ class OGM:
         :return: True if pos is within map, False otherwise
         """
         if self.within_map(pos):
-            self.map[round(pos[0]), round(pos[1])] = self.OBSTACLE
+            self.map[round(pos[0]), round(pos[1])] = OBSTACLE
             return True
         else:
             return False
@@ -48,7 +48,7 @@ class OGM:
         :return: True if pos is within map, False otherwise
         """
         if self.within_map(pos):
-            self.map[round(pos[0]), round(pos[1])] = self.FREE
+            self.map[round(pos[0]), round(pos[1])] = FREE
             return True
         else:
             return False
@@ -60,7 +60,7 @@ class OGM:
         :return: True if Occupied/Obstacle and within map, False otherwise
         """
         if self.within_map(pos):
-            return self.map[round(pos[0]), round(pos[1])] == self.OBSTACLE
+            return self.map[round(pos[0]), round(pos[1])] == OBSTACLE
         else:
             return False
 
@@ -71,7 +71,7 @@ class OGM:
         :return: True if UnOccupied/Free and within map, False otherwise
         """
         if self.within_map(pos):
-            return self.map[round(pos[0]), round(pos[1])] == self.FREE
+            return self.map[round(pos[0]), round(pos[1])] == FREE
         else:
             return False
 
@@ -87,30 +87,28 @@ class OGM:
         :param pos: (x,y) locaiton
         :return: List of valid vertices along with the movement cost.
         """
-        (x, y) = (round(pos[0]), round(pos[1]))
-        neighbours = {(x + 1, y): 1, (x + 1, y + 1): SQRT2, (x, y + 1): 1, (x - 1, y + 1): SQRT2,
-                      (x - 1, y): 1, (x - 1, y - 1): SQRT2, (x, y - 1): 1, (x + 1, y - 1): SQRT2}
-        return {k: v for k, v in neighbours.items() if self.within_map(k)}
+        x, y = pos[0], pos[1]
+        neighbours = [(x + 1, y), (x + 1, y + 1), (x, y + 1), (x - 1, y + 1),
+                      (x - 1, y), (x - 1, y - 1), (x, y - 1), (x + 1, y - 1)]
+
+        return {k: self.move_cost(pos, k) for k in neighbours if self.within_map(k)}
 
     def get_successors(self, pos: tuple):
         """
         List of outgoing edges from a vertex.
-        NOTE: If the vertex is an obstacle the movement cost to each of its neighbours is INFINITY [Empty list].
-        The movement cost from a free vertex to an neighbouring obstacle vertex is INFINITY otherwise it's distance.
+        NOTE: If the vertex is an obstacle the movement cost to each of its neighbours is an empty list
+        The movement cost from a free vertex to a neighbouring obstacle vertex is INFINITY otherwise it's distance
         :param pos: vertex position (x,y)
         :return: Dictionary with list of successor vertices and movement cost
         """
-        (x, y) = (round(pos[0]), round(pos[1]))
-        if self.is_obstacle((x,y)):
+        if self.is_obstacle(pos):
             return {}
-            # neighbours = {(x + 1, y): INF, (x + 1, y + 1): INF, (x, y + 1): INF, (x - 1, y + 1): INF,
-            #               (x - 1, y): INF, (x - 1, y - 1): INF, (x, y - 1): INF, (x + 1, y - 1): INF}
         else:
-            neighbours = {(x + 1, y): 1, (x + 1, y + 1): SQRT2, (x, y + 1): 1, (x - 1, y + 1): SQRT2,
-                          (x - 1, y): 1, (x - 1, y - 1): SQRT2, (x, y - 1): 1, (x + 1, y - 1): SQRT2}
+            x, y = pos[0], pos[1]
+            neighbours = [(x + 1, y), (x + 1, y + 1), (x, y + 1), (x - 1, y + 1),
+                          (x - 1, y), (x - 1, y - 1), (x, y - 1), (x + 1, y - 1)]
 
-        # return {k: (INF if (self.map[k] == self.OBSTACLE) else v) for k, v in neighbours.items() if self.within_map(k)}
-        return {k: v for k, v in neighbours.items() if self.is_free(k)}
+        return {k: self.move_cost(pos, k) for k in neighbours if self.is_free(k)}
 
     def get_predecessors(self, pos: tuple):
         """
@@ -119,14 +117,4 @@ class OGM:
         :param pos: vertex position (x,y)
         :return: Dictionary with list of predecessors vertices and movement cost
         """
-        (x, y) = (round(pos[0]), round(pos[1]))
-        if self.is_obstacle((x,y)):
-            return {}
-            # neighbours = {(x + 1, y): INF, (x + 1, y + 1): INF, (x, y + 1): INF, (x - 1, y + 1): INF,
-            #               (x - 1, y): INF, (x - 1, y - 1): INF, (x, y - 1): INF, (x + 1, y - 1): INF}
-        else:
-            neighbours = {(x + 1, y): 1, (x + 1, y + 1): SQRT2, (x, y + 1): 1, (x - 1, y + 1): SQRT2,
-                          (x - 1, y): 1, (x - 1, y - 1): SQRT2, (x, y - 1): 1, (x + 1, y - 1): SQRT2}
-
-        # return {k: (INF if (self.map[k] == self.OBSTACLE) else v) for k, v in neighbours.items() if self.within_map(k)}
-        return {k: v for k, v in neighbours.items() if self.is_free(k)}
+        return self.get_successors(pos)

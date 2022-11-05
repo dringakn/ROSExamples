@@ -62,6 +62,17 @@ def get_grid_pos(surface, pos, rows=ROWS, cols=COLS):
     width, height = surface.get_size()
     return int(pos[1] // (height / rows)), int(pos[0] // (width / cols))  # y, x
 
+def replan(path):
+    if len(path) == 0:
+        return
+
+    _path = planner.re_plan(path[0], changed_cells)  # use current location and stored cells
+    if len(_path):
+        path = _path
+        pygame.display.set_caption(f"Planner: Path length {len(path)}")
+    else:
+        pygame.display.set_caption(f"Planner: Path not found!!!")
+
 
 if __name__ == '__main__':
     # list_dict_lookup_performance()
@@ -113,7 +124,7 @@ if __name__ == '__main__':
                 if event.key == pygame.K_ESCAPE:  # Exit program
                     running = False
 
-                if event.key == pygame.K_SPACE:  # Move to next path location
+                elif event.key == pygame.K_SPACE:  # Move to next path location
                     if len(path) > 1:
                         path.pop(0)
                         _path = planner.re_plan(path[0], changed_cells)  # use current location and stored cells
@@ -122,6 +133,9 @@ if __name__ == '__main__':
                             pygame.display.set_caption(f"Planner: Path length {len(path)}")
                         else:
                             pygame.display.set_caption(f"Planner: Path not found!!!")
+
+                elif event.key == pygame.K_RETURN:  # Replan
+                    replan(path)
 
             # elif pygame.mouse.get_pressed()[0]:  # Left mouse button is being pressed
             #
@@ -132,29 +146,22 @@ if __name__ == '__main__':
                     pos = pygame.mouse.get_pos()  # (col, row)
                     pos = get_grid_pos(main_window, pos)  # x, y
                     if planner.map.is_free(pos):
-                        neighbors_with_old_cost = planner.map.get_successors(pos)
+                        neighbors_with_old_cost = planner.map.get_neighbours(pos)
                         changed_cells[pos] = neighbors_with_old_cost
+                        replan(path)
                         planner.map.set_obstacle(pos)
 
                 elif event.button == pygame.BUTTON_RIGHT:  # Right-button is pressed, change to free if obstacle
                     pos = pygame.mouse.get_pos()  # (col, row)
                     pos = get_grid_pos(main_window, pos)  # x, y
                     if planner.map.is_obstacle(pos):
-                        neighbors_with_old_cost = planner.map.get_successors(pos)
+                        neighbors_with_old_cost = planner.map.get_neighbours(pos)
                         changed_cells[pos] = neighbors_with_old_cost
+                        replan(path)
                         planner.map.set_free(pos)
 
             elif event.type == pygame.MOUSEBUTTONUP:  # Mouse button is released
                 # replan
-                if len(path) == 0:
-                    continue
-
-                _path = planner.re_plan(path[0], changed_cells)  # use current location and stored cells
-                if len(_path):
-                    path = _path
-                    pygame.display.set_caption(f"Planner: Path length {len(path)}")
-                else:
-                    pygame.display.set_caption(f"Planner: Path not found!!!")
 
                 # print(modified_cells)
                 changed_cells.clear() # Clear stored cells list, during mouse being pressed
