@@ -97,8 +97,8 @@ if __name__ == '__main__':
                             pygame.display.set_caption(f"Planner: Path not found!!!")
 
                 elif event.key == pygame.K_r:  # Move to next path location
-                    # planner.update_start((0,0))
                     planner.initialize(path.pos[0], (ROWS-1, COLS-1))
+                    # planner.initialize((0, 0), (ROWS-1, COLS-1))
                     planner.update_map(map)
                     planner.re_plan()
                     path = planner.get_path()
