@@ -3,7 +3,6 @@ g(x): cost to move from start->current
 h(x): estimated cost to move from current->goal
 U: Open list, list of nodes to be examined, sorted by f(x)
 Note: There is no closed list
-TODO: What about BP?
 """
 import ogm
 from ogm import OGM

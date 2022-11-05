@@ -7,7 +7,6 @@ Note: There is no closed list
 from ogm import OGM, SQRT2, INF, OBSTACLE, FREE, np
 from math import sqrt
 
-EPS = 1.0e-10
 OBSTACLE_COST = OBSTACLE  # -1
 # Free can have one of the two values
 FREE_COST1 = 1  # 1 means high low traverse-ability cost
@@ -59,14 +58,30 @@ class NodeInfo:
 class Path:
     def __init__(self):
         self.pos = []  # List of locations
-        self.path_length = INF  # Length of the path
+        self.LT = {}  # lookup table
+        self.path_length = 0  # Length of the path
+        self.prev = None
 
     def __repr__(self):
         return f"[{len(self.pos)}]:{self.path_length}"
 
+    def __contains__(self, node):
+        return node.key in self.LT
+
+    def push(self, node):
+        self.pos.append(node.pos)
+        self.LT[node.key] = len(self.pos)
+        if self.prev is None:
+            self.path_length = 0
+        else:
+            self.path_length += sqrt((self.prev[0]-node.pos[0])**2 + (self.prev[1]-node.pos[1])**2)
+        self.prev = node.pos
+
     def clear(self):
         self.pos.clear()  # Empty the location list
+        self.LT.clear() # Empty the lookup table
         self.path_length = 0  # Length of the path
+        self.prev = None
 
 
 class PQueue:
@@ -193,61 +208,55 @@ class DStar:
         self.LT = dict()  # Lookup table to store grid-cell NodeInfo: key=Node.key, value=NodeInfo
         self.width = None
         self.height = None
-        self.map = None  # TODO: delete
 
     def __repr__(self):
         return f"{self.U.peek()}"
 
-    def _make_new_cell(self, pos: (int, int)):
-        key = hash(pos)
+    def _make_new_cell(self, key):
         if key in self.LT:
             return
 
         self.LT[key] = NodeInfo(INF, INF, self.C1)
 
-    def _get_g(self, pos):
-        key = hash(pos)
+    def _get_g(self, key):
         if key not in self.LT:
             return INF
 
         return self.LT[key].g
 
-    def _set_g(self, pos, g):
-        self._make_new_cell(pos)
-        self.LT[hash(pos)].g = g
+    def _set_g(self, key, g):
+        self._make_new_cell(key)
+        self.LT[key].g = g
 
-    def _get_rhs(self, pos):
-        key = hash(pos)
+    def _get_rhs(self, key):
         if key not in self.LT:
             return INF
 
         return self.LT[key].rhs
 
-    def _set_rhs(self, pos, rhs):
-        self._make_new_cell(pos)
-        self.LT[hash(pos)].rhs = rhs
+    def _set_rhs(self, key, rhs):
+        self._make_new_cell(key)
+        self.LT[key].rhs = rhs
 
-    def _get_node_info(self, pos: (int, int)):
+    def _get_node_info(self, key):
         """
         Return the node information stored in the look-up table.
         Note: if the node doesn't exist in the table, a default value is added in the table before return
         :param node: location (x, y).
         :return: NodeInfo structure
         """
-        key = hash(pos)
         if key in self.LT:
             return self.LT[key]
         else:
             return NodeInfo(INF, INF, self.C1)  # node default g, rhs, cost values
 
-    def _set_node_info(self, pos: (int, int), info: NodeInfo):
+    def _set_node_info(self, key, info: NodeInfo):
         """
         Create/Update the node information structure in the lookup table
         :param node: Location (x, y)
         :param info: Node info structure to be stored/updated
         :return: Nothing.
         """
-        key = hash(pos)
         self.LT[key] = info
 
     def _cost(self, u: (int, int), v: (int, int)):
@@ -302,7 +311,7 @@ class DStar:
         return ((SQRT2 - 1.0) * min + max) * self.C1
 
     def _calculate_priority(self, node: Node):
-        tb = min(self._get_g(node.pos), self._get_rhs(node.pos))  # tie-beaker: min(node.g, node.rhs)
+        tb = min(self._get_g(node.key), self._get_rhs(node.key))  # tie-beaker: min(node.g, node.rhs)
         return tb + self._heuristic(node.pos, self.start.pos) + self.km, tb
 
     def initialize(self, start: (int, int), goal: (int, int)):
@@ -317,23 +326,22 @@ class DStar:
         self.LT.clear()  # Clear the look-up table
         self.km = 0
         self.start = Node(start)
-        self._set_node_info(self.start.pos, NodeInfo(INF, INF, self.C1))
+        self._set_node_info(self.start.key, NodeInfo(INF, INF, self.C1))
         self.start.p = self._calculate_priority(self.start)  # calculate priority before assignment
         self.last = self.start
 
         self.goal = Node(goal)
-        self._set_node_info(self.goal.pos, NodeInfo(INF, 0, self.C1))  # set the initial value of goal (g, rhs)
+        self._set_node_info(self.goal.key, NodeInfo(INF, 0, self.C1))  # set the initial value of goal (g, rhs)
         self.goal.p = self._calculate_priority(self.goal)  # calculate priority before assignment
         self.U.push(self.goal)
 
-    def _occupied(self, pos: (int, int)):
+    def _occupied(self, key):
         """
         Check if the pos is traversable/free or non-traversable/obstacle.
         Note: New/unknown locations are considered unoccupied. Occupied cells are marked with cost of -1
         :param pos: location with (x,y)
         :return: True if pos is non-traversable/obstacle, False otherwise
         """
-        key = hash(pos)
         if key in self.LT:
             # Non-traversable/obstacle location has cost value of -1, traversable/free has 1 or 1000
             return self.LT[key].cost < 0
@@ -346,7 +354,7 @@ class DStar:
         :param node: Node with key information.
         :return: True if consistent, False otherwise
         """
-        return self._get_g(node.pos) == self._get_rhs(node.pos)
+        return self._get_g(node.key) == self._get_rhs(node.key)
 
     def get_path(self):
         """
@@ -373,16 +381,12 @@ class DStar:
             if self.LT[node.key].cost == cost:
                 return
 
-        self._make_new_cell(node.pos)
+        self._make_new_cell(node.key)
         self.LT[node.key].cost = cost
-        self.map[node.pos] = cost  # TODO: delete
         self._process_node(node)
 
     def update_map(self, map: OGM):
         self.width, self.height = map.width, map.height
-        self.map = np.ones((self.width, self.height), dtype=np.int8) * self.C1  # TODO:delete
-        self.G = np.ones((self.width, self.height), dtype=np.float) * INF  # TODO: delete
-        self.RHS = self.G.copy()  # TODO: delete
         for x in range(self.width):
             for y in range(self.height):
                 self.update_map_node((x, y), map.map[(x, y)])
@@ -392,7 +396,9 @@ class DStar:
         for x in range(self.width):
             for y in range(self.height):
                 pos = (x,y)
-                map[pos] = self.LT[hash(pos)].cost
+                key = hash(pos)
+                if key in self.LT:
+                    map[pos] = self.LT[key].cost
 
         return map
 
@@ -404,7 +410,6 @@ class DStar:
                 map[pos] = self.LT[hash(pos)].g
         return map
 
-
     def get_RHS(self):
         map = np.ones((self.width, self.height), dtype=np.float) * INF
         for x in range(self.width):
@@ -415,16 +420,16 @@ class DStar:
 
     def _process_node(self, u: Node):
         if u != self.goal:  # if the current node isn't the goal
-            rhs = self._min_successors(u.pos)  # find minimum rhs value of current node's successors
-            self._set_rhs(u.pos, rhs)
+            rhs = self._min_successors(u)  # find minimum rhs value of current node's successors
+            self._set_rhs(u.key, rhs)
 
-        if (self._get_g(u.pos) != self._get_rhs(u.pos)) and (u in self.U):  # in-consistent node already present
+        if (self._get_g(u.key) != self._get_rhs(u.key)) and (u in self.U):  # in-consistent node already present
             u.p = self._calculate_priority(u)
             self.U.update(u)
-        elif (self._get_g(u.pos) != self._get_rhs(u.pos)) and (u not in self.U):  # in-consistent node not present
+        elif (self._get_g(u.key) != self._get_rhs(u.key)) and (u not in self.U):  # in-consistent node not present
             u.p = self._calculate_priority(u)
             self.U.push(u)
-        elif (self._get_g(u.pos) == self._get_rhs(u.pos)) and (u in self.U):  # consistent node already present
+        elif (self._get_g(u.key) == self._get_rhs(u.key)) and (u in self.U):  # consistent node already present
             self.U.remove(u)
 
     def _start_priority(self):
@@ -459,14 +464,14 @@ class DStar:
                 u.p = p_new  # update new priority
                 self.U.update(u)  # update node
 
-            elif self._get_g(u.pos) > self._get_rhs(u.pos):  # needs update (better node, but over-consistent)
-                self._set_g(u.pos, self._get_rhs(u.pos))
+            elif self._get_g(u.key) > self._get_rhs(u.key):  # needs update (better node, but over-consistent)
+                self._set_g(u.key, self._get_rhs(u.key))
                 self.U.pop()  # Remove peeked node
-                self._process_predecessors(u.pos)  # Explore neighbors predecessors
+                self._process_predecessors(u)  # Explore neighbors predecessors
 
             else:  # g <= rhs, state has got worse
-                self._set_g(u.pos, INF)
-                self._process_predecessors(u.pos)
+                self._set_g(u.key, INF)
+                self._process_predecessors(u)
                 self._process_node(u)  # predecessors(u) UNION u
 
         return 0
@@ -477,60 +482,58 @@ class DStar:
         res = self._compute_path()
         if res < 0:
             print(f"Compute Path Result: {res}")
-            self.path.path_length = INF
+            self.path.path_length = 0
             return False
 
-        if self._get_g(self.start.pos) == INF:
+        if self._get_g(self.start.key) == INF:
             print(f"No path to the goal!!")
-            self.path.path_length = INF
+            self.path.path_length = 0
             return False
 
-        curr = self.start.pos
-        prev = self.start.pos
-        while hash(curr) != self.goal.key:
-            self.path.pos.append(curr)
-            self.path.path_length += self._cost(prev, curr)
+        curr = self.start
+        while curr != self.goal:
+            self.path.push(curr)
             successors = self._successors(curr)
             if len(successors) == 0:
-                self.path.path_length = INF
                 print(f"No path to the goal!!")
+                self.path.path_length = 0
                 return False
 
             c_min = INF
             t_min = INF
             s_min = None
-            for s_pos in successors:
-                if self._occupied(s_pos):
-                    continue
-                if s_pos in self.path.pos:
+            for s in successors:
+                if self._occupied(s.key):
                     continue
 
-                # val = min(self._get_g(s_pos), self._get_rhs(s_pos)) + self._cost(curr, s_pos)
-                val = self._get_g(s_pos) + self._cost(curr, s_pos)
-                val2 = self._euclidean(s_pos, self.goal.pos) + self._euclidean(s_pos, self.start.pos)
+                if s in self.path:
+                    continue
+
+                val = min(self._get_g(s.key), self._get_rhs(s.key)) + self._cost(curr.pos, s.pos)
+                # val = self._get_g(s.key) + self._cost(curr, s_pos)
+                val2 = self._euclidean(s.pos, self.goal.pos) + self._euclidean(s.pos, self.start.pos)
                 if val != INF and val == c_min:
                     # Tiebreak, if current neighbour is equal to current best
                     # choose the neighbour that has the smallest t_min value
                     if val2 < t_min:
                         t_min = val2
                         c_min = val
-                        s_min = s_pos
+                        s_min = s
                 elif val < c_min:
                     # if next neighbour s is strictly lower cost than the
                     # current best, then set it to be the current best
                     t_min = val2
                     c_min = val
-                    s_min = s_pos
-            if c_min == INF:
-                print(f"Loop in the path at {curr}: {self.path.pos}")
+                    s_min = s
+
+            if s_min is None:
+                print(f"Replanning required, loop in the path at {curr.pos}: {self.path.pos}")
                 print(self.get_RHS())
                 return False
 
-            prev = curr
             curr = s_min
 
-        self.path.pos.append(self.goal.pos)
-        self.path.path_length += self._cost(prev, self.goal.pos)
+        self.path.push(self.goal)
         return True
 
     def update_start(self, new_pos: (int, int)):
@@ -540,19 +543,11 @@ class DStar:
         :return:
         """
         self.start = Node(new_pos)
-        # TODO: check if the start node is at a new location or not
-        # self._set_node_info(self.start.pos, NodeInfo(INF, INF, self.C1))  # Create/Update an existing node information???
-
         self.km += self._heuristic(self.last.pos, self.start.pos)  # Update km before calculate_priority
-
         self.start.p = self._calculate_priority(self.start)  # Update start node priority before copying to last
         self.last = self.start
 
-    def update_goal(self):
-        # TODO:
-        pass
-
-    def _successors(self, pos: (int, int)):
+    def _successors(self, node):
         """
         List of outgoing edges from a vertex.
         NOTE: If the vertex is an obstacle the movement cost to each of its neighbours is  an empty list
@@ -560,38 +555,38 @@ class DStar:
         :return: list of successor vertices
         """
         result = []
-        if self._occupied(pos):
+        if self._occupied(node.pos):
             return result
 
-        (x, y) = pos
+        (x, y) = node.pos
         x += 1
         if (0 <= x < self.width) and (0 <= y < self.height):
-            result.append((x, y))
+            result.append(Node((x, y)))
         y += 1
         if (0 <= x < self.width) and (0 <= y < self.height):
-            result.append((x, y))
+            result.append(Node((x, y)))
         x -= 1
         if (0 <= x < self.width) and (0 <= y < self.height):
-            result.append((x, y))
+            result.append(Node((x, y)))
         x -= 1
         if (0 <= x < self.width) and (0 <= y < self.height):
-            result.append((x, y))
+            result.append(Node((x, y)))
         y -= 1
         if (0 <= x < self.width) and (0 <= y < self.height):
-            result.append((x, y))
+            result.append(Node((x, y)))
         y -= 1
         if (0 <= x < self.width) and (0 <= y < self.height):
-            result.append((x, y))
+            result.append(Node((x, y)))
         x += 1
         if (0 <= x < self.width) and (0 <= y < self.height):
-            result.append((x, y))
+            result.append(Node((x, y)))
         x += 1
         if (0 <= x < self.width) and (0 <= y < self.height):
-            result.append((x, y))
+            result.append(Node((x, y)))
 
         return result
 
-    def _predecessors(self, pos: (int, int)):
+    def _predecessors(self, node):
         """
         List of incoming edges to a vertex.
         NOTE: Obstacle vertices are not added to the result
@@ -599,57 +594,64 @@ class DStar:
         :return: List with predecessors vertices
         """
         result = []
-        (x, y) = pos
+        (x, y) = node.pos
         x += 1
-        if not self._occupied((x, y)):
-            if (0 <= x < self.width) and (0 <= y < self.height):
-                result.append((x, y))
+        if (0 <= x < self.width) and (0 <= y < self.height):
+            n = Node((x, y))
+            if not self._occupied(n.key):
+                result.append(n)
         y += 1
-        if not self._occupied((x, y)):
-            if (0 <= x < self.width) and (0 <= y < self.height):
-                result.append((x, y))
+        if (0 <= x < self.width) and (0 <= y < self.height):
+            n = Node((x, y))
+            if not self._occupied(n.key):
+                result.append(n)
         x -= 1
-        if not self._occupied((x, y)):
-            if (0 <= x < self.width) and (0 <= y < self.height):
-                result.append((x, y))
+        if (0 <= x < self.width) and (0 <= y < self.height):
+            n = Node((x, y))
+            if not self._occupied(n.key):
+                result.append(n)
         x -= 1
-        if not self._occupied((x, y)):
-            if (0 <= x < self.width) and (0 <= y < self.height):
-                result.append((x, y))
+        if (0 <= x < self.width) and (0 <= y < self.height):
+            n = Node((x, y))
+            if not self._occupied(n.key):
+                result.append(n)
         y -= 1
-        if not self._occupied((x, y)):
-            if (0 <= x < self.width) and (0 <= y < self.height):
-                result.append((x, y))
+        if (0 <= x < self.width) and (0 <= y < self.height):
+            n = Node((x, y))
+            if not self._occupied(n.key):
+                result.append(n)
         y -= 1
-        if not self._occupied((x, y)):
-            if (0 <= x < self.width) and (0 <= y < self.height):
-                result.append((x, y))
+        if (0 <= x < self.width) and (0 <= y < self.height):
+            n = Node((x, y))
+            if not self._occupied(n.key):
+                result.append(n)
         x += 1
-        if not self._occupied((x, y)):
-            if (0 <= x < self.width) and (0 <= y < self.height):
-                result.append((x, y))
+        if (0 <= x < self.width) and (0 <= y < self.height):
+            n = Node((x, y))
+            if not self._occupied(n.key):
+                result.append(n)
         x += 1
-        if not self._occupied((x, y)):
-            if (0 <= x < self.width) and (0 <= y < self.height):
-                result.append((x, y))
+        if (0 <= x < self.width) and (0 <= y < self.height):
+            n = Node((x, y))
+            if not self._occupied(n.key):
+                result.append(n)
 
         return result
 
-    def _min_successors(self, pos: (int, int)):
+    def _min_successors(self, node):
         """
         Find the minimum value (g(s_pos) + c(pos, s_pos)) for the location successors
         :param pos: location (x, y)
         :return: float
         """
         min_s = INF
-        for s_pos in self._successors(pos):
-            temp = self._get_g(s_pos) + self._cost(pos, s_pos)
+        for s in self._successors(node):
+            temp = self._get_g(s.key) + self._cost(node.pos, s.pos)
             if temp < min_s:
                 min_s = temp
 
         return min_s
 
-    def _process_predecessors(self, pos: (int, int)):
-        for p_pos in self._predecessors(pos):
-            p = Node(p_pos)
+    def _process_predecessors(self, node):
+        for p in self._predecessors(node):
             self._process_node(p)

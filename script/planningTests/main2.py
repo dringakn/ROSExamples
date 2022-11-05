@@ -36,7 +36,7 @@ def draw_ogm(surface, map: OGM):
 
 def draw_path(surface, path: Path):
     if path is not None:
-        if path.path_length != INF:
+        if len(path.pos) > 1:
             center = [(path.pos[0][1] * GRID_XSIZE + GRID_XSIZE / 2), (path.pos[0][0] * GRID_YSIZE + GRID_YSIZE / 2)]
             pygame.draw.circle(surface, BLUE, center, min(GRID_XSIZE, GRID_YSIZE) / 2.0)
             for p in path.pos[1:]:  # (y,x)
@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
                 elif event.key == pygame.K_r:  # Move to next path location
                     # planner.update_start((0,0))
-                    planner.initialize((0, 0), (ROWS-1, COLS-1))
+                    planner.initialize(path.pos[0], (ROWS-1, COLS-1))
                     planner.update_map(map)
                     planner.re_plan()
                     path = planner.get_path()
@@ -113,7 +113,9 @@ if __name__ == '__main__':
                     pos = get_grid_pos(main_window, pos)  # x, y
                     planner.update_map_node(pos, OBSTACLE)
                     for n_pos, n_cost in map.get_neighbours(pos).items():
-                        planner.update_map_node(n_pos, planner.LT[hash(n_pos)].cost)
+                        key = hash(n_pos)
+                        if key in planner.LT:
+                            planner.update_map_node(n_pos, planner.LT[key].cost)
 
                 elif event.button == pygame.BUTTON_RIGHT:  # Right-button is pressed, change to free if obstacle
                     pos = pygame.mouse.get_pos()  # (col, row)
@@ -121,11 +123,12 @@ if __name__ == '__main__':
                     planner.update_map_node(pos, FREE)
                     for n_pos, n_cost in map.get_neighbours(pos).items():
                         # planner.update_map_node(n_pos, FREE)
-                        planner.update_map_node(n_pos, planner.LT[hash(n_pos)].cost)
+                        key = hash(n_pos)
+                        if key in planner.LT:
+                            planner.update_map_node(n_pos, planner.LT[key].cost)
 
             elif event.type == pygame.MOUSEBUTTONUP:  # Mouse button is released
-                if path.path_length != INF:
-                    planner.update_start(path.pos[0])
+                    planner.update_start(planner.start.pos)
 
                     if planner.re_plan():
                         path = planner.get_path()
