@@ -87,6 +87,7 @@ using namespace Eigen;
 
 int main()
 {
+  // Intersection of a ray with a planer patch
   VectorXd Ps = Vector3d(0, 0, 0);			// Ray start point
   VectorXd Pe = Vector3d(2, 4, 3);			// Ray end point
   VectorXd Plane = Vector4d(2, 2, 2, -36);  // 3D plane
@@ -94,17 +95,22 @@ int main()
   VectorXd Pb = Vector3d(3, -3, -2);		// Polygon point2
   VectorXd Pc = Vector3d(4, 1, -4);			// Polygon point3
   VectorXd Pd = Vector3d(3, 3, -1);			// Polygon point4
+
   MatrixXd A = Matrix4d::Zero();
+
   // Set-up set of linear equations
   A << Plane(0), Plane(1), Plane(2), 0, 1, 0, 0, Ps(0) - Pe(0), 0, 1, .0, Ps(1) - Pe(1), 0, 0, 1, Ps(2) - Pe(2);
   VectorXd b = Vector4d(-Plane(3), Ps(0), Ps(1), Ps(2));
   cout << "A:" << endl << A << endl << "b:" << endl << b << endl;
   cout << "Sol:" << endl << A.inverse() * b << endl;
+
+  // Second test
   A = Matrix3d::Zero();
   A.col(0) = Pa;
   A.col(1) = Pb;
   A.col(2) = Pc;
   b = Vector3d(1.4, 0.6, -1.2);
+
   cout << "A:" << endl << A << endl << "b:" << endl << b << endl;
   cout << "Sol:" << endl << A.inverse() * b << endl;
   return 0;
