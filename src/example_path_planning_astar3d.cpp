@@ -24,10 +24,11 @@
 */
 
 #include "AStar3D.hpp"
+#include <tf/transform_listener.h>          // Robot transform listener
 
-AStar3D<unsigned long int, double> g(false, true, true, false, 3, 2.00); // 0=0.25, 1=0.5, 2=1, 3=2
+unsigned int search_depth = 2;
+AStar3D<unsigned long int, double> g(false, true, true, search_depth); // 0=0.25, 1=0.5, 2=1, 3=2
 ros::Publisher path_pub;
-// ufo::map::OccupancyMapColor cmap(0.1);
 
 bool frame2map(const tf::TransformListener &li, geometry_msgs::PointStamped &pt,
                geometry_msgs::PointStamped &pt_m)
