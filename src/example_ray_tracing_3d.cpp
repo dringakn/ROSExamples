@@ -15,7 +15,7 @@
 
 		In order to avoid singularity, the equation of a line can be described implicitly
 		using following parameteric equation:
-		L(t) = (1-t)*S + t*E
+		L(t) = (1-t)*S + t*E = S - tS + tE = S + t(E-S)
 		where
 		S = Start point
 		E = End point
@@ -24,9 +24,9 @@
 		E. if t<0, the point is beyond S.
 		The above parameteric equation can be written as a fuction of each
 		coordinate variables (x,y,z), i.e.
-		x(t) = (1-t)*sx + t*ex
-		y(t) = (1-t)*sy + t*ey
-		z(t) = (1-t)*sz + t*ez
+		x(t) = (1-t)*sx + t*ex = sx + t(ex - sx)
+		y(t) = (1-t)*sy + t*ey = sy + t(ey - sy)
+		z(t) = (1-t)*sz + t*ez = sz + t(ez - sz)
 
 		Therefore, in order to detect if the plane intersect with the line we can solve
 		the following set of linear equations
