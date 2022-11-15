@@ -584,5 +584,18 @@ target_link_libraries(example_set ${catkin_LIBRARIES})
 add_executable(example_priority_queue src/example_priority_queue.cpp)
 target_link_libraries(example_priority_queue ${catkin_LIBRARIES})
 
+add_executable(example_path_smoothing src/example_path_smoothing.cpp)
+target_link_libraries(example_priority_queue ${catkin_LIBRARIES})
 
+add_executable(example_3d_point_distance_from_line src/example_3d_point_distance_from_line.cpp)
+target_link_libraries(example_3d_point_distance_from_line ${catkin_LIBRARIES})
+
+add_executable(example_3d_point_on_line src/example_3d_point_on_line.cpp)
+target_link_libraries(example_3d_point_on_line ${catkin_LIBRARIES})
+
+add_executable(example_3d_quternion_angle_between_two_vectors src/example_3d_quternion_angle_between_two_vectors.cpp)
+target_link_libraries(example_3d_quternion_angle_between_two_vectors ${catkin_LIBRARIES})
+
+add_executable(example_read_numbers_from_text_file src/example_read_numbers_from_text_file.cpp)
+target_link_libraries(example_read_numbers_from_text_file ${catkin_LIBRARIES})
 
