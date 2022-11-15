@@ -46,8 +46,10 @@ using namespace Eigen;
 
 int main()
 {
-	Vector3d u = Vector3d(1, -2, -3); // First vector
-	Vector3d v = Vector3d(4, -5, -1); // Second vector
+	// Vector3d u = Vector3d(1, -2, -3); // First vector
+	// Vector3d v = Vector3d(4, -5, -1); // Second vector
+	Vector3d u = Vector3d(0, 0, 1); // First vector
+	Vector3d v = Vector3d(1, 1, 2); // Second vector
 
 	double d = u.dot(v);
 	Vector3d w = u.cross(v);

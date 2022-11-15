@@ -3,7 +3,12 @@
 	Email: dringakn@gmail.com
 	Description:
 
-	 Distance of a point P1 from a line formed using two points (Ps, Pe):
+	Method-1: 
+		dist(Pt, Ps, Pe) = |(Pt-Pe) x (Pt-Ps)| / |Pe-Ps|
+		https://www.math.kit.edu/ianm2/lehre/am22016s/media/distances.pdf
+
+	Method-2: 
+	Distance of a point P1 from a line formed using two points (Ps, Pe):
 		dist = ||u x v|| / ||v||
 		||u x v|| = Magnitude of of the normal vector (cross-product of u and v)
 		u = vector formed between specified point and start point of the line.
@@ -43,16 +48,25 @@ using namespace Eigen;
 
 int main()
 {
-	VectorXd P1 = Vector3d(2, 3, 4);   // point whose shortest distance from the ray to be found.
-	VectorXd Ps = Vector3d(1, -2, -3); // Ray start point
-	VectorXd Pe = Vector3d(4, -5, -1);  // Ray end point
+	// Vector3d P = Vector3d(2, 3, 4);	   // point whose shortest distance from the ray to be found.
+	// Vector3d Ps = Vector3d(1, -2, -3); // Ray start point
+	// Vector3d Pe = Vector3d(4, -5, -1); // Ray end point
+	Vector3d P = Vector3d(10, 2, 0);	 // point whose shortest distance from the ray to be found.
+	Vector3d Ps = Vector3d(0, 0, 0); // Ray start point
+	Vector3d Pe = Vector3d(2, 0, 0); // Ray end point
 
-	Vector3d v = Pe - Ps; // Direction vector
-	Vector3d u = P1 - Ps; // Point vector from ray starting point toward point
+	Vector3d v = Pe - Ps;												// Direction vector
+	Vector3d u = P - Ps;												// Point vector from ray starting point toward point
 	double distance = sqrt(u.cross(v).squaredNorm() / v.squaredNorm()); // sqrt is optimized
 
-	cout << "Direction vector:\n" << v << std::endl
-		 << "Point vector from ray starting point:\n" << u << std::endl;
+	cout << "Direction vector:\n"
+		 << v << std::endl
+		 << "Point vector from ray starting point:\n"
+		 << u << std::endl;
+	cout << "Distance of the point from ray:" << distance << std::endl;
+
+	Vector3d P1 = P - Pe, P2 = P - Ps, P3 = Pe - Ps;
+	distance = sqrt(P1.cross(P2).squaredNorm() / P3.squaredNorm());
 	cout << "Distance of the point from ray:" << distance << std::endl;
 
 	return 0;
