@@ -295,6 +295,17 @@ class DStar:
         y = u[1] - v[1]
         return sqrt((x * x) + (y * y))
 
+    def _manhatten(self, u: (int, int), v: (int, int)):
+        """
+         Returns the Euclidean distance of moving from state u to state v
+        :param u: first location (x, y)
+        :param v: second location (x, y)
+        :return: float
+        """
+        x = abs(u[0] - v[0])
+        y = abs(u[1] - v[1])
+        return x + y
+
     def _heuristic(self, u: (int, int), v: (int, int)):
         """
          Returns the 8-way distance between state u and state v
@@ -302,13 +313,14 @@ class DStar:
         :param v: second location (x, y)
         :return: float
         """
-        min = abs(u[0] - v[0])
-        max = abs(u[1] - v[1])
-        if min > max:
-            temp = min
-            min = max
-            max = temp
-        return ((SQRT2 - 1.0) * min + max) * self.C1
+        # min = abs(u[0] - v[0])
+        # max = abs(u[1] - v[1])
+        # if min > max:
+        #     temp = min
+        #     min = max
+        #     max = temp
+        # return ((SQRT2 - 1.0) * min + max) * self.C1
+        return self._manhatten(u, v) * self.C1
 
     def _calculate_priority(self, node: Node):
         tb = min(self._get_g(node.key), self._get_rhs(node.key))  # tie-beaker: min(node.g, node.rhs)
@@ -385,11 +397,14 @@ class DStar:
         self.LT[node.key].cost = cost
         self._process_node(node)
 
-    def update_map(self, map: OGM):
+    def load_map(self, map: OGM):
         self.width, self.height = map.width, map.height
         for x in range(self.width):
             for y in range(self.height):
-                self.update_map_node((x, y), map.map[(x, y)])
+                # self.update_map_node((x, y), map.map[(x, y)])
+                key = hash((x,y))
+                if key not in self.LT:
+                    self.LT[key] = NodeInfo(INF, INF, map.map[(x, y)])
 
     def get_map(self):
         map = np.ones((self.width, self.height), dtype=np.int8) * FREE
@@ -542,8 +557,12 @@ class DStar:
         :param new_pos:
         :return:
         """
+        # self._set_g(self.start.key, INF)
+        # self._set_rhs(self.start.key, INF)
         self.start = Node(new_pos)
         self.km += self._heuristic(self.last.pos, self.start.pos)  # Update km before calculate_priority
+        # self._set_g(self.start.key, INF)
+        # self._set_rhs(self.start.key, INF)
         self.start.p = self._calculate_priority(self.start)  # Update start node priority before copying to last
         self.last = self.start
 

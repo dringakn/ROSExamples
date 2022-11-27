@@ -10,11 +10,11 @@ WHITE = (255, 255, 255)
 GRAY = (128, 128, 128)
 
 BACKGROUND = WHITE
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 800
+WINDOW_WIDTH = 1000
+WINDOW_HEIGHT = 1000
 
-ROWS = 10  # Along x-axis, OGM Width
-COLS = 10  # Along y-axis, OGM Height
+ROWS = 20  # Along x-axis, OGM Width
+COLS = 20  # Along y-axis, OGM Height
 
 GRID_XSIZE = WINDOW_WIDTH // ROWS
 GRID_YSIZE = WINDOW_HEIGHT // COLS
@@ -56,18 +56,20 @@ if __name__ == '__main__':
     running = True
 
     map = OGM(ROWS, COLS)
-    for y in range(0, ROWS, 4):
-        if y + 1 < ROWS:
-            for x in range(0, COLS - 1):
-                map.set_obstacle((y + 1, x))
-        if y + 3 < ROWS:
-            for x in range(1, COLS):
-                map.set_obstacle((y + 3, x))
+    # for y in range(0, ROWS, 4):
+    #     if y + 1 < ROWS:
+    #         for x in range(0, COLS - 1):
+    #             map.set_obstacle((y + 1, x))
+    #     if y + 3 < ROWS:
+    #         for x in range(1, COLS):
+    #             map.set_obstacle((y + 3, x))
 
 
     planner = DStar()
-    planner.initialize((0, 0), (ROWS-1, COLS-1))
-    planner.update_map(map)
+    start_pos = (int(ROWS/2), 0)  # (0, 0)
+    goal_pos = (int(ROWS/2), COLS-1)  # (ROWS-1, COLS-1)
+    planner.initialize(start_pos, goal_pos)
+    planner.load_map(map)
     planner.re_plan()
     path = planner.get_path()
     print("Path:", path.pos)
@@ -97,9 +99,9 @@ if __name__ == '__main__':
                             pygame.display.set_caption(f"Planner: Path not found!!!")
 
                 elif event.key == pygame.K_r:  # Move to next path location
-                    planner.initialize(path.pos[0], (ROWS-1, COLS-1))
-                    # planner.initialize((0, 0), (ROWS-1, COLS-1))
-                    planner.update_map(map)
+                    planner.initialize(path.pos[0], goal_pos)
+                    # planner.initialize((0, 0), goal_pos)
+                    planner.load_map(map)
                     planner.re_plan()
                     path = planner.get_path()
 

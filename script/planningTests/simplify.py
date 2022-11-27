@@ -1,62 +1,81 @@
 import matplotlib.pyplot as plt
 import copy
+import math
 
 path = [
-    [0, 0],
+    [0, 0, 0],
 
-    [9, 0],
-    [10, 0],
-    [10, 1],
+    [9, 0, 0],
+    [10, 0, 0],
+    [10, 1, 0],
 
-    [10, 2],
-    [10, 3],
-    [9, 3],
+    [10, 2, 0],
+    [10, 3, 0],
+    [9, 3, 0],
 
-    [1, 3],
-    [0, 3],
-    [0, 4],
+    [1, 3, 0],
+    [0, 3, 0],
+    [0, 4, 0],
 
-    [0, 5],
-    [0, 6],
-    [1, 6],
+    [0, 5, 0],
+    [0, 6, 0],
+    [1, 6, 0],
 
-    [9, 6],
-    [10, 6],
-    [10, 7],
+    [9, 6, 0],
+    [10, 6, 0],
+    [10, 7, 0],
 
-    [10, 8],
-    [10, 9],
-    [9, 9],
+    [10, 8, 0],
+    [10, 9, 0],
+    [9, 9, 0],
 
-    [1, 9],
-    [0, 9],
-    [0, 10],
+    [1, 9, 0],
+    [0, 9, 0],
+    [0, 10, 0],
 
-    [0, 11],
-    [0, 12],
+    [0, 11, 0],
+    [0, 12, 0],
 ]
 
-def iepf(path, tol=0.0000001):
-    new_path = copy.deepcopy(path)
+def norm(u):
+    return math.sqrt(u[0]*u[0] + u[1]*u[1] + u[2]*u[2])
 
-    change = tol
-    while change >= tol:
-        change = 0
-        for i in range(1, len(path)-1):
-            for j in range(len(path[i])):
-                old = new_path[i][j]
-                new_path[i][j] += (alpha * (path[i][j] - new_path[i][j]))
-                new_path[i][j] += (beta * (new_path[i-1][j] + new_path[i+1][j] - (2*new_path[i][j])))
-                change += abs(old - new_path[i][j])
+
+def cross(u, v):
+    return [u[1]*v[2] - u[2]*v[1], -(u[0]*v[2] - u[2]*v[0]), u[0]*v[1] - u[1]*v[0]]
+
+
+def dist_to_line(pt, start, end):
+    # works when start and end are not collinear
+    u = [0, 0, 0] # direction vector
+    u[0] = end[0] - start[0]
+    u[1] = end[1] - start[1]
+    u[2] = end[2] - start[2]
+    v = [0, 0, 0] # Point vector
+    v[0] = pt[0] - start[0]
+    v[1] = pt[1] - start[1]
+    v[2] = pt[2] - start[2]
+    return norm(cross(v, u)) / norm(u)
+
+
+def simplify(path, tol=1):
+    new_path = []
+    if len(path)>2:
+        new_path.append(path[0])
+        for idx in range(2, len(path)):
+            dist = dist_to_line(path[idx-1], path[idx-2], path[idx])
+            if dist > tol:
+                new_path.append(path[idx-1])
 
     return new_path
 
-new_path = iepf(path, 0.00001)
-x = [p[0] for p in new_path]
-y = [p[1] for p in new_path]
+new_path = simplify(path, 0.5)
+print(new_path)
+# x = [p[0] for p in new_path]
+# y = [p[1] for p in new_path]
 # for p in path:
 #     print(p)
 
-plt.plot(x, y, '-o')
-plt.grid(axis='both')
-plt.show()
+# plt.plot(x, y, '-o')
+# plt.grid(axis='both')
+# plt.show()
