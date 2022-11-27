@@ -599,3 +599,6 @@ target_link_libraries(example_3d_quternion_angle_between_two_vectors ${catkin_LI
 add_executable(example_read_numbers_from_text_file src/example_read_numbers_from_text_file.cpp)
 target_link_libraries(example_read_numbers_from_text_file ${catkin_LIBRARIES})
 
+add_executable(example_path_orientation src/example_path_orientation.cpp)
+target_link_libraries(example_path_orientation ${catkin_LIBRARIES})
+
