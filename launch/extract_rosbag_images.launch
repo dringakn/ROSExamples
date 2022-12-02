@@ -1,0 +1,9 @@
+<launch>
+  <node pkg="rosbag" type="play" name="rosbag" required="true" args="$(env HOME)/bagfile.bag"/>
+  <node name="extract" pkg="image_view" type="extract_images" respawn="false" required="true" output="screen" cwd="ROS_HOME">
+    <remap from="image" to="/image"/>
+  </node>
+  <!-- mv ~/.ros/frame*.jpg test/ -->
+  <!-- ffmpeg -framerate 25 -i frame%04d.jpg -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4 -->
+  <!-- sudo apt install mjpegtools -->
+</launch>
