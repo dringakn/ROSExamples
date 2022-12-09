@@ -8,7 +8,7 @@ Description: Extract images from a rosbag on specified topic to the output folde
 Usuage: ./extract_rosbag_images_downsampled.py bag_files.bag ./output/images/folder/path topic_name save_every_n_image
 Example: ./extract_rosbag_images_downsampled.py bag_files.bag ./output /cam0 1
 Notes: 
-    ffmpeg -framerate 25 -i frame%06.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4
+    ffmpeg -framerate 25 -i frame%06d.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4
     sudo apt install mjpegtools
 """
 
