@@ -5,6 +5,8 @@ from decimal import Decimal
 from io import BytesIO
 from PIL import Image
 import math
+import elevation as dem
+import os
 
 def is_valid_type(element, cls):
     """
@@ -152,7 +154,11 @@ class Overpass(object):
             # extags = list(way.tags.keys()) + [k + '=' + v for k, v in way.tags.items()]
             pts = [(float(node.lon), float(node.lat), height) for node in way.nodes]
             buildings.append(pts)
-            
+
+        # Get elevation
+        fname = f"{os.getcwd()}/ROI-DEM.tif" 
+        dem.clip(bounds=(roi[0], roi[1], roi[2], roi[3]), output=fname, product='SRTM1');
+
         return buildings
 
 
