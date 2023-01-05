@@ -147,6 +147,7 @@ class Overpass(object):
             if height_found:
                 # If height tag is available give it a priority.
                 height = 1 * height
+                
             elif building_levels_found:
                 # Otherwise, look for building:levels tag to calculate building height
                 height = levels * height
