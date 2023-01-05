@@ -1,12 +1,13 @@
+import os
+import math
 import requests
 import json
 from collections import OrderedDict
 from decimal import Decimal
 from io import BytesIO
 from PIL import Image
-import math
 import elevation as dem
-import os
+import alphashape as alpha # Create alpha shapes for a given set of points
 
 def is_valid_type(element, cls):
     """
