@@ -4,10 +4,16 @@ import requests
 import json
 from collections import OrderedDict
 from decimal import Decimal
-from io import BytesIO
-from PIL import Image
-import elevation as dem
-import alphashape as alpha # Create alpha shapes for a given set of points
+
+import numpy as np  # For data-type
+from io import BytesIO  # For OSM image tile
+from PIL import Image  # For OSM image tile
+import elevation as dem  # To obtain dem image
+import rasterio as rio  # For reading dem image
+from rasterio.warp import Resampling  # For dem upscaling
+import alphashape as alpha  # Create alpha shapes for a given set of points
+import utm
+
 
 def is_valid_type(element, cls):
     """
@@ -20,15 +26,102 @@ def is_valid_type(element, cls):
     """
     return isinstance(element, cls) and element.id is not None
 
-class Overpass(object):
+
+class UTM:
+   
+    def __init__(self, lat0, lng0, zone_num=32, zone_letter='U'):
+        self.zone_num = zone_num
+        self.zone_letter = zone_letter
+        self.change_reference(lat0, lng0)
+        
+    def change_reference(self, lat, lng):
+        self.lat, self.lng = lat, lng
+        self.east, self.north = self.get_utm(
+            lat, lng, False)  # False to initialize
     
+    def get_utm(self, lat, lng, output_local=False):
+        # Note lat, lng order
+        east, north, _, _ = utm.from_latlon(
+            lat, lng, self.zone_num, self.zone_letter)
+        if output_local:
+            east -= self.east
+            north -= self.north
+
+        return (east, north)  # x, y
+
+    def get_latlng(self, east, north, local_input=False):
+        # x, y = east, north
+        if local_input:
+            east += self.east
+            north += self.north
+        lat, lng = utm.to_latlon(east, north, self.zone_num, self.zone_letter)
+        return (lat, lng)
+
+    def translate(self, east, north):
+        return self.get_latlng(east, north, local_input=True)
+
+
+    def get_bbox(self, size=1):
+        bl = self.translate(-size, -size)# Bottom-Left
+        tr = self.translate(size, size)# Top-Right
+        return (bl[0], bl[1], tr[0], tr[1])
+
+class DEM:
+    def __init__(self, roi=[49.7955670752582, 9.89987744122153, 49.802298332928636, 9.909039867216649], offset=0.0005, upscale_factor=30):
+        # roi: [s,w,n,e] <--> [ymin,xmin,ymax,xmax]
+
+        self.roi = (roi[0]-offset, roi[1]-offset, roi[2]+offset, roi[3]+offset)
+
+        # Get elevation image
+        fname = f"{os.getcwd()}/ROI-DEM.tif"
+        dem.clip(bounds=(self.roi[0], self.roi[1], self.roi[2],
+                 self.roi[3]), output=fname, product='SRTM1')
+        dem.clean()  # clean up stale temporary files and fix the cache in the event of a server error
+
+        self.data = rio.open(fname)
+
+        # Resample DEM
+        self.array = self.data.read(1,
+                                    out_shape=(int(self.data.height * upscale_factor),
+                                               int(self.data.width * upscale_factor)),
+                                    out_dtype=np.double,
+                                    resampling=Resampling.bilinear
+                                    )
+        self.height = self.array.shape[0]
+        self.width = self.array.shape[1]
+
+        # DEM image transform
+        self.transform = self.data.transform * self.data.transform.scale(
+            (self.data.width / self.width),
+            (self.data.height / self.height)
+        )
+
+    def get_altitude(self, lat, lng):
+        return self.array[rio.transform.rowcol(self.transform, lng, lat)]
+
+    def get_altitudes(self):
+        cols, rows = np.meshgrid(np.arange(self.width), np.arange(self.height))
+        xs, ys = rio.transform.xy(self.data.transform, rows, cols)
+        lngs = np.array(xs)
+        lats = np.array(ys)
+        pts = []
+        for y, lat in enumerate(lats):
+            for x, lng in enumerate(lngs):
+                pts.append([lng, lat, self.array[(x, y)]])
+
+        return lats, lngs, pts
+
+
+class Overpass(object):
+
     """
     Class to access the Overpass API
     """
 
     def __init__(self, overpass_server="http://overpass-api.de/api/interpreter"):
         self.overpass_server = overpass_server
-        self.headers = {"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
+        self.headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
 
     def queryBuilder(bbox, tags=['building', 'highway'], types=['node', 'way', 'relation'], format='json'):
         '''
@@ -68,7 +161,6 @@ class Overpass(object):
 
         return qry
 
-
     def query(self, query):
         """
         Query the Overpass API
@@ -79,9 +171,9 @@ class Overpass(object):
         """
         if not isinstance(query, bytes):
             query = query.encode("utf-8")
-        response = requests.get(self.overpass_server, params={'data': query}, headers=self.headers)
+        response = requests.get(self.overpass_server, params={
+                                'data': query}, headers=self.headers)
         return Result.from_json(response.json(), api=self)
-
 
     def deg2num(self, lat_deg, lon_deg, zoom):
         lat_rad = math.radians(lat_deg)
@@ -91,14 +183,12 @@ class Overpass(object):
                     (1 / math.cos(lat_rad))) / math.pi) / 2.0 * n)
         return (xtile, ytile)
 
-
     def num2deg(self, xtile, ytile, zoom):
         n = 2.0 ** zoom
         lon_deg = xtile / n * 360.0 - 180.0
         lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ytile / n)))
         lat_deg = math.degrees(lat_rad)
         return (lat_deg, lon_deg)
-
 
     def getImageTile(self, lat=51.88863727036334, lon=10.417070845502911, delta_lat=0.001,  delta_long=0.001, zoom=19):
         xmin, ymax = self.deg2num(lat, lon, zoom)
@@ -112,20 +202,24 @@ class Overpass(object):
                     # print("Opening: " + imgurl)
                     imgstr = requests.get(imgurl, headers=self.headers)
                     tile = Image.open(BytesIO(imgstr.content))
-                    Cluster.paste(tile, box=((xtile-xmin)*256,  (ytile-ymin)*255))
+                    Cluster.paste(tile, box=(
+                        (xtile-xmin)*256,  (ytile-ymin)*255))
                 except Exception as ex:
                     print(f"Couldn't download image: {ex}")
                     tile = None
-                    
+
         # Cluster = getImageCluster(51.88863727036334, 10.417070845502911, 0.001,  0.001, 19)
         # fig = plt.figure(figsize=(16,16))
         # plt.imshow(np.asarray(Cluster))
         # plt.show()
         return Cluster
 
+    def getBuildingsFootprints(self, roi=[49.7955670752582, 9.89987744122153, 49.802298332928636, 9.909039867216649], default_height: float = 5.0):
+        roi = (51.8903, 10.41933)
+        roi_lat = roi[0]  # First element is latitude
+        roi_lng = roi[1]  # Second element is longitude
 
-    def getBuildingsFootprints(self, roi=[49.7955670752582, 9.89987744122153, 49.802298332928636, 9.909039867216649], default_height:float=5.0):
-		#bbx: [s,w,n,e] <--> [ymin,xmin,ymax,xmax]
+        # bbx: [s,w,n,e] <--> [ymin,xmin,ymax,xmax]
         ql_query = f'[out:json][bbox: {roi[0]},{roi[1]},{roi[2]},{roi[3]}];(way["building"];relation["building"];);out body;>;out skel qt;'
         # print(ql_query)
         result = self.query(ql_query)
@@ -148,24 +242,26 @@ class Overpass(object):
             if height_found:
                 # If height tag is available give it a priority.
                 height = 1 * height
-                
+
             elif building_levels_found:
                 # Otherwise, look for building:levels tag to calculate building height
                 height = levels * height
 
             # extags = list(way.tags.keys()) + [k + '=' + v for k, v in way.tags.items()]
-            pts = [(float(node.lon), float(node.lat), height) for node in way.nodes]
+            pts = [(float(node.lon), float(node.lat), height)
+                   for node in way.nodes]
             buildings.append(pts)
 
         # Get elevation
-        fname = f"{os.getcwd()}/ROI-DEM.tif" 
-        dem.clip(bounds=(roi[0], roi[1], roi[2], roi[3]), output=fname, product='SRTM1');
+        fname = f"{os.getcwd()}/ROI-DEM.tif"
+        dem.clip(bounds=(roi[0], roi[1], roi[2], roi[3]),
+                 output=fname, product='SRTM1')
 
         return buildings
 
 
 class Result(object):
-    
+
     """
     Class to handle the result.
     """
@@ -179,10 +275,14 @@ class Result(object):
         """
         if elements is None:
             elements = []
-        self._nodes = OrderedDict((element.id, element) for element in elements if is_valid_type(element, Node))
-        self._ways = OrderedDict((element.id, element) for element in elements if is_valid_type(element, Way))
-        self._relations = OrderedDict((element.id, element) for element in elements if is_valid_type(element, Relation))
-        self._class_collection_map = {Node: self._nodes, Way: self._ways, Relation: self._relations}
+        self._nodes = OrderedDict((element.id, element)
+                                  for element in elements if is_valid_type(element, Node))
+        self._ways = OrderedDict((element.id, element)
+                                 for element in elements if is_valid_type(element, Way))
+        self._relations = OrderedDict(
+            (element.id, element) for element in elements if is_valid_type(element, Relation))
+        self._class_collection_map = {
+            Node: self._nodes, Way: self._ways, Relation: self._relations}
         self.api = api
         self._bounds = {}
 
@@ -197,9 +297,11 @@ class Result(object):
         :raises ValueError: If provided parameter is not instance of :class:`overpy.Result`
         """
         if not isinstance(other, Result):
-            raise ValueError("Provided argument has to be instance of overpy:Result()")
+            raise ValueError(
+                "Provided argument has to be instance of overpy:Result()")
 
-        other_collection_map = {Node: other.nodes, Way: other.ways, Relation: other.relations}
+        other_collection_map = {Node: other.nodes,
+                                Way: other.ways, Relation: other.relations}
         for element_type, own_collection in self._class_collection_map.items():
             for element in other_collection_map[element_type]:
                 if is_valid_type(element, element_type) and element.id not in own_collection:
@@ -213,7 +315,8 @@ class Result(object):
         :type element: overpy.Element
         """
         if is_valid_type(element, Element):
-            self._class_collection_map[element.__class__].setdefault(element.id, element)
+            self._class_collection_map[element.__class__].setdefault(
+                element.id, element)
 
     def get_elements(self, filter_cls, elem_id=None):
         """
@@ -512,7 +615,7 @@ class Way(Element):
         """
         if data.get("type") != cls._type_value:
             print(f"ElementDataWrongType: {cls._type_value}, ata.get('type')")
-            
+
         tags = data.get("tags", {})
 
         way_id = data.get("id")
@@ -527,7 +630,7 @@ class Way(Element):
 
         return cls(way_id=way_id, attributes=attributes, node_ids=node_ids, tags=tags, result=result)
 
-    
+
 class Relation(Element):
 
     """
@@ -595,7 +698,7 @@ class Relation(Element):
 
         return cls(rel_id=rel_id, attributes=attributes, members=members, tags=tags, result=result)
 
-   
+
 class RelationMember(object):
 
     """
@@ -634,7 +737,7 @@ class RelationMember(object):
         role = data.get("role")
         return cls(ref=ref, role=role, result=result)
 
-  
+
 class RelationNode(RelationMember):
     _type_value = "node"
 
