@@ -11,8 +11,11 @@ from PIL import Image  # For OSM image tile
 import elevation as dem  # To obtain dem image
 import rasterio as rio  # For reading dem image
 from rasterio.warp import Resampling  # For dem upscaling
+from rasterio.plot import show # DEM display
+import richdem as rd # DEM display
+import matplotlib.pyplot as plt
 import alphashape as alpha  # Create alpha shapes for a given set of points
-import utm
+import utm # UTM to/from conversion
 
 
 def is_valid_type(element, cls):
@@ -28,17 +31,17 @@ def is_valid_type(element, cls):
 
 
 class UTM:
-   
+
     def __init__(self, lat0, lng0, zone_num=32, zone_letter='U'):
         self.zone_num = zone_num
         self.zone_letter = zone_letter
         self.change_reference(lat0, lng0)
-        
+
     def change_reference(self, lat, lng):
         self.lat, self.lng = lat, lng
         self.east, self.north = self.get_utm(
             lat, lng, False)  # False to initialize
-    
+
     def get_utm(self, lat, lng, output_local=False):
         # Note lat, lng order
         east, north, _, _ = utm.from_latlon(
@@ -60,22 +63,23 @@ class UTM:
     def translate(self, east, north):
         return self.get_latlng(east, north, local_input=True)
 
-
     def get_bbox(self, size=1):
-        bl = self.translate(-size, -size)# Bottom-Left
-        tr = self.translate(size, size)# Top-Right
+        bl = self.translate(-size, -size)  # Bottom-Left
+        tr = self.translate(size, size)  # Top-Right
         return (bl[0], bl[1], tr[0], tr[1])
 
-class DEM:
-    def __init__(self, roi=[49.7955670752582, 9.89987744122153, 49.802298332928636, 9.909039867216649], offset=0.0005, upscale_factor=30):
-        # roi: [s,w,n,e] <--> [ymin,xmin,ymax,xmax]
 
-        self.roi = (roi[0]-offset, roi[1]-offset, roi[2]+offset, roi[3]+offset)
+class DEM:
+    
+    def __init__(self, roi=(51.8903, 10.41933), offset=250, upscale_factor=30):
 
         # Get elevation image
         fname = f"{os.getcwd()}/ROI-DEM.tif"
-        dem.clip(bounds=(self.roi[0], self.roi[1], self.roi[2],
-                 self.roi[3]), output=fname, product='SRTM1')
+
+        utm = UTM(roi[0], roi[1], 32, 'U')
+        # bbox: [s,w,n,e] <--> [ymin,xmin,ymax,xmax]
+        bbox = utm.get_bbox(size=offset)
+        dem.clip(bounds=(bbox[1], bbox[0], bbox[3], bbox[2]), output=fname, product='SRTM1')
         dem.clean()  # clean up stale temporary files and fix the cache in the event of a server error
 
         self.data = rio.open(fname)
@@ -97,7 +101,7 @@ class DEM:
         )
 
     def get_altitude(self, lat, lng):
-        return self.array[rio.transform.rowcol(self.transform, lng, lat)]
+        return self.array[rio.transform.rowcol(self.transform, lng, lat)] #Note swap (lng, lat)
 
     def get_altitudes(self):
         cols, rows = np.meshgrid(np.arange(self.width), np.arange(self.height))
@@ -111,6 +115,16 @@ class DEM:
 
         return lats, lngs, pts
 
+    def show_dem(self):
+        richdem = rd.rdarray(self.array, no_data=-9999)
+        return rd.rdShow(richdem, axes=False, cmap='viridis', figsize=(12, 10))
+
+    def show_dem2(self):
+        fig, ax = plt.subplots(1, figsize=(16, 16))
+        show(self.array, cmap='Greys_r', ax=ax)
+        show(self.array, contour=True, ax=ax, linewidths=0.7)
+        plt.axis("off")
+        plt.show()
 
 class Overpass(object):
 
