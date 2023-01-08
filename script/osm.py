@@ -14,9 +14,9 @@ from rasterio.warp import Resampling  # For dem upscaling
 from rasterio.plot import show # DEM display
 import richdem as rd # DEM display
 import matplotlib.pyplot as plt
+import shapely # for alpha shapes
 import alphashape as alpha  # Create alpha shapes for a given set of points
 import utm # UTM to/from conversion
-
 
 def is_valid_type(element, cls):
     """
@@ -32,18 +32,35 @@ def is_valid_type(element, cls):
 
 class UTM:
 
-    def __init__(self, lat0, lng0, zone_num=32, zone_letter='U'):
-        self.zone_num = zone_num
-        self.zone_letter = zone_letter
+    def __init__(self, lat0, lng0):
+        self.zone_letter = utm.latitude_to_zone_letter(lat0) # e.g. 'U'
+        self.zone_num = utm.latlon_to_zone_number(lat0, lng0) # e.g. 32
         self.change_reference(lat0, lng0)
 
+
     def change_reference(self, lat, lng):
+        """Set the reference Geodatic coordinates.
+
+        Args:
+            lat (float): Latitude
+            lng (float): Longitude
+        """
         self.lat, self.lng = lat, lng
         self.east, self.north = self.get_utm(
             lat, lng, False)  # False to initialize
 
+
     def get_utm(self, lat, lng, output_local=False):
-        # Note lat, lng order
+        """Convert Geodatic coordinates into local/global Cartesian coordinates
+
+        Args:
+            lat (float): Latitude
+            lng (float): Longitude
+            output_local (bool, optional): True to output as local coordinates. Defaults to False.
+
+        Returns:
+            tuple: (east[x], north[y])
+        """
         east, north, _, _ = utm.from_latlon(
             lat, lng, self.zone_num, self.zone_letter)
         if output_local:
@@ -51,6 +68,7 @@ class UTM:
             north -= self.north
 
         return (east, north)  # x, y
+
 
     def get_latlng(self, east, north, local_input=False):
         # x, y = east, north
@@ -60,25 +78,49 @@ class UTM:
         lat, lng = utm.to_latlon(east, north, self.zone_num, self.zone_letter)
         return (lat, lng)
 
-    def translate(self, east, north):
+
+    def translate_as_geodatic(self, east, north):
+        """Get the Geodatic coordinate with respect to reference coordinate.
+
+        Args:
+            east (float): The offset distance in meters along east[x]. 
+            north (float): The offset distance in meters along north[y].
+
+        Returns:
+            tuple: (lat, lng)
+        """
         return self.get_latlng(east, north, local_input=True)
 
+
+    def translate_as_cartesian(self, east, north):
+        """Get the Cartesian coordinate with respect to reference coordinate.
+
+        Args:
+            east (float): The offset distance in meters along east[x]. 
+            north (float): The offset distance in meters along north[y].
+
+        Returns:
+            tuple: (east, north)
+        """
+        return (self.east+east, self.north+north)
+
+
     def get_bbox(self, size=1):
-        bl = self.translate(-size, -size)  # Bottom-Left
-        tr = self.translate(size, size)  # Top-Right
+        bl = self.translate_as_geodatic(-size, -size)  # Bottom-Left
+        tr = self.translate_as_geodatic(size, size)  # Top-Right
         return (bl[0], bl[1], tr[0], tr[1])
 
 
 class DEM:
     
-    def __init__(self, roi=(51.8903, 10.41933), offset=250, upscale_factor=30):
+    def __init__(self, roi=(51.8903, 10.41933), size=250, upscale_factor=30):
 
         # Get elevation image
         fname = f"{os.getcwd()}/ROI-DEM.tif"
 
-        utm = UTM(roi[0], roi[1], 32, 'U')
+        utm = UTM(roi[0], roi[1])
         # bbox: [s,w,n,e] <--> [ymin,xmin,ymax,xmax]
-        bbox = utm.get_bbox(size=offset)
+        bbox = utm.get_bbox(size=size)
         dem.clip(bounds=(bbox[1], bbox[0], bbox[3], bbox[2]), output=fname, product='SRTM1')
         dem.clean()  # clean up stale temporary files and fix the cache in the event of a server error
 
@@ -133,6 +175,11 @@ class Overpass(object):
     """
 
     def __init__(self, overpass_server="http://overpass-api.de/api/interpreter"):
+        # Values are updated after call to getBuildingsFootprints(...)
+        self.dem = None
+        self.utm = None
+        self.bbox = None
+        # Set server url
         self.overpass_server = overpass_server
         self.headers = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
@@ -175,6 +222,7 @@ class Overpass(object):
 
         return qry
 
+
     def query(self, query):
         """
         Query the Overpass API
@@ -189,6 +237,7 @@ class Overpass(object):
                                 'data': query}, headers=self.headers)
         return Result.from_json(response.json(), api=self)
 
+
     def deg2num(self, lat_deg, lon_deg, zoom):
         lat_rad = math.radians(lat_deg)
         n = 2.0 ** zoom
@@ -197,12 +246,14 @@ class Overpass(object):
                     (1 / math.cos(lat_rad))) / math.pi) / 2.0 * n)
         return (xtile, ytile)
 
+
     def num2deg(self, xtile, ytile, zoom):
         n = 2.0 ** zoom
         lon_deg = xtile / n * 360.0 - 180.0
         lat_rad = math.atan(math.sinh(math.pi * (1 - 2 * ytile / n)))
         lat_deg = math.degrees(lat_rad)
         return (lat_deg, lon_deg)
+
 
     def getImageTile(self, lat=51.88863727036334, lon=10.417070845502911, delta_lat=0.001,  delta_long=0.001, zoom=19):
         xmin, ymax = self.deg2num(lat, lon, zoom)
@@ -228,17 +279,25 @@ class Overpass(object):
         # plt.show()
         return Cluster
 
-    def getBuildingsFootprints(self, roi=[49.7955670752582, 9.89987744122153, 49.802298332928636, 9.909039867216649], default_height: float = 5.0):
-        roi = (51.8903, 10.41933)
-        roi_lat = roi[0]  # First element is latitude
-        roi_lng = roi[1]  # Second element is longitude
 
-        # bbx: [s,w,n,e] <--> [ymin,xmin,ymax,xmax]
-        ql_query = f'[out:json][bbox: {roi[0]},{roi[1]},{roi[2]},{roi[3]}];(way["building"];relation["building"];);out body;>;out skel qt;'
+    def getBuildingsFootprints(self, roi=(51.8903, 10.41933), size=250, default_height: float = 5.0, upscale_factor=30, tightness=1000):
+        
+        # ROI: First element is latitude, Second element is longitude
+
+        # Get elevation
+        self.dem = DEM(roi=roi, size=size+250, upscale_factor=upscale_factor)
+        # UTM to LatLng
+        self.utm = UTM(roi[0], roi[1])
+        # bbox: [s,w,n,e] <--> [ymin,xmin,ymax,xmax]
+        self.bbox = self.utm.get_bbox(size=size)
+        # Get OSM
+        ql_query = f'[out:json][bbox: {self.bbox[0]},{self.bbox[1]},{self.bbox[2]},{self.bbox[3]}];(way["building"];relation["building"];);out body;>;out skel qt;'
         # print(ql_query)
         result = self.query(ql_query)
+        
         buildings = []
-
+        ground = []
+        footprint = []
         for way in result.ways:
             height = default_height  # Default height
             levels = 1  # Default building levels
@@ -247,11 +306,18 @@ class Overpass(object):
             for k, v in way.tags.items():
                 k = k.lower()
                 if 'height' in k:
-                    height = float(v)
-                    height_found = True
+                    try:
+                        height = float(v)
+                        height_found = True
+                    except:
+                        pass
                 elif 'building:level' in k:
-                    levels = int(v)
-                    building_levels_found = True
+                    try:
+                        levels = float(v)
+                        building_levels_found = True
+                    except:
+                        # Invalid string
+                        pass
 
             if height_found:
                 # If height tag is available give it a priority.
@@ -262,16 +328,48 @@ class Overpass(object):
                 height = levels * height
 
             # extags = list(way.tags.keys()) + [k + '=' + v for k, v in way.tags.items()]
-            pts = [(float(node.lon), float(node.lat), height)
-                   for node in way.nodes]
+            pts = []
+            for node in way.nodes:
+                lat = float(node.lat)
+                lng = float(node.lon)
+                alt = self.dem.get_altitude(lat, lng)
+                east, north = self.utm.get_utm(lat, lng, output_local=True)
+                footprint.append([lat, lng])
+                ground.append([east, north, alt])
+                pts.append([east, north, alt, height])
             buildings.append(pts)
 
-        # Get elevation
-        fname = f"{os.getcwd()}/ROI-DEM.tif"
-        dem.clip(bounds=(roi[0], roi[1], roi[2], roi[3]),
-                 output=fname, product='SRTM1')
+        boundary = alpha.alphashape(footprint, tightness)
 
-        return buildings
+        roi_polygon = []
+        if isinstance(boundary, shapely.geometry.multipolygon.MultiPolygon):   
+            for poly in boundary:   
+                for pt in poly.exterior.coords:
+                    lat = pt[0]
+                    lng = pt[1]
+                    alt = self.dem.get_altitude(lat, lng)
+                    east, north = self.utm.get_utm(lat, lng, output_local=True)
+                    roi_polygon.append([east, north, alt])
+        else:        
+            for pt in boundary.exterior.coords:
+                lat = pt[0]
+                lng = pt[1]
+                alt = self.dem.get_altitude(lat, lng)
+                east, north = self.utm.get_utm(lat, lng, output_local=True)
+                roi_polygon.append([east, north, alt])
+
+        return buildings, ground, roi_polygon
+
+
+    def get_waypoints_altitude(self, waypoints: list()):
+        points = []
+        for pt in waypoints:
+            east, north = self.utm.translate_as_cartesian(pt[0], pt[1])
+            lat, lng = self.utm.get_latlng(east, north, local_input=False)
+            alt = self.dem.get_altitude(lat, lng)
+            points.append([pt[0], pt[1], alt])
+
+        return points
 
 
 class Result(object):

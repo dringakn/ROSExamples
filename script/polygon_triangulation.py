@@ -3,7 +3,7 @@ import sys
 from collections import namedtuple
 
 # Internal data structure
-Point = namedtuple("Point", "x y z")
+Point = namedtuple("Point", "x y z h")
 
 class BuildingMesh:
 
@@ -21,7 +21,7 @@ class BuildingMesh:
 
         # Convert the input list of points as namedtuple
         self.polygon = [Point(*point) for point in polygon]
-        # self.polygon = [Point(pt[0], pt[1], pt[2]) for pt in polygon]
+        # self.polygon = [Point(pt[0], pt[1], pt[2], pt[3]) for pt in polygon]
         
         # Check if it's a closed polygon
         if self.polygon[0] == self.polygon[-1]:
@@ -41,7 +41,10 @@ class BuildingMesh:
         vt0 = self.polygon[0]
         vtx.append([vt0[0], vt0[1], vt0[2]])  # Append first vertex to make close loop polygon
         N = len(vtx)
-
+        
+        # Assuming all vertices contains same height
+        height = vt0[3]
+        
         # Iterate over polygon vertices
         tri_idx = []
         for idx in range(0, N-1): # Skip last vertex (same as first)
@@ -55,7 +58,7 @@ class BuildingMesh:
         return vtx, tri_idx
 
     def extrude_polygon_cap(self, height=1):
-        vtx = [[pt.x, pt.y, pt.z+height] for pt in self.polygon] # copy original list
+        vtx = [[pt.x, pt.y, pt.z+pt.h] for pt in self.polygon] # copy original list
         tri_idx = []
         triangles = self._earclip()
         for tri in triangles:
