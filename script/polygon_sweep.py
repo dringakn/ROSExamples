@@ -1,6 +1,6 @@
 import CGAL
 from CGAL.CGAL_Kernel import Polygon_2, Line_2, Segment_2, Point_2, Direction_2, Vector_2, Ray_2, Weighted_point_2
-from CGAL.CGAL_Kernel import do_intersect, intersection, squared_distance, orientation, determinant, area, bisector, bounded_side_2, cross_product, left_turn
+from CGAL.CGAL_Kernel import do_intersect, intersection, squared_distance, orientation, determinant, area, bisector, bounded_side_2, cross_product, left_turn, centroid
 from CGAL.CGAL_Kernel import COLLINEAR, POSITIVE, NEGATIVE, ORIGIN, CLOCKWISE, COUNTERCLOCKWISE, LEFT_TURN, ON_BOUNDARY, ON_BOUNDED_SIDE, ON_POSITIVE_SIDE, ON_UNBOUNDED_SIDE, ON_NEGATIVE_SIDE
 import numpy as np # Numpy
 import pyvisgraph as vg # Visibility graph
@@ -246,6 +246,7 @@ class PolygonSweep:
 
         Returns:
             time (float): The total time is acceleration time, cruise time, and deacceleration time
+            distance (float): The distance between start and end point in meters
         """
         if (v_max < 0) or (a_max < 0):
             print(f"Invalid v_max[{v_max}], a_max[{a_max}]")
@@ -259,10 +260,10 @@ class PolygonSweep:
         # Compute total segment time:
         if (distance < 2.0 * acc_distance):
             # Case 1: Distance too small to accelerate to maximum velocity.
-            return (2.0 * np.sqrt(distance / a_max))
+            return (2.0 * np.sqrt(distance / a_max)), distance
         else:
             # Case 2: Distance long enough to accelerate to maximum velocity.
-            return (2.0 * acc_time) + ((distance - (2.0 * acc_distance)) / v_max)
+            return (2.0 * acc_time) + ((distance - (2.0 * acc_distance)) / v_max), distance
 
 
     def camera_lateral_offset(self, altitude: float, fov: float=60.0, overlap: float=0.5):
@@ -406,7 +407,24 @@ class PolygonSweep:
         return True, shortest_path
 
 
-    def compute_waypoints(self, sweeps: list(), v_max: float=1.0, a_max: float=1.0, offset: float=0.001):
+    def sample_points_on_line(self, ls: Segment_2, sample_distance=1, default_z=0.0):
+        p1 = (ls.source().x(), ls.source().y())
+        p2 = (ls.target().x(), ls.target().y())
+        direction = (p2[0] - p1[0], p2[1] - p1[1])
+        length = np.sqrt(direction[0]**2 + direction[1]**2)
+        unit_vector = (direction[0]/length, direction[1]/length)
+        samples = []
+        n_samples = int(length/sample_distance)
+        if n_samples <= 1:
+            n_samples = 2
+        for i in range(n_samples):
+            scale = (length / (n_samples - 1)) * i
+            scaled_vector = (p1[0] + unit_vector[0] * scale, p1[1] + unit_vector[0] * scale, default_z)
+            samples.append(scaled_vector)
+        return samples
+
+    
+    def compute_waypoints(self, sweeps: list(), v_max: float=1.0, a_max: float=1.0, offset: float=0.001, sample_dist=1.0, default_z=0.0):
         waypoints = []
         path_length = 0
         path_time = -1
@@ -414,6 +432,7 @@ class PolygonSweep:
         if len(sweeps) > 1:
             waypoints.append(sweeps[0].source())
             waypoints.append(sweeps[0].target())
+            
             reverse_sweep_path = True
             for sweep in sweeps[1:]:
                 if reverse_sweep_path:
@@ -421,32 +440,38 @@ class PolygonSweep:
                 reverse_sweep_path = not reverse_sweep_path  # Invert for next sweep-line
                 start = sweep.source()
                 goal = sweep.target()
+                
                 # connect previous segments
                 _, origin, _, _ = self.project_point_on_polygon_hull(waypoints[-1], offset)
                 _, destination, _, _ = self.project_point_on_polygon_hull(start, offset)
 
+                # Add connecting segment
                 result, path = self.calculate_shortest_path(origin, destination)
                 if result == True:
-                    for pt in path[1:-1]:
+                    for pt in path[1:-1]: # Skip start and goal
                         waypoints.append(pt)
+                
                 # Add current segment
                 waypoints.append(start)
                 waypoints.append(goal)
 
             # Get Point_2 X,Y,Z coordinates and calculate distance and time.
+            # Set the default z-coordinate
             points = []
             ppt = waypoints[0] # Previous point
-            points.append([ppt.x(), ppt.y(), 0])
+            points.append([ppt.x(), ppt.y(), default_z])
             for pt in waypoints[1:]:
-                points.append([pt.x(), pt.y(), 0])
-                path_length += np.sqrt(squared_distance(ppt, pt))
-                path_time += self.compute_traversal_time(ppt, pt, v_max, a_max)
+                # points.extend(self.sample_points_on_line(Segment_2(ppt, pt), sample_dist, default_z))
+                points.append([pt.x(), pt.y(), default_z])
+                # time, dist = self.compute_traversal_time(ppt, pt, v_max, a_max)
+                # path_time += time
+                # path_length += dist
                 ppt = pt
 
         return points, path_length, path_time
 
 
-    def plan_path(self, reverse=False, v_max=1, a_max=1):
+    def plan_path(self, reverse=False, v_max=1, a_max=1, sample_dist=1.0, default_z=0.0):
         waypoints = []
         path_length = 0
         path_time = 0
@@ -455,6 +480,6 @@ class PolygonSweep:
         height = self.find_camera_height(60, 50, 1100, 900, 0.03);
         result, sweeps = self.calculate_sweep_segments(self.optimal_orientation, offset, reverse)
         if result:
-            waypoints, path_length, path_time = self.compute_waypoints(sweeps, v_max, a_max, 0.001)
+            waypoints, path_length, path_time = self.compute_waypoints(sweeps, v_max, a_max, 0.001, sample_dist, default_z)
         
         return result, waypoints, path_length, path_time

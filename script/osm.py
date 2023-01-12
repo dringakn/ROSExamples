@@ -310,13 +310,14 @@ class Overpass(object):
                         height = float(v)
                         height_found = True
                     except:
+                        print(f"Invalid Height: {v}")
                         pass
                 elif 'building:level' in k:
                     try:
                         levels = float(v)
                         building_levels_found = True
                     except:
-                        # Invalid string
+                        print(f"Invalid levels: {v}")
                         pass
 
             if height_found:
@@ -328,6 +329,8 @@ class Overpass(object):
                 height = levels * height
 
             # extags = list(way.tags.keys()) + [k + '=' + v for k, v in way.tags.items()]
+            # print(extags)
+            
             pts = []
             for node in way.nodes:
                 lat = float(node.lat)
