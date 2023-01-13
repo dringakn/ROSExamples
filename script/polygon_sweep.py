@@ -461,8 +461,8 @@ class PolygonSweep:
             ppt = waypoints[0] # Previous point
             points.append([ppt.x(), ppt.y(), default_z])
             for pt in waypoints[1:]:
-                # points.extend(self.sample_points_on_line(Segment_2(ppt, pt), sample_dist, default_z))
-                points.append([pt.x(), pt.y(), default_z])
+                points.extend(self.sample_points_on_line(Segment_2(ppt, pt), sample_dist, default_z))
+                # points.append([pt.x(), pt.y(), default_z])
                 # time, dist = self.compute_traversal_time(ppt, pt, v_max, a_max)
                 # path_time += time
                 # path_length += dist

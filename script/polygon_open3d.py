@@ -57,6 +57,17 @@ class PolygonOpen3D:
         
         return ans.numpy().tolist()
     
+    def project_waypoints_on_meshes(self, meshes: list(), points: list(), zoffset=0.0):
+        tscene = o3d.t.geometry.RaycastingScene()
+        for mesh in meshes:
+            tscene.add_triangles(o3d.t.geometry.TriangleMesh.from_legacy(mesh))
+            
+        query_points = o3d.core.Tensor(points, dtype=o3d.core.Dtype.Float32)
+        ans = tscene.compute_closest_points(query_points)['points']
+        ans = ans + o3d.core.Tensor([0.0, 0.0, zoffset], dtype=o3d.core.Dtype.Float32)
+        
+        return ans.numpy().tolist()
+    
     def create_lidar_model(self, vfov = 30, hres=1, vres=1):
         direction = []
         for theta in np.arange(0, 2*np.pi, hres*np.pi/180.0):
