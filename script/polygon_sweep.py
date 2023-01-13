@@ -424,7 +424,7 @@ class PolygonSweep:
         return samples
 
     
-    def compute_waypoints(self, sweeps: list(), v_max: float=1.0, a_max: float=1.0, offset: float=0.001, sample_dist=1.0, default_z=0.0):
+    def compute_waypoints(self, sweeps: list(), v_max: float=1.0, a_max: float=1.0, tolerance: float=0.001, default_z=0.0):
         waypoints = []
         path_length = 0
         path_time = -1
@@ -442,8 +442,8 @@ class PolygonSweep:
                 goal = sweep.target()
                 
                 # connect previous segments
-                _, origin, _, _ = self.project_point_on_polygon_hull(waypoints[-1], offset)
-                _, destination, _, _ = self.project_point_on_polygon_hull(start, offset)
+                _, origin, _, _ = self.project_point_on_polygon_hull(waypoints[-1], tolerance)
+                _, destination, _, _ = self.project_point_on_polygon_hull(start, tolerance)
 
                 # Add connecting segment
                 result, path = self.calculate_shortest_path(origin, destination)
@@ -455,23 +455,22 @@ class PolygonSweep:
                 waypoints.append(start)
                 waypoints.append(goal)
 
-            # Get Point_2 X,Y,Z coordinates and calculate distance and time.
+            # Get Point_2 X,Y coordinates and calculate distance and time.
             # Set the default z-coordinate
             points = []
             ppt = waypoints[0] # Previous point
             points.append([ppt.x(), ppt.y(), default_z])
             for pt in waypoints[1:]:
-                points.extend(self.sample_points_on_line(Segment_2(ppt, pt), sample_dist, default_z))
-                # points.append([pt.x(), pt.y(), default_z])
-                # time, dist = self.compute_traversal_time(ppt, pt, v_max, a_max)
-                # path_time += time
-                # path_length += dist
+                points.append([pt.x(), pt.y(), default_z])
+                time, dist = self.compute_traversal_time(ppt, pt, v_max, a_max)
+                path_time += time
+                path_length += dist
                 ppt = pt
 
         return points, path_length, path_time
 
 
-    def plan_path(self, reverse=False, v_max=1, a_max=1, sample_dist=1.0, default_z=0.0):
+    def plan_path(self, reverse=False, v_max=1, a_max=1, default_z=0.0):
         waypoints = []
         path_length = 0
         path_time = 0
@@ -480,6 +479,6 @@ class PolygonSweep:
         height = self.find_camera_height(60, 50, 1100, 900, 0.03);
         result, sweeps = self.calculate_sweep_segments(self.optimal_orientation, offset, reverse)
         if result:
-            waypoints, path_length, path_time = self.compute_waypoints(sweeps, v_max, a_max, 0.001, sample_dist, default_z)
+            waypoints, path_length, path_time = self.compute_waypoints(sweeps, v_max, a_max, 0.001, default_z)
         
         return result, waypoints, path_length, path_time

@@ -28,7 +28,8 @@ class PolygonOpen3D:
 
     def create_mesh(self, vertice: list(), triangle_idx: list(), color=[0, 0, 0]):
         mesh = o3d.geometry.TriangleMesh(o3d.utility.Vector3dVector(vertice), o3d.utility.Vector3iVector(triangle_idx))
-        mesh.compute_vertex_normals()
+        mesh.compute_vertex_normals() # # Important for lighting
+        mesh.compute_triangle_normals() # Important for ray-tracing.
         if color == [0, 0, 0]:
             mesh.paint_uniform_color([np.random.random_sample(), np.random.random_sample(), np.random.random_sample()])        
             # mesh.vertex_colors = o3d.utility.Vector3dVector(np.random.uniform(0, 1, size=(len(vtx), 3)))
@@ -42,6 +43,8 @@ class PolygonOpen3D:
         pcd.estimate_normals()
         pcd.orient_normals_to_align_with_direction()
         mesh, _ = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(pcd, depth=6)
+        mesh.compute_vertex_normals() # # Important for lighting
+        mesh.compute_triangle_normals() # Important for ray-tracing.
         mesh.paint_uniform_color([np.random.random_sample(), np.random.random_sample(), np.random.random_sample()])        
         return mesh
 
@@ -57,16 +60,23 @@ class PolygonOpen3D:
         
         return ans.numpy().tolist()
     
-    def project_waypoints_on_meshes(self, meshes: list(), points: list(), zoffset=0.0):
+    
+    def project_waypoints_on_meshes(self, meshes: list(), points: list(), zoffset=0.0, dir=(0,0,-1)):
         tscene = o3d.t.geometry.RaycastingScene()
         for mesh in meshes:
             tscene.add_triangles(o3d.t.geometry.TriangleMesh.from_legacy(mesh))
             
-        query_points = o3d.core.Tensor(points, dtype=o3d.core.Dtype.Float32)
-        ans = tscene.compute_closest_points(query_points)['points']
-        ans = ans + o3d.core.Tensor([0.0, 0.0, zoffset], dtype=o3d.core.Dtype.Float32)
-        
-        return ans.numpy().tolist()
+        pts = [[pt[0], pt[1], pt[2]+zoffset, dir[0], dir[1], dir[2]] for pt in points]
+        rays = o3d.core.Tensor(pts, dtype=o3d.core.Dtype.Float32)
+        result = tscene.cast_rays(rays)['t_hit'].numpy()
+        ans = []
+        for idx, pt in enumerate(points):
+            height = result[idx]
+            if np.isinf(height):
+                height = pt[2]
+            ans.append([pt[0], pt[1], height])
+        return ans
+    
     
     def create_lidar_model(self, vfov = 30, hres=1, vres=1):
         direction = []
@@ -97,3 +107,43 @@ class PolygonOpen3D:
         pcd = o3d.t.geometry.PointCloud(points)
         
         return pcd.to_legacy()
+    
+    
+    def create_plane(self, width=1, height=1, color=(1,0,0)):
+        hw = width/2.0
+        hh = height/2.0
+        vertices = []
+        triangle_idx = []
+        vertices.append([-hw, -hh, 0]) # 0:Lower left
+        vertices.append([hw, -hh, 0]) # 1:Lower right
+        vertices.append([hw, hh, 0]) # 2:Upper right
+        vertices.append([-hw, hh, 0]) # 3:Upper left
+        triangle_idx.append([0, 1, 2]) # First triangle, CCW order
+        triangle_idx.append([0, 2, 3]) # First triangle, CCW order
+        mesh = o3d.geometry.TriangleMesh(o3d.utility.Vector3dVector(vertices), o3d.utility.Vector3iVector(triangle_idx))
+        mesh.compute_vertex_normals() # For lighting
+        mesh.compute_triangle_normals() # Important for ray-tracing.
+        mesh.paint_uniform_color([1, 0, 0])        
+        return mesh
+
+
+    def create_scene(self, meshes):
+        scene = o3d.t.geometry.RaycastingScene()
+        for mesh in meshes:
+            mesh_id = scene.add_triangles(o3d.t.geometry.TriangleMesh.from_legacy(mesh))
+        return scene    
+
+
+    def closest_point_on_meshes(self, meshes: list, points: list):
+        scene = self.create_scene(meshes)
+        query_pts = o3d.core.Tensor(points, dtype=o3d.core.Dtype.Float32)
+        ans = scene.compute_closest_points(query_pts)['points']
+        return ans.numpy().tolist(), scene.compute_distance(query_pts).numpy().tolist()
+
+
+    def find_intersection_with_meshes(self, meshes: list, points: list, dir: tuple):
+        scene = self.create_scene(meshes)
+        pts = [[pt[0], pt[1], pt[2], dir[0], dir[1], dir[2]] for pt in points]
+        rays = o3d.core.Tensor(pts, dtype=o3d.core.Dtype.Float32)
+        ans = scene.cast_rays(rays)['t_hit']
+        return ans.numpy().tolist()
