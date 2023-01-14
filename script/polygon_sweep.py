@@ -288,14 +288,14 @@ class PolygonSweep:
             return -1
 
 
-    def find_camera_height(self, hfov: float=60, vfov: float=50, width: int=1100, height: int=900, gsd: float=0.03):
+    def find_camera_height(self, hfov: float=60, vfov: float=50, img_width: int=1100, img_height: int=900, gsd: float=0.03):
         """Find the maximum flying height given camera parameters and desires GSD.
 
         Args:
             hfov (float, optional): Horizontal field of view in degrees. Defaults to 60.
             vfov (float, optional): Vertical field of view in degrees. Defaults to 50.
-            width (int, optional): Camera image width in pixels. Defaults to 1100.
-            height (int, optional): Camera image height in pixels. Defaults to 900.
+            img_width (int, optional): Camera image width in pixels. Defaults to 1100.
+            img_height (int, optional): Camera image height in pixels. Defaults to 900.
             gsd (float, optional): Desired ground sampling distance [m/pixel]. Defaults to 0.03.
 
         Projected Area: Lx, Ly
@@ -311,8 +311,8 @@ class PolygonSweep:
         """
         hfov = np.deg2rad(hfov)
         vfov = np.deg2rad(vfov)
-        hmax_hor = (width * gsd) / (2.0 * np.tan(hfov/2.0))
-        hmax_ver = (height * gsd) / (2.0 * np.tan(vfov/2.0))
+        hmax_hor = (img_width * gsd) / (2.0 * np.tan(hfov/2.0))
+        hmax_ver = (img_height * gsd) / (2.0 * np.tan(vfov/2.0))
         hmax = min(hmax_hor, hmax_ver)
 
         print(f"hmax: {hmax:0.2f}, hmax_hor: {hmax_hor:0.2f}, hmax_ver: {hmax_ver:0.2f}")
@@ -407,23 +407,36 @@ class PolygonSweep:
         return True, shortest_path
 
 
-    def sample_points_on_line(self, ls: Segment_2, sample_distance=1, default_z=0.0):
-        p1 = (ls.source().x(), ls.source().y())
-        p2 = (ls.target().x(), ls.target().y())
-        direction = (p2[0] - p1[0], p2[1] - p1[1])
-        length = np.sqrt(direction[0]**2 + direction[1]**2)
-        unit_vector = (direction[0]/length, direction[1]/length)
+    def sample_points_on_line(self, source: tuple, target: tuple, sample_distance=1):
+        direction = (target[0] - source[0], target[1] - source[1], target[2] - source[2])
+        length = np.sqrt(direction[0]**2 + direction[1]**2 + direction[2]**2)
+        unit_vector = (direction[0]/length, direction[1]/length, direction[2]/length)
         samples = []
         n_samples = int(length/sample_distance)
         if n_samples <= 1:
             n_samples = 2
         for i in range(n_samples):
             scale = (length / (n_samples - 1)) * i
-            scaled_vector = (p1[0] + unit_vector[0] * scale, p1[1] + unit_vector[0] * scale, default_z)
+            scaled_vector = (source[0] + unit_vector[0] * scale, 
+                             source[1] + unit_vector[1] * scale, 
+                             source[2] + unit_vector[2] * scale, 
+                             )
             samples.append(scaled_vector)
         return samples
 
     
+    def upsample_waypoints(self, waypoints: list(), sample_distance=1):
+        sample_waypoints = []
+        source = waypoints[0]
+        for target in waypoints[1:]:
+            pts = self.sample_points_on_line(source, target, sample_distance)
+            sample_waypoints.extend(pts[:-1])
+            source = target
+            
+        sample_waypoints.append(pts[-1]) # Add remaining last point
+        return sample_waypoints
+      
+        
     def compute_waypoints(self, sweeps: list(), v_max: float=1.0, a_max: float=1.0, tolerance: float=0.001, default_z=0.0):
         waypoints = []
         path_length = 0
@@ -470,15 +483,19 @@ class PolygonSweep:
         return points, path_length, path_time
 
 
-    def plan_path(self, reverse=False, v_max=1, a_max=1, default_z=0.0):
+    def plan_path(self, reverse=False, height=1, v_max=1, a_max=1):
         waypoints = []
         path_length = 0
         path_time = 0
 
-        offset = self.camera_lateral_offset(30, 60, 0.7);
-        height = self.find_camera_height(60, 50, 1100, 900, 0.03);
+        max_height = self.find_camera_height(60, 50, 1100, 900, 0.03);
+        height = min(height, max_height)
+        
+        offset = self.camera_lateral_offset(height, 60, 0.7);
+        
         result, sweeps = self.calculate_sweep_segments(self.optimal_orientation, offset, reverse)
+        
         if result:
-            waypoints, path_length, path_time = self.compute_waypoints(sweeps, v_max, a_max, 0.001, default_z)
+            waypoints, path_length, path_time = self.compute_waypoints(sweeps, v_max, a_max, 0.001, height)
         
         return result, waypoints, path_length, path_time

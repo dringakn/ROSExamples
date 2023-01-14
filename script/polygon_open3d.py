@@ -26,6 +26,26 @@ class PolygonOpen3D:
         return line_set
 
 
+    def create_open3d_lineset_2d(self, vertice: list(), color=[1,0,0], default_z=0):
+        """Create Open3D Lineset from given list of vertice
+
+        Args:
+            vertice (list(list([x,y]))): List of lists containing points Cartesian coordinates [x,y]
+            color (list, optional): Color [R, G, B]. Defaults to [1,0,0].
+
+        Returns:
+            LineSet: Open3D LineSet object
+        """
+        points = [[pt[0], pt[1], default_z] for pt in vertice]
+        lines = [[idx-1, idx] for idx in range(1, len(points))] # Create consective point as line
+        colors = [color for i in range(len(lines))]
+        line_set = o3d.geometry.LineSet()
+        line_set.points = o3d.utility.Vector3dVector(points)
+        line_set.lines = o3d.utility.Vector2iVector(lines)
+        line_set.colors = o3d.utility.Vector3dVector(colors)
+        return line_set
+    
+    
     def create_mesh(self, vertice: list(), triangle_idx: list(), color=[0, 0, 0]):
         mesh = o3d.geometry.TriangleMesh(o3d.utility.Vector3dVector(vertice), o3d.utility.Vector3iVector(triangle_idx))
         mesh.compute_vertex_normals() # # Important for lighting
@@ -73,8 +93,8 @@ class PolygonOpen3D:
         for idx, pt in enumerate(points):
             height = result[idx]
             if np.isinf(height):
-                height = pt[2]
-            ans.append([pt[0], pt[1], height])
+                height = 0#pt[2]
+            ans.append([pt[0], pt[1], pt[2]+height])
         return ans
     
     
@@ -147,3 +167,12 @@ class PolygonOpen3D:
         rays = o3d.core.Tensor(pts, dtype=o3d.core.Dtype.Float32)
         ans = scene.cast_rays(rays)['t_hit']
         return ans.numpy().tolist()
+    
+    
+    def show_meshes(self, meshes):
+        o3d.visualization.draw_geometries(meshes, 
+                                          mesh_show_back_face=True, 
+                                          point_show_normal=True, 
+                                          mesh_show_wireframe=False, 
+                                          window_name=f"Playground: {len(meshes)}")
+        

@@ -15,6 +15,7 @@ from rasterio.plot import show # DEM display
 import richdem as rd # DEM display
 import matplotlib.pyplot as plt
 import shapely # for alpha shapes
+from shapely.geometry import Point, Polygon, LineString # shapely objects
 import alphashape as alpha  # Create alpha shapes for a given set of points
 import utm # UTM to/from conversion
 
@@ -179,6 +180,7 @@ class Overpass(object):
         self.dem = None
         self.utm = None
         self.bbox = None
+        self.polygons = None
         # Set server url
         self.overpass_server = overpass_server
         self.headers = {
@@ -290,6 +292,8 @@ class Overpass(object):
         self.utm = UTM(roi[0], roi[1])
         # bbox: [s,w,n,e] <--> [ymin,xmin,ymax,xmax]
         self.bbox = self.utm.get_bbox(size=size)
+        # Polygons
+        self.polygons = []
         # Get OSM
         ql_query = f'[out:json][bbox: {self.bbox[0]},{self.bbox[1]},{self.bbox[2]},{self.bbox[3]}];(way["building"];relation["building"];);out body;>;out skel qt;'
         # print(ql_query)
@@ -332,14 +336,18 @@ class Overpass(object):
             # print(extags)
             
             pts = []
+            pg = []
             for node in way.nodes:
                 lat = float(node.lat)
                 lng = float(node.lon)
                 alt = self.dem.get_altitude(lat, lng)
                 east, north = self.utm.get_utm(lat, lng, output_local=True)
                 footprint.append([lat, lng])
+                pg.append([east, north, alt])
                 ground.append([east, north, alt])
                 pts.append([east, north, alt, height])
+            
+            self.polygons.append((len(self.polygons)+1, height, Polygon(pg)))
             buildings.append(pts)
 
         boundary = alpha.alphashape(footprint, tightness)
@@ -363,6 +371,16 @@ class Overpass(object):
 
         return buildings, ground, roi_polygon
 
+    def get_building_height(self, pt):
+        # Find the polygon id in which the query point lies
+        for polygon_id, height, polygon in self.polygons:
+            if polygon.contains(pt):
+            # if pt.within(polygon):
+                # print("Query point lies in polygon id:", polygon_id)
+                return height
+        else:
+            # print("Query point does not lie in any of the polygons.")
+            return 0
 
     def get_waypoints_altitude(self, waypoints: list()):
         points = []
@@ -370,7 +388,8 @@ class Overpass(object):
             east, north = self.utm.translate_as_cartesian(pt[0], pt[1])
             lat, lng = self.utm.get_latlng(east, north, local_input=False)
             alt = self.dem.get_altitude(lat, lng)
-            points.append([pt[0], pt[1], alt])
+            building_height = self.get_building_height(Point(pt[0], pt[1]))
+            points.append([pt[0], pt[1], alt+building_height])
 
         return points
 
