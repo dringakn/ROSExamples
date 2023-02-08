@@ -371,6 +371,7 @@ class Overpass(object):
 
         return buildings, ground, roi_polygon
 
+
     def get_building_height(self, pt):
         # Find the polygon id in which the query point lies
         for polygon_id, height, polygon in self.polygons:
@@ -381,6 +382,7 @@ class Overpass(object):
         else:
             # print("Query point does not lie in any of the polygons.")
             return 0
+
 
     def get_waypoints_altitude(self, waypoints: list()):
         points = []
