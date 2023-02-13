@@ -127,10 +127,11 @@ class Quadrotor:
         cmd_acc = des_acc + Kp_tra * pos_err + Kd_tra * lin_vel_err # F, Force vector
         u1 = self.m * (self.g + cmd_acc[2]) # u1: Thrust force along z-axis, gravity compensation
         
-        # Angle error can be calculated as follows
+        # Reference angles (Roll, Pitch) can be calculated as follows
         phi_r = (1.0/self.g) * (cmd_acc[0] * np.sin(psi_r) - cmd_acc[1] * np.cos(psi_r))
         theta_r = (1.0/self.g) * (cmd_acc[0] * np.cos(psi_r) + cmd_acc[1] * np.sin(psi_r))
         
+        # Angle errors can be calculated as follows
         angle_err = np.array([phi_r - phi, theta_r - theta, psi_r - psi])
         ang_vel_err = np.array([0 - p, 0 - q, dpsi_r - r])
         
