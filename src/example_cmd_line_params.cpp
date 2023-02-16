@@ -5,11 +5,50 @@
 */
 #include <ros/ros.h>
 
+/**
+ * @brief Get the value of the option flag if it exist.
+ *  Example: char * filename = getCmdOption(argv, argv + argc, "-f");
+ *
+ * @param begin start of the list of string array, e.g. argv
+ * @param end end of the list of string array, e.g. argv+argc
+ * @param option command line switch, e.g. "-h"
+ * @return char*
+ */
+char *getCmdOption(char **begin, char **end, const std::string &option)
+{
+    char **itr = std::find(begin, end, option);
+    if (itr != end && ++itr != end)
+    {
+        return *itr;
+    }
+    return 0;
+}
+
+/**
+ * @brief Check if the option flag (switch) exists.
+ *  Example: if(cmdOptionExists(argv, argv+argc, "-h")){...}
+ *
+ * @param begin start of the list of string array, e.g. argv
+ * @param end end of the list of string array, e.g. argv+argc
+ * @param option command line switch, e.g. "-h"
+ * @return true
+ * @return false
+ */
+bool cmdOptionExists(char **begin, char **end, const std::string &option)
+{
+    return std::find(begin, end, option) != end;
+}
+
 int main(int argc, char **argv) {
   ros::init(argc, argv, "example_command_line_parameters");
   ros::NodeHandle nh;
   double param = 0.0;
 
+  // Check if command line option is provided.
+  std::string file_name = "";
+  if (cmdOptionExists(argv, argv + argc, "-f"))
+    file_name = getCmdOption(argv, argv + argc, "-f");
+        
   // For debugging
   // for (int i = 0; i < argc; i++)
   //     ROS_INFO("argv: %s", argv[i]);
