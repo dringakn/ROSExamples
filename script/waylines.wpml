@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<kml xmlns="http://www.opengis.net/kml/2.2"
+  xmlns:wpml="http://www.dji.com/wpmz/1.0.2">
+  <Document>
+    <Folder>
+      <wpml:templateId>0</wpml:templateId>
+      <wpml:executeHeightMode>relativeToStartPoint</wpml:executeHeightMode>
+      <wpml:waylineId>0</wpml:waylineId>
+      <wpml:distance>0</wpml:distance>
+      <wpml:duration>0</wpml:duration>
+      <wpml:autoFlightSpeed>1</wpml:autoFlightSpeed>
+      <Placemark>
+        <Point>
+          <coordinates>9.97151628837884, 49.7871353125553</coordinates>
+        </Point>
+        <wpml:index>0</wpml:index>
+        <wpml:executeHeight>10</wpml:executeHeight>
+        <wpml:waypointSpeed>1</wpml:waypointSpeed>
+        <wpml:waypointHeadingParam>
+          <wpml:waypointHeadingMode>followWayline</wpml:waypointHeadingMode>
+          <wpml:waypointHeadingAngle>0</wpml:waypointHeadingAngle>
+          <wpml:waypointPoiPoint>0.000000,0.000000,0.000000</wpml:waypointPoiPoint>
+          <wpml:waypointHeadingAngleEnable>0</wpml:waypointHeadingAngleEnable>
+        </wpml:waypointHeadingParam>
+        <wpml:waypointTurnParam>
+          <wpml:waypointTurnMode>toPointAndStopWithDiscontinuityCurvature</wpml:waypointTurnMode>
+          <wpml:waypointTurnDampingDist>0</wpml:waypointTurnDampingDist>
+        </wpml:waypointTurnParam>
+        <wpml:useStraightLine>0</wpml:useStraightLine>
+      </Placemark>
+    </Folder>
+    <wpml:missionConfig>
+      <wpml:flyToWaylineMode>safely</wpml:flyToWaylineMode>
+      <wpml:finishAction>goHome</wpml:finishAction>
+      <wpml:exitOnRCLost>executeLostAction</wpml:exitOnRCLost>
+      <wpml:executeRCLostAction>goBack</wpml:executeRCLostAction>
+      <wpml:takeOffSecurityHeight>0</wpml:takeOffSecurityHeight>
+      <wpml:globalTransitionalSpeed>1</wpml:globalTransitionalSpeed>
+      <wpml:droneInfo>
+        <wpml:droneEnumValue>60</wpml:droneEnumValue>
+        <wpml:droneSubEnumValue>0</wpml:droneSubEnumValue>
+      </wpml:droneInfo>
+    </wpml:missionConfig>
+  </Document>
+</kml>

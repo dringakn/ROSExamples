@@ -1,3 +1,10 @@
+/*
+    Author: Dr. Ing. Ahmad Kamal Nasir
+    Email: dringakn@gmail.com
+    Description: Extract UFOMaps from a rosbag.
+    Notes:
+*/
+
 #include <bits/stdc++.h>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>

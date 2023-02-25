@@ -602,3 +602,10 @@ target_link_libraries(example_read_numbers_from_text_file ${catkin_LIBRARIES})
 add_executable(example_path_orientation src/example_path_orientation.cpp)
 target_link_libraries(example_path_orientation ${catkin_LIBRARIES})
 
+add_executable(example_rosbag_extract_pointcloud2 src/example_rosbag_extract_pointcloud2.cpp)
+target_link_libraries(example_rosbag_extract_pointcloud2 ${catkin_LIBRARIES})
+
+add_executable(example_rosbag_extract_tf src/example_rosbag_extract_tf.cpp)
+target_link_libraries(example_rosbag_extract_tf ${catkin_LIBRARIES})
+
+
