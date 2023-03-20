@@ -608,4 +608,8 @@ target_link_libraries(example_rosbag_extract_pointcloud2 ${catkin_LIBRARIES})
 add_executable(example_rosbag_extract_tf src/example_rosbag_extract_tf.cpp)
 target_link_libraries(example_rosbag_extract_tf ${catkin_LIBRARIES})
 
+add_executable(example_rosbag_ufomapping src/example_rosbag_ufomapping.cpp)
+add_dependencies(example_rosbag_ufomapping ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(example_rosbag_ufomapping  ${catkin_LIBRARIES} UFO::Map)
+
 
