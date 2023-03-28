@@ -95,5 +95,3 @@ if __name__ == '__main__':
         publish_disk_speeds()
     except rospy.ROSInterruptException:
         pass
-
-
