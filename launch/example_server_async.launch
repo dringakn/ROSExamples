@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+    <node name="server" pkg="ros_examples" type="service_server" output="screen"/>
+    <node name="client" pkg="ros_examples" type="service_client" output="screen"/>
+    <node name="rostopic" pkg="rostopic" type="rostopic" output="screen" args="pub /topic1 std_msgs/Empty {} -r 100"/>
+    
+</launch>
