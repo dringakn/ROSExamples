@@ -11,6 +11,7 @@ import os
 import rospy
 from diagnostic_msgs.msg import DiagnosticArray, KeyValue, DiagnosticStatus
 from std_msgs.msg import Header
+from collections import defaultdict
 
 
 class WirelessQuality:
@@ -101,6 +102,41 @@ class WirelessQuality:
         array.status.append(status)
         return array
 
+    def scan(self):
+        # scan passive, or
+        # nmcli device wifi list --rescan yes
+        networks = []
+        current_network = None
+        for line in self.__execute_command(f"iw {self.iface} scan").split('\n'):
+            if line.startswith('BSS'):
+                if current_network:
+                    networks.append(current_network)
+                current_network = defaultdict(lambda: '')
+                current_network['BSS'] = line.split(' ')[1][:17]
+            elif ':' in line:
+                key, value = line.split(':', 1)
+                key = key.strip()
+                if key.startswith('* '):
+                    key = key[2:]
+                value = value.strip()
+                if key and value:
+                    current_network[key] = value
+
+
+        for bss in networks:
+            # bs = bss['BSS'] if 'BSS' in bss else ''
+            bs = bss['BSS']
+            ssid = bss['SSID']
+            freq = bss['freq']
+            last_seen = bss['last seen']
+            signal = bss['signal']
+            ds_parameter_set = bss['DS Parameter set']
+            power_constraint = bss['Power constraint']
+            print(
+                f"{ssid}[{bs}]\t\t{freq}\t{signal}\t{last_seen}\t{ds_parameter_set}\t{power_constraint}")
+
+        pass
+
 
 if __name__ == '__main__':
 
@@ -109,7 +145,7 @@ if __name__ == '__main__':
                         anonymous=False,
                         log_level=rospy.INFO)
         interfacename = rospy.get_param('~interface_name', 'wlp0s20f3')
-        update_rate = rospy.get_param('~update_rate_wireless_quality', 0.25)
+        update_rate = rospy.get_param('~update_rate_wireless_quality', 1)
         rospy.loginfo(
             f"Wireless quality of {interfacename} interface @ {update_rate} Hz")
 
@@ -123,6 +159,8 @@ if __name__ == '__main__':
         while not rospy.is_shutdown():
 
             msg = wifi.measure_quality()
+            wifi.scan()
+
             pub.publish(msg)
             rate.sleep()
 

@@ -43,6 +43,8 @@ find_package(catkin REQUIRED COMPONENTS
   ufomap_ros
 )
 
+catkin_python_setup()
+
 generate_dynamic_reconfigure_options(cfg/example_node_parameters.cfg)
 
 # RViz Display plugin related libraries
