@@ -122,7 +122,6 @@ class WirelessQuality:
                 if key and value:
                     current_network[key] = value
 
-
         for bss in networks:
             # bs = bss['BSS'] if 'BSS' in bss else ''
             bs = bss['BSS']
@@ -141,13 +140,13 @@ class WirelessQuality:
 if __name__ == '__main__':
 
     try:
-        rospy.init_node('rssi_publisher',
+        rospy.init_node('wireless_quality',
                         anonymous=False,
                         log_level=rospy.INFO)
         interfacename = rospy.get_param('~interface_name', 'wlp0s20f3')
         update_rate = rospy.get_param('~update_rate_wireless_quality', 1)
         rospy.loginfo(
-            f"Wireless quality of {interfacename} interface @ {update_rate} Hz")
+            f"Wireless quality of {interfacename} @ {update_rate} Hz")
 
         pub = rospy.Publisher("wireless_connection_info",
                               DiagnosticArray,
