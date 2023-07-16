@@ -615,3 +615,17 @@ add_dependencies(example_rosbag_ufomapping ${${PROJECT_NAME}_EXPORTED_TARGETS} $
 target_link_libraries(example_rosbag_ufomapping  ${catkin_LIBRARIES} UFO::Map)
 
 
+add_executable(example_cpp_shared_ptr_serialization src/example_cpp_shared_ptr_serialization.cpp)
+target_link_libraries(example_cpp_shared_ptr_serialization ${catkin_LIBRARIES})
+
+add_executable(example_cpp_template src/example_cpp_template.cpp)
+target_link_libraries(example_cpp_template ${catkin_LIBRARIES})
+
+add_executable(example_cpp_polymorphism src/example_cpp_polymorphism.cpp)
+target_link_libraries(example_cpp_polymorphism ${catkin_LIBRARIES})
+
+add_executable(example_cpp_make_shared src/example_cpp_make_shared.cpp)
+target_link_libraries(example_cpp_make_shared ${catkin_LIBRARIES})
+
+add_executable(example_cpp_serialize_class_object src/example_cpp_serialize_class_object.cpp)
+target_link_libraries(example_cpp_serialize_class_object ${catkin_LIBRARIES})
