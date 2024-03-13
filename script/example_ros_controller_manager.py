@@ -131,7 +131,19 @@ class ControllerManagerClient:
                 rospy.loginfo(f"Controller '{name}' is not running: {self.controllers[name].state}.")
 
         except rospy.ServiceException as e:
-            rospy.logerr(f"Failed to start controller '{name}': {e}")
+            rospy.logerr(f"Failed to stop controller '{name}': {e}")
+
+    def controller_status(self, name):
+        try:
+            if name not in self.controllers.keys():
+                rospy.logwarn(f"Controller '{name}' is not loaded")
+                return
+
+            rospy.loginfo(f"{name} status: ")
+            print(self.controllers[name])
+
+        except rospy.ServiceException as e:
+            rospy.logerr(f"Failed to get controller '{name}' status: {e}")
 
 
 if __name__ == '__main__':
@@ -143,5 +155,6 @@ if __name__ == '__main__':
     # controller_manager.load_controller('joint_based_cartesian_traj_controller')
     controller_manager.start_controller('joint_based_cartesian_traj_controller')
     controller_manager.stop_controller('joint_based_cartesian_traj_controller')
+    controller_manager.controller_status('joint_based_cartesian_traj_controller')
 
     # controller_manager.unload_controller('joint_based_cartesian_traj_controller')
