@@ -3,6 +3,7 @@
 import rospy
 from controller_manager_msgs.srv import ReloadControllerLibraries, ListControllerTypes
 from controller_manager_msgs.srv import ListControllers, LoadController, UnloadController, SwitchController
+from controller_manager_msgs.srv import SwitchControllerRequest, LoadControllerRequest, UnloadControllerRequest
 
 
 class ControllerManagerClient:
@@ -14,109 +15,133 @@ class ControllerManagerClient:
         rospy.wait_for_service('/controller_manager/load_controller', rospy.Duration(5).to_sec())
         rospy.wait_for_service('/controller_manager/unload_controller', rospy.Duration(5).to_sec())
         rospy.wait_for_service('/controller_manager/switch_controller', rospy.Duration(5).to_sec())
-        self.reload_libraries = rospy.ServiceProxy('/controller_manager/reload_controller_libraries', ReloadControllerLibraries)
-        self.list_controller_types = rospy.ServiceProxy('/controller_manager/list_controller_types', ListControllerTypes)
-        self.list_controllers = rospy.ServiceProxy('/controller_manager/list_controllers', ListControllers)
-        self.load_controller = rospy.ServiceProxy('/controller_manager/load_controller', LoadController)
-        self.unload_controller = rospy.ServiceProxy('/controller_manager/unload_controller', UnloadController)
-        self.switch_controller = rospy.ServiceProxy('/controller_manager/switch_controller', SwitchController)
+
+        self.reload_libraries_service = rospy.ServiceProxy('/controller_manager/reload_controller_libraries', ReloadControllerLibraries)
+        self.list_controller_types_service = rospy.ServiceProxy('/controller_manager/list_controller_types', ListControllerTypes)
+        self.list_controllers_service = rospy.ServiceProxy('/controller_manager/list_controllers', ListControllers)
+        self.load_controller_service = rospy.ServiceProxy('/controller_manager/load_controller', LoadController)
+        self.unload_controller_service = rospy.ServiceProxy('/controller_manager/unload_controller', UnloadController)
+        self.switch_controller_service = rospy.ServiceProxy('/controller_manager/switch_controller', SwitchController)
+
+        self.controller_types = {}
+        self.controllers = {}
 
     def reload_controller_libraries(self):
         try:
-            self.reload_libraries()
+            self.reload_libraries_service()
             rospy.loginfo("Controller libraries reloaded successfully.")
         except rospy.ServiceException as e:
             rospy.logerr(f"Failed to reload controller libraries: {e}")
 
-    def list_all_controller_types(self):
+    def get_all_controller_types(self):
         try:
-            controller_types = self.list_controller_types()
             rospy.loginfo(f"Controller Type:")
-            for idx, ctype in enumerate(controller_types.types):
-                rospy.loginfo(f"[{idx+1}] {ctype} [{controller_types.base_classes[idx]}]")
+            res = self.list_controller_types_service()
+            self.controller_types = {k: v for k, v in zip(res.types, res.base_classes)}
+            idx = 1
+            for key, value in self.controller_types.items():
+                rospy.loginfo(f"[{idx}] {key} [{value}]")
+                idx += 1
         except rospy.ServiceException as e:
             rospy.logerr(f"Failed to list controller types: {e}")
 
-    def list_all_controllers(self):
+    def get_all_controllers(self):
         try:
             rospy.loginfo(f"Controller State:")
-            controllers = self.list_controllers()
-            for idx, controller in enumerate(controllers.controller):
+            res = self.list_controllers_service()
+            for idx, controller in enumerate(res.controller):
+                self.controllers[controller.name] = controller
                 rospy.loginfo(f"[{idx+1}] {controller.name}[{controller.type}] is {controller.state}: {[r.hardware_interface for r in controller.claimed_resources]}")
         except rospy.ServiceException as e:
             rospy.logerr(f"Failed to list controllers: {e}")
 
-    def load_controller(self, name, type, joints=[]):
+    def load_controller(self, name):
         try:
-            self.load_controller(name, type, joints)
-            rospy.loginfo(f"Controller '{name}' loaded successfully.")
+            req = LoadControllerRequest()
+            req.name = name
+            res = self.load_controller_service(req)
+            if res.ok:
+                rospy.loginfo(f"Controller '{name}' loading and initialization successfully.")
+            else:
+                rospy.loginfo(f"Controller '{name}' loading and initialization failed. is it already loaded?")
+
         except rospy.ServiceException as e:
             rospy.logerr(f"Failed to load controller '{name}': {e}")
 
     def unload_controller(self, name):
         try:
-            self.unload_controller(name)
-            rospy.loginfo(f"Controller '{name}' unloaded successfully.")
-        except rospy.ServiceException as e:
-            rospy.logerr(f"Failed to unload controller '{name}': {e}")
+            req = UnloadControllerRequest()
+            req.name = name
+            res = self.unload_controller_service(req)
+            if res.ok:
+                rospy.loginfo(f"Controller '{name}' unloaded successfully.")
+            else:
+                rospy.loginfo(f"Controller '{name}' unloading failed. is it already unloaded?")
 
-    def switch_controller(self, start_controllers=[], stop_controllers=[], strictness=2):
+        except rospy.ServiceException as e:
+            rospy.logerr(f"Failed to load controller '{name}': {e}")
+
+    def switch_controller(self, start_controllers=[], stop_controllers=[], strictness=1):
+        """ start/stop controller(s)
+        Args:
+            start_controllers (list, optional): List of controllers to start. Defaults to [].
+            stop_controllers (list, optional): List of controllers to stop. Defaults to [].
+            strictness (int, optional): Strictness of the switch, 1=BEST-EFFORT, 2=STRICT. Defaults to 2.
+        """
         try:
-            self.switch_controller(start_controllers, stop_controllers, strictness)
-            rospy.loginfo("Switched controllers successfully.")
+            req = SwitchControllerRequest()
+            req.start_controllers = start_controllers
+            req.stop_controllers = stop_controllers
+            req.strictness = strictness
+            # start the controllers as soon as their hardware dependencies are ready, will wait for all interfaces to be ready otherwise the timeout in seconds before aborting pending controllers. 0 for infinite timeout.
+            req.start_asap = True
+            req.timeout = 0
+            res = self.switch_controller_service(req)
+            if res.ok:
+                rospy.loginfo(f"Switched controllers successfully.")
+            else:
+                rospy.loginfo(f"Switching controllers failed. Is the hardware interface ready?")
+
         except rospy.ServiceException as e:
             rospy.logerr(f"Failed to switch controllers: {e}")
 
-    def is_controller_running(self, controller_name):
+    def start_controller(self, name):
         try:
-            controllers = self.list_controllers()
-            for controller in controllers.controller:
-                if controller.name == controller_name:
-                    if controller.state == "running":
-                        rospy.loginfo(f"Controller {controller_name} is running.")
-                        return True
-                    else:
-                        rospy.loginfo(f"Controller {controller_name} is not running. State: {controller.state}")
-                        return False
-            rospy.logwarn(f"Controller {controller_name} not found.")
-            return False
-        except rospy.ServiceException as e:
-            rospy.logerr(f"Failed to list controllers: {e}")
-            return False
+            if name not in self.controllers.keys():
+                rospy.logwarn(f"Controller '{name}' is not loaded")
+                return
 
-    def run_controller(self, controller_name):
-        try:
-            controllers = self.list_controllers()
-            for controller in controllers.controller:
-                if controller.name == controller_name:
-                    if controller.state == "initialized":
-                        rospy.loginfo(f"Starting controller {controller_name}...")
-                        self.switch_controller([controller_name], [], 2)  # Start the controller
-                        rospy.loginfo(f"Controller {controller_name} started.")
-                    elif controller.state == "running":
-                        rospy.loginfo(f"Controller {controller_name} is already running.")
-                    else:
-                        rospy.logwarn(f"Controller {controller_name} is not in an appropriate state to be started.")
-                    return
-            rospy.logwarn(f"Controller {controller_name} not found.")
+            if self.controllers[name].state == "running":
+                rospy.loginfo(f"Controller '{name}' is already running.")
+            else:
+                self.switch_controller(start_controllers=[name], stop_controllers=[], strictness=1)
+
         except rospy.ServiceException as e:
-            rospy.logerr(f"Failed to start controller {controller_name}: {e}")
+            rospy.logerr(f"Failed to start controller '{name}': {e}")
+
+    def stop_controller(self, name):
+        try:
+            if name not in self.controllers.keys():
+                rospy.logwarn(f"Controller '{name}' is not loaded")
+                return
+
+            if self.controllers[name].state == "running":
+                self.switch_controller(start_controllers=[], stop_controllers=[name], strictness=1)
+            else:
+                rospy.loginfo(f"Controller '{name}' is not running: {self.controllers[name].state}.")
+
+        except rospy.ServiceException as e:
+            rospy.logerr(f"Failed to start controller '{name}': {e}")
 
 
 if __name__ == '__main__':
     controller_manager = ControllerManagerClient()
     controller_manager.reload_controller_libraries()
-    controller_manager.list_all_controller_types()
-    controller_manager.list_all_controllers()
+    controller_manager.get_all_controller_types()
+    controller_manager.get_all_controllers()
 
-    # Check if the controller is running
-    if not controller_manager.is_controller_running('joint_based_cartesian_traj_controller'):
-        # Load the controller if it's not running
-        controller_manager.load_controller('joint_based_cartesian_traj_controller')
-        # Run the controller if it's in the initialized state
-        controller_manager.run_controller('joint_based_cartesian_traj_controller')
+    # controller_manager.load_controller('joint_based_cartesian_traj_controller')
+    controller_manager.start_controller('joint_based_cartesian_traj_controller')
+    controller_manager.stop_controller('joint_based_cartesian_traj_controller')
 
-    # Example usage:
-    # controller_manager.load_controller("my_controller", "MyControllerType")
-    # controller_manager.unload_controller("my_controller")
-    # controller_manager.switch_controller(["new_controller"], ["old_controller"])
+    # controller_manager.unload_controller('joint_based_cartesian_traj_controller')
