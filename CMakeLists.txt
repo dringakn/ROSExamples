@@ -10,6 +10,7 @@ find_package(PCL REQUIRED) # PCL
 find_package(octomap REQUIRED) # OctoMap
 find_package(Boost REQUIRED) # Boost libraries
 find_package(ufomap REQUIRED) # UFOMapping
+find_package(mav_trajectory_generation REQUIRED) # mav_trajectory_generation
 
 find_package(catkin REQUIRED COMPONENTS
   actionlib_msgs
@@ -56,7 +57,7 @@ set(CMAKE_AUTOMOC ON) # Unknown symbol error
 # catkin_package() #RViz plugin
 
 include_directories(
-  include 
+  include
   ${catkin_INCLUDE_DIRS}
   ${OpenCV_INCLUDE_DIRS}
   ${Eigen_INCLUDE_DIRS}
@@ -82,6 +83,7 @@ add_service_files(FILES
 add_action_files(FILES
   myact.action
   delayaction.action
+  Countdown.action
 )
 
 ## Generate added messages and services with any dependencies listed here
@@ -544,8 +546,8 @@ target_link_libraries(example_gps_geodatic_to_cartesian ${catkin_LIBRARIES})
 add_executable(example_synchronized_messages_rosbag src/example_synchronized_messages_rosbag.cpp)
 target_link_libraries(example_synchronized_messages_rosbag ${catkin_LIBRARIES})
 
-add_executable(example_rosbag_read src/example_rosbag_read.cpp)
-target_link_libraries(example_rosbag_read ${catkin_LIBRARIES})
+# add_executable(example_rosbag_read src/example_rosbag_read.cpp)
+# target_link_libraries(example_rosbag_read ${catkin_LIBRARIES})
 
 add_executable(example_octomap_basics src/example_octomap_basics.cpp)
 target_link_libraries(example_octomap_basics ${catkin_LIBRARIES})
@@ -614,7 +616,6 @@ add_executable(example_rosbag_ufomapping src/example_rosbag_ufomapping.cpp)
 add_dependencies(example_rosbag_ufomapping ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(example_rosbag_ufomapping  ${catkin_LIBRARIES} UFO::Map)
 
-
 add_executable(example_cpp_shared_ptr_serialization src/example_cpp_shared_ptr_serialization.cpp)
 target_link_libraries(example_cpp_shared_ptr_serialization ${catkin_LIBRARIES})
 
@@ -629,3 +630,6 @@ target_link_libraries(example_cpp_make_shared ${catkin_LIBRARIES})
 
 add_executable(example_cpp_serialize_class_object src/example_cpp_serialize_class_object.cpp)
 target_link_libraries(example_cpp_serialize_class_object ${catkin_LIBRARIES})
+
+# add_executable(example_mav_trajectory_generation src/example_mav_trajectory_generation.cpp)
+# target_link_libraries(example_mav_trajectory_generation ${catkin_LIBRARIES})

@@ -8,6 +8,11 @@
   <url type="website">http://web.lums.edu.pk/~akn</url>
   <license>MIT</license>
 
+  <depend>rospy</depend>
+
+  <depend>actionlib</depend>
+  <depend>actionlib_msgs</depend>
+
   <buildtool_depend>catkin</buildtool_depend>
 
   <!-- Dynamic reconfigure  -->
@@ -60,11 +65,11 @@
 
   <export>
 
-    <!-- 
+    <!--
       Example RViz display plugin to be loaded by rviz.
       Note: rviz is specfied as the package tag not the current package name (ros_examples).
-      It should correspond to the package where the base_class for the plugin lives. 
-      In this case, the base class and the inherited plugin classes live in the same package, 
+      It should correspond to the package where the base_class for the plugin lives.
+      In this case, the base class and the inherited plugin classes live in the same package,
       but in most real-world situations this will not be the case such as rviz.
     -->
     <nodelet plugin="${prefix}/example_nodelet_plugin.xml"/>
