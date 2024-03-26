@@ -12,15 +12,11 @@ class AprilTagConverter:
     def _create_parser(self):
         parser = argparse.ArgumentParser(
             description='A script to convert pre-generated apriltag .png files into SVG format.',
-            epilog='Example: "python3 tag_to_svg.py --input=./tag36h11/tag36_11_00000.png --output=./tag36h11_50mm/tag36_11_00000.svg --size=50mm" or "python3 tag_to_svg.py --input=./tag36h11 --output=./tag36h11_50mm --size=50mm"'
+            epilog='Example: "python3 tag_to_svg.py --input=./tag36h11/tag36_11_00000.png --size=50mm" or "python3 tag_to_svg.py --input=./tag36h11/ --size=50mm"'
         )
         parser.add_argument(
             '--input', type=self._validate_path, required=True,
             help='The path to the input file or folder containing apriltag png files to convert.'
-        )
-        parser.add_argument(
-            '--output', type=str, required=True,
-            help='The path to the output folder where SVG files will be saved.'
         )
         parser.add_argument(
             '--size', type=str, required=False, default='20mm', dest="svg_size",
@@ -73,9 +69,9 @@ class AprilTagConverter:
 
     def convert_to_svg(self):
         args = self.parser.parse_args()
-        input_path = args.input
-        output_folder = args.output
         svg_size = args.svg_size
+        input_path = args.input
+        output_folder = f"{os.path.dirname(input_path)}_{svg_size}"
 
         self._create_output_folder(output_folder)
 

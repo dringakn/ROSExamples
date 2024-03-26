@@ -152,9 +152,10 @@ if __name__ == '__main__':
     controller_manager.get_all_controller_types()
     controller_manager.get_all_controllers()
 
-    # controller_manager.load_controller('joint_based_cartesian_traj_controller')
+    controller_manager.load_controller('joint_based_cartesian_traj_controller')
     controller_manager.start_controller('joint_based_cartesian_traj_controller')
-    controller_manager.stop_controller('joint_based_cartesian_traj_controller')
-    controller_manager.controller_status('joint_based_cartesian_traj_controller')
+
+    # controller_manager.stop_controller('joint_based_cartesian_traj_controller')
+    # controller_manager.controller_status('joint_based_cartesian_traj_controller')
 
     # controller_manager.unload_controller('joint_based_cartesian_traj_controller')
