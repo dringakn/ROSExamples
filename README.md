@@ -1,5 +1,25 @@
 # ROSExamples
 ROS Examples for various basic concepts. All example files names are self explanatory except the exampleXX.
+
+## Setup:
+```bash
+sudo apt install ros-noetic-navigation
+sudo apt install ros-noetic-robot-localization
+sudo apt install libtbb-dev
+
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws
+catkin init
+catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
+cd src
+git clone https://github.com/dringakn/ROSExamples.git
+git clone https://github.com/dringakn/ufomap.git
+
+cd ~/catkin_ws
+rosdep install --from-paths src --ignore-src -y -r
+
+```
+
 ## AStar:
 ## Dijkstra:
 ## example_action_client:
