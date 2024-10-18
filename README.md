@@ -14,6 +14,7 @@ catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
 cd src
 git clone https://github.com/dringakn/ROSExamples.git
 git clone https://github.com/dringakn/ufomap.git
+git clone https://github.com/dringakn/mav_trajectory_generation
 
 cd ~/catkin_ws
 rosdep install --from-paths src --ignore-src -y -r
