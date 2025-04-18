@@ -63,6 +63,8 @@
   <build_depend>dynamic_reconfigure</build_depend>
   <build_depend>filters</build_depend>
 
+  <depend>robot_localization</depend>
+
   <export>
 
     <!--
