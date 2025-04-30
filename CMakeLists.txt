@@ -633,3 +633,7 @@ target_link_libraries(example_cpp_serialize_class_object ${catkin_LIBRARIES})
 
 # add_executable(example_mav_trajectory_generation src/example_mav_trajectory_generation.cpp)
 # target_link_libraries(example_mav_trajectory_generation ${catkin_LIBRARIES})
+
+add_executable(example_geodetic_converter src/example_geodetic_converter.cpp)
+target_link_libraries(example_geodetic_converter ${catkin_LIBRARIES})
+
