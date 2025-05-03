@@ -637,3 +637,6 @@ target_link_libraries(example_cpp_serialize_class_object ${catkin_LIBRARIES})
 add_executable(example_geodetic_converter src/example_geodetic_converter.cpp)
 target_link_libraries(example_geodetic_converter ${catkin_LIBRARIES})
 
+add_executable(example_waypoints_processor src/example_waypoints_processor.cpp)
+target_link_libraries(example_waypoints_processor ${catkin_LIBRARIES})
+
