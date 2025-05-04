@@ -1,80 +1,89 @@
 #!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
 
-# For image exif information view: exiftool image.jpg
-# sudo apt-get install exiftool
-# exiftool -gpslatitude="37 deg 48' 35.58\" N" -gpslongitude="122 deg 27' 22.20\" W" -gpslatituderef="North" -gpslongituderef="West" image.jpg
+Description:
+    Standalone script to embed EXIF metadata—including GPS coordinates,
+    capture timestamp, altitude, and camera make/model—into PNG or JPEG images.
 
-# from PIL import Image
-# from PIL.ExifTags import TAGS, GPSTAGS
+Features:
+  • Set GPS tags:
+      – GPSLatitudeRef, GPSLatitude
+      – GPSLongitudeRef, GPSLongitude
+      – GPSAltitudeRef, GPSAltitude
+  • Set DateTimeOriginal
+  • Set Image Make & Model tags
+  • Uses piexif for metadata writing
+  • Inspect or verify with exiftool
 
-img = "~/Deals3D_2023-02-24-17-46-02_images/frame001039.png"
-
-# def add_gps_info_to_image(image_path, lat, lng):
-#     image = Image.open(image_path)
-
-#     # Get exif data
-#     exif_data = {}
-#     try:
-#         for tag_id, value in image._getexif().items():
-#             tag = TAGS.get(tag_id, tag_id)
-#             exif_data[tag] = value
-#     except AttributeError:
-#         pass
-
-#     print(exif_data)
-#     print(GPSTAGS)
+Usage:
+    1) Adjust the `img` path and `exif_dict` entries below, or
+    2) Extend into a CLI by wrapping `embed_exif()` with argparse.
     
-#     # Set GPS data
-#     exif_data['GPSInfo'] = {
-#         GPSTAGS['GPSLatitudeRef']: 'N' if lat >= 0 else 'S',
-#         GPSTAGS['GPSLatitude']: get_decimal_from_dms(abs(lat)),
-#         GPSTAGS['GPSLongitudeRef']: 'E' if lng >= 0 else 'W',
-#         GPSTAGS['GPSLongitude']: get_decimal_from_dms(abs(lng))
-#     }
+Example:
+    exiftool -gpslatitude="37 deg 48' 35.58\" N" \
+             -gpslongitude="122 deg 27' 22.20\" W" \
+             -gpslatituderef="N" \
+             -gpslongituderef="W" \
+             image.jpg
 
-#     # Save new exif data to image
-#     image.save(image_path, exif=exif_data)
+Dependencies:
+    • piexif      (pip install piexif)
+    • Pillow     (pip install Pillow)
+    • exiftool   (sudo apt-get install exiftool)
+"""
 
-#     # Verify GPS data has been added
-#     new_image = Image.open(image_path)
-#     new_exif_data = {}
-#     for tag_id, value in new_image._getexif().items():
-#         tag = TAGS.get(tag_id, tag_id)
-#         new_exif_data[tag] = value
-
-#     if 'GPSInfo' not in new_exif_data:
-#         return False
-
-#     gps_info = new_exif_data['GPSInfo']
-#     if GPSTAGS['GPSLatitude'] not in gps_info or GPSTAGS['GPSLongitude'] not in gps_info:
-#         return False
-
-#     return True
-
-# def get_decimal_from_dms(dms):
-#     degrees = dms // 100
-#     minutes = (dms - (degrees * 100)) / 60
-#     seconds = (dms - (degrees * 100) - (minutes * 60)) / 3600
-#     return degrees + minutes + seconds
+# For quick inspection:
+#   exiftool image.jpg
+#   sudo apt-get install exiftool
 
 import piexif
 from PIL import Image
+import os
 
-im = Image.open(img)
+# --- Configuration --------------------------------------------------------
 
+# Path to your image file (PNG or JPEG)
+img = os.path.expanduser(
+    "~/Deals3D_2023-02-24-17-46-02_images/frame001039.png"
+)
+
+# EXIF tags to embed
 exif_dict = {
+    # Capture timestamp
     piexif.ExifIFD.DateTimeOriginal: "2022:01:15 12:00:00",
-    piexif.GPSIFD.GPSLatitudeRef: "N",
-    piexif.GPSIFD.GPSLatitude: ((51, 1), (30, 1), (0, 1)),
+
+    # GPS coordinates: degrees/minutes/seconds as rational tuples
+    piexif.GPSIFD.GPSLatitudeRef:  "N",
+    piexif.GPSIFD.GPSLatitude:     ((51,1), (30,1), (0,1)),
     piexif.GPSIFD.GPSLongitudeRef: "W",
-    piexif.GPSIFD.GPSLongitude: ((0, 1), (7, 1), (39, 1)),
-    piexif.GPSIFD.GPSAltitudeRef: 0,
-    piexif.GPSIFD.GPSAltitude: (1000, 1),
-    piexif.ImageIFD.Make: "My Camera",
+    piexif.GPSIFD.GPSLongitude:    ((0,1),  (7,1),  (39,1)),
+    piexif.GPSIFD.GPSAltitudeRef:  0,
+    piexif.GPSIFD.GPSAltitude:     (1000,1),
+
+    # Camera info
+    piexif.ImageIFD.Make:  "My Camera",
     piexif.ImageIFD.Model: "My Camera Model",
 }
 
-exif_bytes = piexif.dump(exif_dict)
-im.save(img, "png", exif=exif_bytes)
+# --- Core Functionality ---------------------------------------------------
+
+def embed_exif(image_path: str, exif_data: dict) -> None:
+    """
+    Open the image at `image_path`, embed the EXIF tags from `exif_data`,
+    and overwrite the file in place.
+    """
+    img = Image.open(image_path)
+    exif_bytes = piexif.dump(exif_data)
+    img.save(image_path, exif=exif_bytes)
+    print(f"[OK] Embedded EXIF into: {image_path}")
 
 
+# --- Entry Point ----------------------------------------------------------
+
+if __name__ == "__main__":
+    if not os.path.isfile(img):
+        print(f"[ERROR] File not found: {img}")
+    else:
+        embed_exif(img, exif_dict)

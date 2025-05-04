@@ -1,4 +1,35 @@
 #!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    A ROS Action Server called “countdown” that takes a starting integer and
+    counts down to zero at 1 Hz, publishing feedback on each tick. It cleanly
+    handles goal completion, preemption, and abortion.
+
+Features:
+  • Action name: “countdown”
+  • Action type: ros_examples/CountdownAction
+  • Publishes CountdownFeedback (current_num) at 1 Hz
+  • On reaching zero, sets succeeded with CountdownResult.is_finished = True
+  • Supports preemption: if client cancels, sends preempted with is_finished = False
+  • On unexpected shutdown while active, sends aborted with is_finished = False
+  • Logs state transitions (start, feedback, success, preempt, abort)
+
+Usage:
+    # Start the server:
+    rosrun your_package countdown_server.py
+
+    # From a client, send a goal:
+    rostopic pub /countdown/goal ros_examples/CountdownActionGoal \
+      '{goal: {starting_num: 10}}'
+
+Dependencies:
+  • rospy
+  • actionlib
+  • ros_examples (defines CountdownAction, CountdownFeedback, CountdownResult)
+"""
 
 import time
 import rospy

@@ -1,11 +1,32 @@
 #!/usr/bin/env python3
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Date: 14 Feb 2023
-Description: Extract UFO messages from a rosbag on specified topic into a ufo and pcd files.
-Example: ./extract_rosbag_ufomap.py /home/ahmad/records_2022-11-29-13-03-50.bag --ufomap_topic /ufomap_mapping_server_node/map
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+Date:          14 Feb 2023
+
+Description:
+    Extracts UFOMapStamped messages from a ROS bag and writes them out as:
+      • a .ufo (UFOMap binary) file
+      • a .pcd (Point Cloud Data) file
+
+Features:
+  • Reads a ROS bag and filters on a given UFO map topic  
+  • Automatically derives output filenames based on the bag name  
+  • Dumps the first (or only) UFOMapStamped message to disk  
+  • Converts the UFO map to a flat point cloud and saves as PCD  
+  • Prints progress and any errors to the console  
+
+Dependencies:
+  • ROS (rosbag Python API)  
+  • Python 3 standard libraries: argparse, os  
+  • UFOMap ROS messages (ufomap_msgs)  
+  • PCL or equivalent for .pcd export (e.g. python-pcl)  
+
+Example:
+    ./extract_rosbag_ufomap.py \
+        /home/ahmad/records_2022-11-29-13-03-50.bag \
+        --ufomap_topic /ufomap_mapping_server_node/map
 """
 
 import os # filename, extension extraction

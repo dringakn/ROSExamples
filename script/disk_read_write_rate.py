@@ -1,4 +1,30 @@
 #!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    ROS node that monitors disk I/O rates of running rosbag record processes
+    and publishes per-second read/write throughput.
+
+Features:
+  • Discovers processes whose name contains "rosbag" (or "record")
+  • Uses psutil to read each process’s io_counters()
+  • Computes read_bytes and write_bytes delta per second (KB/s)
+  • Publishes Float64 messages on:
+      – /io_read_rate
+      – /io_write_rate
+  • Runs at 1 Hz by default
+  • Logs I/O counters to console for debugging
+
+Dependencies:
+  • Python package psutil (install via `pip install psutil`)
+  • Access to /proc filesystem
+  • ROS packages: rospy, std_msgs
+
+Example:
+    rosrun your_package io_monitor.py
+"""
 
 import psutil
 import os

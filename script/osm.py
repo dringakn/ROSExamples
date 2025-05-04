@@ -1,3 +1,47 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    A comprehensive geospatial toolkit for:
+      • UTM ↔ Geodetic conversions with a moving reference
+      • Digital Elevation Model (DEM) download (SRTM1), resampling, altitude lookup, and visualization
+      • OpenStreetMap Overpass API queries for building footprints and boundary extraction via alpha‑shapes
+      • On‑the‑fly OSM tile fetching for custom map imagery
+      • Extraction of building heights (tags “height” or “building:levels”) and per‑waypoint altitude + building clearance
+
+Features:
+  – UTM class:
+      • Initialize/shift reference lat/lon ↔ east/north (local vs. global)
+      • BBOX builder for area of interest
+  – DEM class:
+      • Clip SRTM1 DEM for ROI, upscale by arbitrary factor
+      • Methods: get_altitude(lat, lon), full grid export, two display routines (matplotlib & richdem)
+  – Overpass class:
+      • Build and send Overpass QL for nodes/ways/relations
+      • Parse JSON into Element/Node/Way/Relation objects
+      • Utilities: tile↔latlon, fetch image clusters
+      • getBuildingsFootprints: returns 3D footprints, ground pts, ROI boundary
+      • get_building_height(point) & get_waypoints_altitude(list_of_xy)
+  – Result/Element hierarchy:
+      • from_json factories and easy .nodes/.ways/.relations access
+      • RelationMember subclasses for nested relations
+
+Dependencies:
+  • Python stdlib: os, math, json, collections, decimal, io, requests
+  • NumPy, Pillow (PIL), elevation, rasterio (+warp & plot), richdem, matplotlib
+  • Shapely, alphashape, utm
+
+Example:
+    # Basic building footprints + altitude extraction
+    from your_module import Overpass
+    api = Overpass()
+    buildings, ground, boundary = api.getBuildingsFootprints(
+        roi=(51.89, 10.42), size=250, default_height=5.0, upscale_factor=30
+    )
+"""
+
 import os
 import math
 import requests

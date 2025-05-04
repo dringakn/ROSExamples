@@ -1,5 +1,22 @@
 #!/usr/bin/env python3
+"""
+Author:    Dr. Ing. Ahmad Kamal Nasir
+Email:     dringakn@gmail.com
 
+Description:
+    A simple text-based UI framework using curses that manages multiple
+    titled windows, each displaying dynamic data. Users can switch focus
+    between windows and the framework can be extended to handle custom
+    input per window.
+
+Features:
+  • Multiple windows with borders and titles
+  • Automatic content refresh at 10 Hz
+  • Keyboard controls:
+      – ← / → : move focus between windows
+      – q     : quit application
+  • Easy to extend: subclass MyWindow to implement per-window input handling
+"""
 import curses
 import time
 import random

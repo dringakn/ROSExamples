@@ -1,3 +1,37 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    This module defines a simple pendulum-with-cart system and animates its motion in real time.
+    The system state is [x, x_dot, theta, theta_dot], where:
+      - x         : horizontal displacement of the cart
+      - x_dot     : cart velocity
+      - theta     : pendulum angle from vertical (radians)
+      - theta_dot : angular velocity of the pendulum
+
+Features:
+  • Customizable physical parameters:
+      – m   : mass of pendulum bob (kg)
+      – l   : pendulum length (m)
+      – u   : external control torque/force
+  • Equations of motion encapsulated in `model()`
+  • Time stepping via `step(dt)` using `scipy.integrate.odeint`
+  • Reset capability via `reset(t0, x0)`
+  • Real‑time animation at configurable frame rate
+  • Easily extended for damping, additional forces, or PID control
+
+Dependencies:
+  • numpy         (for array math)
+  • scipy         (for ODE integration)
+  • matplotlib    (for plotting & animation)
+
+Example:
+    # run with default parameters (m=1 kg, l=10 m, u=1 N·m, initial angle π/4)
+    python pendulum_sim.py
+"""
+
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt

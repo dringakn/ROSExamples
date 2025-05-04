@@ -1,12 +1,36 @@
+#!/usr/bin/env python3
 """
-File: pqueue.py
-Created: 22 Oct 2022
-Modified: 22 Oct 2022
-Author: Dr. -Ing. Ahmad Kamal Nasir [dringakn@gmail.com]
+File:        pqueue.py
+Created:     22 Oct 2022
+Modified:    04 May 2025
+Author:      Dr. Ing. Ahmad Kamal Nasir [dringakn@gmail.com]
+
 Description:
-    Implement Priority Queue using list.
+    A generic, in‑memory Priority Queue implementation backed by a Python list.
+    Each element is wrapped in a QNode that defines its priority key (a tuple)
+    and supports efficient lookup, insertion, removal, and update operations.
+
+Features:
+  • Min‑heap semantics via __lt__/__le__/__gt__/__ge__ overloads on QNode
+  • O(log n) push, pop, remove and priority‑update operations
+  • push_or_update convenience: insert new or re‑prioritize existing
+  • Constant‑time membership test and direct index lookup via a hash map
+  • Customizable priority type (tuple comparison by default for D* path planning)
+  • dist() helper for spatial heuristics (Euclidean distance between positions)
+
+Usage:
+    from pqueue import PQueue, QNode
+    pq = PQueue()
+    node = QNode(pos=(x, y), p=(f_cost, h_cost))
+    pq.push(node)
+    best = pq.pop()
+
 Note:
-    For descending order sorting invert the logic of __lt__ operator of class 'Node'.
+    To reverse to a max‑heap, invert the logic in QNode.__lt__ (and related dunder methods).
+
+Complexity:
+    • push, pop, remove, update: O(log n)
+    • peek, contains: O(1)
 
 """
 from math import sqrt

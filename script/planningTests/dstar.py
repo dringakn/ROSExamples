@@ -1,8 +1,50 @@
+#!/usr/bin/env python3
 """
-g(x): cost to move from start->current
-h(x): estimated cost to move from current->goal
-U: Open list, list of nodes to be examined, sorted by f(x)
-Note: There is no closed list
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    D* (Dynamic A*) incremental path planning algorithm.  
+    Efficiently replans in changing or partially known environments by
+    updating only affected portions of the search graph.
+
+Algorithm Notes:
+    g(x):   the current cost-to-come from the start node to node x  
+    h(x):   heuristic estimate of cost-to-go from x to the goal  
+    f(x):   g(x) + h(x) (used implicitly in priority comparisons)  
+    U:      the open list (priority queue) of nodes to be examined, 
+            sorted by a two-key priority (see _calculate_priority)  
+    km:     accumulated heuristic adjustment factor for consistency  
+    No closed list is maintained; nodes are re-inserted/updated as needed.
+
+Features:
+  • Incremental replanning:
+      – Only affected nodes are re-evaluated when edge costs change  
+      – Supports dynamic environments without full restart  
+  • Consistency maintenance:
+      – Uses g and rhs values to detect and repair inconsistencies  
+      – Two-phase node processing (over-consistent vs under-consistent)  
+  • Efficient priority handling:
+      – Custom two-part priority key (tie-break on lower g/rhs)  
+      – Backwards search from goal for faster replanning  
+  • Path extraction:
+      – Finds next best neighbor by minimum g + cost  
+      – Automatically incorporates map updates via update_map()
+
+Dependencies:
+  – ogm (occupancy grid map abstraction; provides move_cost, successors, predecessors)  
+  – pqueue (priority queue with update/remove operations)  
+  – math.sqrt (for distance calculations, if needed)
+
+Usage:
+    from ogm import OGM
+    from pqueue import PQueue, QNode
+    planner = DStar()
+    planner.set_map(your_ogm_instance)
+    planner.set_start(QNode(start_pos, (INF, INF)))
+    planner.set_goal(QNode(goal_pos, (INF, INF)))
+    planner.initialize()
+    path = planner.re_plan(start_pos)
 """
 import ogm
 from ogm import OGM

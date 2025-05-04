@@ -1,3 +1,29 @@
+#!/usr/bin/env python3
+"""
+Author:    Dr. Ing. Ahmad Kamal Nasir
+Email:     dringakn@gmail.com
+
+Description:
+    Simulates and animates a DC motor’s rotational dynamics
+    under PID voltage control, plotting angular velocity over time.
+
+Features:
+  • DCMotor class modeling mechanical (J, B) and electrical (R, L, Ke, Kt) dynamics  
+  • State integration via scipy.integrate.odeint  
+  • PIDController for closed-loop voltage input  
+  • Real-time 2D plot (t vs. ω) using Matplotlib FuncAnimation  
+  • Easy parameter tweaking for motor and controller  
+
+Dependencies:
+  – numpy  
+  – scipy  
+  – matplotlib  
+  – pid_controller.PIDController  
+
+Usage:
+    python3 dc_motor_sim.py
+"""
+
 import numpy as np
 from scipy.integrate import odeint, solve_ivp
 import matplotlib.pyplot as plt

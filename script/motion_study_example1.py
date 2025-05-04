@@ -1,4 +1,36 @@
-#! /bin/python3
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Compute the minimum time required to travel from a start point to a goal point
+    along a straight line using a trapezoidal (or triangular, if distance is short)
+    velocity profile under maximum velocity and acceleration constraints. Then
+    generate and plot the resulting velocity‐vs‐time profile.
+
+Function:
+    computeTimeVelocityRamp(start, goal, v_max, a_max, v_initial, v_final) -> float
+        • start       : numpy.ndarray of shape (2,) – Cartesian [x, y] start position
+        • goal        : numpy.ndarray of shape (2,) – Cartesian [x, y] goal position
+        • v_max       : float – maximum cruising velocity (m/s)
+        • a_max       : float – maximum acceleration magnitude (m/s²)
+        • v_initial   : float – initial velocity at start (m/s)
+        • v_final     : float – final velocity at goal (m/s)
+        Returns the total time (s) to complete the motion.
+
+Usage Example:
+    $ python3 velocity_ramp.py
+
+Dependencies:
+    • numpy
+    • matplotlib
+
+Notes:
+    • If the distance is too short to reach v_max, a triangular profile is used.
+    • The function assumes constant acceleration/deceleration phases.
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 

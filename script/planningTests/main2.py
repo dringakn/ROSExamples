@@ -1,3 +1,44 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Interactive 2D incremental path planning demo using the D* algorithm.
+    Renders a ROWS×COLS occupancy grid in a pygame window and continuously
+    replans from a moving start to a fixed goal as obstacles are added or removed.
+
+Features:
+  • Grid setup:
+      – Configurable ROWS×COLS, window size, and cell dimensions
+      – FREE vs. OBSTACLE display
+  • D* planning:
+      – Uses the DStar class from dstar2 for incremental re‐planning
+      – Start initialized at mid‐left, goal at mid‐right by default
+      – `planner.re_plan()` updates path length and node costs on changes
+  • Visualization:
+      – FREE cells drawn as white outlines; obstacles as filled black
+      – Start cell shown as blue circle; path as red circles
+      – Window title displays current path length or “not found”
+  • Interaction:
+      – LEFT CLICK to place an obstacle at that grid cell
+      – RIGHT CLICK to remove an obstacle
+      – SPACE to step the start position along the current path
+      – R to re‐initialize planner at current start → goal
+      – ESC or window close to exit
+  • Controls path‐following:
+      – After each SPACE or map change, planner updates and redraws
+      – Mouse actions trigger planner.update_map_node and re‐planning
+      – Path printed to console on each re‐plan
+
+Usage:
+    python dstar_visualizer.py
+
+Dependencies:
+    • pygame
+    • dstar2 (providing DStar, Path, OGM, OBSTACLE, FREE, INF)
+"""
+
 from dstar2 import DStar, Path, OGM, OBSTACLE, FREE, INF
 import time
 import pygame

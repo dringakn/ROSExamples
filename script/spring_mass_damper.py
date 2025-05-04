@@ -1,3 +1,36 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Simulates and animates a spring–mass–damper system using numerical integration
+    of its ODEs and Matplotlib for real‐time visualization.
+
+Features:
+  • Configurable system parameters:
+      – m: mass (kg)
+      – k: spring constant (N/m)
+      – c: damping coefficient (N·s/m)
+      – x0: initial state [position (m), velocity (m/s)]
+  • ODE integration via scipy.integrate.odeint
+  • Step‑by‑step simulation interface (`step()`) with adjustable time step
+  • Reset capability to restart simulation from arbitrary initial conditions
+  • Real‑time animation using Matplotlib’s FuncAnimation
+  • Adjustable frame rate (frames per second) and total frames
+  • Self‑contained example at bottom showing 20 fps animation for 100 frames
+
+Usage:
+    Simply run this script:
+        $ python spring_mass_damper.py
+    Modify the `SpringMassDamper(...)` parameters, `dt`, and animation settings
+    as desired.
+
+Requirements:
+    • numpy
+    • scipy
+    • matplotlib
+"""
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt

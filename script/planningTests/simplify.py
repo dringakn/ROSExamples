@@ -1,3 +1,29 @@
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Simple Python utility to simplify a 3D polyline by removing points
+    whose perpendicular distance to the line between their neighbors is
+    below a given tolerance. Ideal for down‑sampling waypoint lists
+    or reducing noisy track data.
+
+Features:
+  • 3D support – works on (x,y,z) coordinates  
+  • Adjustable tolerance – controls how aggressively points are removed  
+  • Utility functions:
+      – norm(u): Euclidean length of vector u  
+      – cross(u,v): 3D cross product  
+      – dist_to_line(p, a, b): perpendicular distance from point p to line segment ab  
+  • simplify(path, tol): returns a reduced path, preserving endpoints  
+  • Optional plotting (uncomment matplotlib code)  
+
+Example:
+    python simplify_path.py
+    # prints the simplified waypoint list,
+    # uncomment plot code at bottom to visualize.
+"""
+
 import matplotlib.pyplot as plt
 import copy
 import math

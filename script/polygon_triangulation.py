@@ -1,3 +1,45 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    BuildingMesh provides utilities to triangulate a simple 2D polygon and
+    build a 3D mesh by extruding its walls and capping its top surface.
+
+Features:
+  • Polygon triangulation via ear‐clipping:
+      – _earclip(): splits a simple, ordered, closed polygon into triangles.
+      – Handles numeric stability with an epsilon guard.
+  • Wall extrusion:
+      – extrude_polygon_sides(height): generates side‐wall triangles by extruding
+        the base polygon upward by its height attribute.
+  • Top‐face capping:
+      – extrude_polygon_cap(): produces triangles covering the top face at full height.
+  • Area computation:
+      – total_area(triangles): sums triangle areas using a stable Heron’s formula.
+  • Orientation‐agnostic:
+      – Detects and reverses clockwise input to maintain CCW winding.
+  • Pure Python, no external deps beyond the standard library.
+
+Usage Example:
+    poly = [
+        (0.0, 0.0, 0.0, 3.0),
+        (1.0, 0.0, 0.0, 3.0),
+        (1.0, 1.0, 0.0, 3.0),
+        (0.0, 1.0, 0.0, 3.0),
+        (0.0, 0.0, 0.0, 3.0)  # closed loop
+    ]
+    mesh = BuildingMesh(poly)
+    # walls
+    verts_sides, tris_sides = mesh.extrude_polygon_sides()
+    # top cap
+    verts_cap,  tris_cap  = mesh.extrude_polygon_cap()
+    # compute area of cap
+    area = mesh.total_area([verts_cap[i] for i in tris_cap])
+
+"""
+
 import math
 import sys
 from collections import namedtuple

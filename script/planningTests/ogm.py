@@ -1,3 +1,51 @@
+#!/usr/bin/env python3
+"""
+Author:      Dr. Ing. Ahmad Kamal Nasir
+Email:       dringakn@gmail.com
+
+Module:      Occupancy Grid Map (OGM)
+
+Description:
+    This module provides a simple 2D occupancy grid map implementation using NumPy.
+    It supports marking cells as obstacles or free space, testing occupancy,
+    computing movement costs between cells (Euclidean distance, infinite if blocked),
+    and enumerating neighbors, successors, and predecessors for use in path‐planning
+    or graph search algorithms.
+
+Features:
+  • Constants:
+      – INF:        infinite cost constant
+      – SQRT2:      √2 for diagonal movement cost
+      – OBSTACLE:   cell value for occupied
+      – FREE:       cell value for unoccupied
+  • OGM(width, height):
+      – Create a grid of given dimensions initialized to FREE
+      – NumPy array `map` of shape (width, height) with dtype int8
+      – Pretty‐print via __repr__ showing integer array
+  • Methods:
+      – within_map(pos)        : check if (x,y) lies inside bounds
+      – set_map(map)           : replace the internal grid with a new NumPy array
+      – get_map()              : return the internal grid
+      – set_obstacle(pos)      : mark a cell as OBSTACLE
+      – set_free(pos)          : mark a cell as FREE
+      – is_obstacle(pos)       : True if cell is OBSTACLE
+      – is_free(pos)           : True if cell is FREE
+      – move_cost(u, v)        : Euclidean cost between u and v, INF if either is obstacle
+      – get_neighbours(pos)    : dict of adjacent cells → move_cost (includes diagonals)
+      – get_successors(pos)    : same as neighbours but skips if pos itself is obstacle
+      – get_predecessors(pos)  : alias for get_successors (undirected grid)
+  • Usage example:
+        >>> ogm = OGM(10, 10)
+        >>> ogm.set_obstacle((3, 4))
+        >>> print(ogm)
+        >>> cost = ogm.move_cost((2, 2), (3, 3))
+        >>> nbrs = ogm.get_neighbours((5, 5))
+
+Dependencies:
+    numpy, math
+"""
+
+
 import numpy as np
 import math
 

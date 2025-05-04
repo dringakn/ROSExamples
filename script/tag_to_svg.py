@@ -1,5 +1,30 @@
 #!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
 
+Description:
+    Convert pre‑generated AprilTag PNG images into standalone SVGs, preserving
+    the exact bit pattern and allowing customizable output size and border.
+
+Features:
+  • Single‑file or batch conversion of an entire folder of .png tags  
+  • Exact per‑pixel SVG rectangles with true RGBA support  
+  • Configurable edge length (e.g. “20mm”, “2in”, “100px”)  
+  • Optional border framing around the tag  
+  • Auto‑create output folder named `<input>_<size>`  
+  • Prints progress to console
+
+Usage:
+    python3 tag_to_svg.py --input /path/to/tag36h11/tag36_11_00000.png --size 50mm  
+    python3 tag_to_svg.py --input /path/to/tag36h11/ --size 50mm
+
+Dependencies:
+    • Python 3.x  
+    • Pillow (`pip install pillow`)  
+    • Standard library: os, argparse
+
+"""
 import os
 import argparse
 from PIL import Image

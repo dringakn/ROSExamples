@@ -1,8 +1,48 @@
+#!/usr/bin/env python3
 """
-g(x): cost to move from start->current
-h(x): estimated cost to move from current->goal
-U: Open list, list of nodes to be examined, sorted by f(x)
-Note: There is no closed list
+Author:    Dr. Ing. Ahmad Kamal Nasir
+Email:     dringakn@gmail.com
+
+Algorithm: D* (Dynamic A*) path planning for grid maps
+
+Description:
+    This module implements the D* algorithm for incremental path planning
+    on a 2D occupancy grid. It maintains two cost measures per node:
+      • g(x): true cost to move from the start to x
+      • rhs(x): one‐step look‐ahead cost toward the goal
+    The open list U holds all nodes whose g and rhs values are inconsistent,
+    sorted by f(x) = min(g(x), rhs(x)) + h(start, x) + km.  There is NO closed list:
+    nodes re‐enter U whenever their cost estimates become inconsistent.
+
+Key Concepts:
+    g(x): cost from start → current node
+    rhs(x): one‐step look‐ahead cost
+    h(x): heuristic estimate current → goal
+    f(x): priority = min(g, rhs) + h(start, node) + km
+    U: open list (PQueue) of nodes to be examined, sorted by f(x)
+    km: key modifier to handle robot moves without restarting
+    No closed list: supports dynamic changes in the environment
+
+Features:
+  • Node: wraps a grid coordinate with priority and unique hash key
+  • NodeInfo: stores (g, rhs, traversal cost) for each cell
+  • Path: reconstructs and tracks the resulting path and its length
+  • PQueue: min‐heap with O(log n) insert/update/remove by node key
+  • DStar: orchestrates map loading, initialization, incremental updates,
+           planning and replanning under changing obstacles
+
+Usage:
+    from ogm import OGM
+    planner = DStar()
+    planner.load_map(my_ogm)            # preload static grid
+    planner.initialize(start, goal)     # set start/goal
+    planner.re_plan()                   # compute initial path
+    # as robot moves:
+    planner.update_start(new_pos)
+    planner.re_plan()
+    # as environment changes:
+    planner.update_map_node((x, y), OBSTACLE)
+    planner.re_plan()
 """
 from ogm import OGM, SQRT2, INF, OBSTACLE, FREE, np
 from math import sqrt

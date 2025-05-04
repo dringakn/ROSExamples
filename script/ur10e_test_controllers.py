@@ -1,4 +1,39 @@
 #!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    ROS node to test and benchmark UR10e trajectory controllers.  
+    Allows sending both joint‐based and Cartesian‐based trajectories
+    to the robot, automatically loading and switching controllers
+    via the controller_manager.
+
+Features:
+  • Dynamic controller management:
+      – Load controllers on demand
+      – Stop all conflicting controllers before starting the target
+      – Best‐effort strictness for minimal disruption
+  • Joint trajectories:
+      – Uses FollowJointTrajectoryAction
+      – Configurable sequence of joint positions, velocities, timings
+      – Supports any controller in JOINT_TRAJECTORY_CONTROLLERS
+  • Cartesian trajectories:
+      – Uses FollowCartesianTrajectoryAction
+      – Sequence of Pose waypoints in Cartesian space
+      – Supports any controller in CARTESIAN_TRAJECTORY_CONTROLLERS
+  • Predefined constants:
+      – JOINT_NAMES for UR10e
+      – Lists of known joint & Cartesian controllers
+      – Conflicting controllers to ensure safe switching
+  • Usage example:
+        rosrun ros_examples trajectory_client.py _trajectory_type:=joint_based
+        rosrun ros_examples trajectory_client.py _trajectory_type:=cartesian
+  • Dependencies:
+      – ROS packages: rospy, actionlib, control_msgs, trajectory_msgs,
+        controller_manager_msgs, cartesian_control_msgs, geometry_msgs
+      – Ensure appropriate controllers are configured and available
+"""
 
 import sys
 

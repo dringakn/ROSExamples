@@ -1,8 +1,44 @@
+#!/usr/bin/env python3
 """
-g(x): cost to move from start->current
-h(x): estimated cost to move from current->goal
-U: Open list, list of nodes to be examined, sorted by f(x)
-V: Closed list, list of nodes which has been already visited, also contains parent info.
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    A* search implementation on an occupancy grid map (OGM) using a priority queue.
+    Finds the lowest‐cost path from a start node to a goal node.
+
+Key Concepts:
+    g(x): actual cost from start → current node
+    h(x): heuristic (estimated) cost from current → goal
+    f(x): g(x) + h(x), used to prioritize node expansion
+
+Data Structures:
+    U (Open list): PQueue of frontier nodes, ordered by f(x)
+    V (Closed list): dict of visited nodes → stores QNode and parent links for backtracking
+
+Features:
+  • set_start(start: QNode)  
+  • set_goal(goal: QNode)  
+  • set_map(map: OGM)  
+  • search_path() → bool  
+      – returns True if path found, False if frontier empty  
+      – populates V and updates self.goal to the goal node  
+  • get_path() → list of (x, y) tuples  
+      – reconstructs and returns the path from start to goal
+  • reconstruct_path(node: QNode) → internal backtracking  
+
+Usage Example:
+    from astar import AStar
+    from ogm   import OGM
+    from pqueue import PQueue, QNode
+
+    astar = AStar()
+    astar.set_map(OGM(width, height))
+    astar.set_start(QNode((sx, sy), float('inf')))
+    astar.set_goal (QNode((gx, gy), float('inf')))
+    if astar.search_path():
+        path = astar.get_path()
+        print("Path:", path)
 """
 from ogm import OGM
 from pqueue import PQueue, QNode

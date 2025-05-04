@@ -1,3 +1,30 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    PolygonOpen3D is a utility class wrapping common Open3D operations to
+    create, manipulate, and query 3D geometries—lines, meshes, point clouds,
+    and LiDAR-style raycasts.
+
+Features:
+  • create_open3d_lineset         Create a LineSet from 3D vertices, optional color & z‑offset
+  • create_open3d_lineset_2d      Create a LineSet from 2D vertices at a default Z height
+  • create_mesh                   Build a TriangleMesh from vertices & triangles, compute normals, colorize
+  • create_poisson_mesh           Perform Poisson surface reconstruction on a point cloud
+  • project_points_on_meshes      Compute closest‑point projections onto meshes
+  • project_waypoints_on_meshes   Raycast waypoints onto meshes along a given direction
+  • create_lidar_model            Generate a unit‑sphere sampling of directions for LiDAR simulation
+  • create_lidar_rays             Assemble origin‑direction rays for a LiDAR scan
+  • lidar_scan                    Cast LiDAR rays in a RaycastingScene and return hit point cloud
+  • create_plane                  Generate a simple quad mesh in the XY plane
+  • create_scene                  Build a RaycastingScene from legacy TriangleMesh objects
+  • closest_point_on_meshes       Batch closest‑point and distance queries for many points
+  • find_intersection_with_meshes Ray‑mesh intersection distance queries
+  • show_meshes                   Visualize meshes in the Open3D GUI with normals & wireframe options
+"""
+
 import open3d as o3d
 import numpy as np
 

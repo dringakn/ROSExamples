@@ -1,10 +1,31 @@
 #!/usr/bin/env python3
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Description: Extract gps messages from a rosbag on specified topic into a gpx file.
-Example: ./extract_rosbag_gpx.py /home/ahmad/records_2022-11-29-13-03-50.bag gps_track.gpx /dji_osdk_ros/rtk_position
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Standalone script to extract GPS (NavSatFix) messages from a ROS bag
+    and produce a GPX track file.
+
+Features:
+  • Parses any ROS bag (*.bag) for GPS fixes on a user‑specified topic.
+  • Builds a GPXTrack with sequential waypoints:
+      – latitude, longitude, elevation
+      – auto‑numbered point name/symbol/description (P0, P1, …)
+  • Outputs a valid .gpx file alongside the input bag.
+  • Minimal dependencies: ROS (rosbag), GPXPy.
+
+Usage:
+    ./extract_rosbag_gpx.py <input.bag> [--gps_topic TOPIC]
+    e.g.
+      ./extract_rosbag_gpx.py \
+        /home/ahmad/records.bag \
+        --gps_topic /dji_osdk_ros/rtk_position
+
+Dependencies:
+  • ROS Noetic / Melodic with python‑rosbag
+  • GPXPy (install via `pip install gpxpy`)
 """
 
 import os # filename, extension extraction

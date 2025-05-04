@@ -1,13 +1,43 @@
 #!/usr/bin/env python3
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Created: 23 Mar 2023
-Modified: 23 Mar 2023
-Description: Extract rosout messages from a rosbag into a pickle file.
-Example: ./extract_rosbag_rosout.py ~/filename.bag cpu_monitor_topics
-Note: Severity level: 1=DEBUG, 2=INFO, 4=WARN, 8=ERROR, 16=FATAL 
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+Created:       23 Mar 2023
+Modified:      04 May 2025
+Description:
+    Extracts `/rosout` messages from a ROS bag, serializes them to a pandas
+    DataFrame (pickled), and generates time‑series plots of ERROR/WARN/INFO
+    counts.
+
+Features:
+  • Flexible topic selection (default: `/rosout`)
+  • Maps ROS log severity integers to names:
+      – 1  = DEBUG
+      – 2  = INFO
+      – 4  = WARN
+      – 8  = ERROR
+      – 16 = FATAL
+  • Builds a DataFrame with columns:
+      – time (indexed, converted to datetime)
+      – level (DEBUG/WARN/INFO/etc.)
+      – node name
+      – message text
+      – source file, function, line number
+      – original topics
+  • Saves raw DataFrame as `<bagname>_rosout.pickle`
+  • Generates and saves PNGs of per-node ERROR/WARN/INFO counts over 10 s windows
+  • Light dependency footprint: `rosbag`, `rosgraph_msgs`, `pandas`, `numpy`, `matplotlib`
+
+Usage:
+    ./extract_rosbag_rosout.py <input.bag> [--topic /rosout]
+
+Example:
+    ./extract_rosbag_rosout.py ~/logs/myrun.bag --topic /rosout
+
+Notes:
+  • Ensure `rosbag` and `rosgraph_msgs` are installed in your ROS environment.
+  • Requires matplotlib for the PNG output.
 """
 
 import os  # filename, extension extraction

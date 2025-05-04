@@ -1,6 +1,34 @@
 #!/usr/bin/env python3
-# Ensure it runs as a python script!
-# Install PyQt or PySide using: pip install pyqt5
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+
+Description:
+    A minimal PyQt5 application that fetches and displays a stitched OpenStreetMap
+    tile image for a given latitude, longitude, and zoom level.
+
+Features:
+  • GUI fields for latitude, longitude and zoom level input
+  • “Fetch Map” button to download and assemble OSM tiles around the specified point
+  • Automatic conversion from latitude/longitude to OSM tile coordinates
+  • Displays the resulting map image in the window
+  • Easy to extend to other tile providers or add overlays
+
+Dependencies:
+  • PyQt5      (pip install pyqt5)
+  • requests   (pip install requests)
+  • Pillow     (pip install pillow)
+  • Python 3.6+
+    Install PyQt or PySide using: pip install pyqt5
+
+Usage:
+    $ python3 map_viewer.py
+    Enter your coordinates, click “Fetch Map”, and see the map.
+
+Example:
+    rosrun my_package map_viewer.py
+"""
 
 import sys, math
 import requests

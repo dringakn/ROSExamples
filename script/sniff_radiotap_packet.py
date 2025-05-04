@@ -1,5 +1,42 @@
 #!/usr/bin/env python3
 
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    A multithreaded RadioTap packet sniffer that switches the given interface
+    into monitor mode, captures 802.11 frames, and provides live statistics.
+
+Features:
+  • Monitor‑mode management:
+      – Brings interface down/up
+      – Sets monitor mode via iwconfig
+      – Verifies interface status with ethtool/ip/iw
+  • Packet capture & parsing:
+      – Uses Scapy to sniff RadioTap frames
+      – Counts per‑MAC address (destination, source, BSSID)
+      – Extracts and tallies SSIDs from beacon frames
+      – Strips payload for clean header inspection
+  • Live console dashboard:
+      – RX packet count and header length
+      – Unique DEST, SRC, BSSID, SSID counts
+      – Sorted top talkers printed every second
+      – Hexdump of the most recent RadioTap header
+  • Flexible filtering:
+      – BPF filter on load (e.g. `not tcp or udp`, specific sender MAC)
+  • Threaded design:
+      – Separate threads for sniffing and dashboard printing
+  • Dependencies:
+      – Python3, Scapy (`sudo pip3 install scapy`)
+      – Linux wireless tools (`iwconfig`, `ifconfig`, `ethtool`, `ip`)
+  • Usage example:
+        sudo python3 sniff_radiotap_packet.py \\
+            -i wlan1 \\
+            -c \\
+            -s 11:22:33:44:55:66
+"""
+
 import os
 import time
 import argparse

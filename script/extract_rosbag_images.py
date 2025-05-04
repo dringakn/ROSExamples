@@ -1,9 +1,36 @@
 #!/usr/bin/env python3
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Description: Extract images from a rosbag on specified topic to the output folder.
+Author:    Dr. Ing. Ahmad Kamal Nasir
+Email:     dringakn@gmail.com
+
+Description:
+    Extracts all image frames from a ROS bag on a given topic and writes them
+    as individual image files to a specified output directory.
+
+Features:
+  • Reads any sensor_msgs/Image stream via cv_bridge (passthrough encoding).
+  • Automatically creates the output directory if it doesn’t exist.
+  • Names files sequentially as frame000001.png, frame000002.png, …
+  • Prints progress to the console.
+  • Simple CLI with positional arguments.
+
+Usage:
+    rosrun <your_package> extract_images.py <bag_file> <output_dir> <image_topic>
+
+Arguments:
+    bag_file    Path to the input ROS bag file (.bag or .rosbag).
+    output_dir  Directory where extracted frames will be saved.
+    image_topic ROS topic name of the Image messages to extract.
+
+Dependencies:
+  • ROS (rosbag, sensor_msgs)
+  • OpenCV (cv2)
+  • cv_bridge
+  • Python standard libs: argparse, os
+
+Example:
+    python extract_images.py recordings.bag /tmp/frames /camera/image_raw
 """
 
 import os

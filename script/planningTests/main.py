@@ -1,3 +1,36 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Demo combining A* and D* path planners on a small 2D occupancy grid,
+    with real‑time visualization and dynamic replanning using pygame.
+
+Features:
+  • Planners:
+      – D* (default) with ability to replan when obstacles change
+      – A* (commented out, easy to switch in)
+  • Interactive visualization:
+      – Draws free vs. occupied cells
+      – Renders the current path in red
+      – Window size, grid resolution adjustable via constants
+  • User controls:
+      – Left‑click to place an obstacle and trigger replanning
+      – Right‑click to remove an obstacle and trigger replanning
+      – SPACE to step to the next point along the path
+      – ENTER to force a full replanning at current position
+      – ESC or window‑close to quit
+  • Utility:
+      – `list_dict_lookup_performance()` to compare Python list vs. dict membership speed
+  • Dependencies:
+      – pygame
+      – astar.py (A* implementation)
+      – dstar.py (D* implementation)
+  • Usage example:
+        python3 wireless_quality.py
+"""
+
 import astar
 import dstar
 import time

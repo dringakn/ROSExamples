@@ -1,4 +1,36 @@
 #!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Simple ROS action client that connects to a "countdown" action server,
+    sends a starting number, and receives periodic countdown feedback until
+    completion.
+
+Features:
+  • Action Client:
+      – Waits for the "countdown" server to become available.
+      – Cancels any previously pending goals on startup.
+      – Sends a CountdownGoal with a user‑specified starting number.
+  • Callbacks:
+      – active_cb: logs when the server accepts the goal.
+      – feedback_cb: logs each intermediate countdown value and current action state.
+      – done_cb: logs final result, prints terminal state, and cleanly shuts down the node.
+  • Compatibility:
+      – Designed for ROS1 with `actionlib` and a custom `ros_examples/CountdownAction`.
+  • Usage:
+      – Run after launching a compatible action server:
+          rosrun ros_examples countdown_client.py
+  • Parameters:
+      – None (hardcoded starting number; modify in code or extend to pull from ROS param).
+
+Example:
+    # In one terminal, start your countdown server:
+    rosrun ros_examples countdown_server.py
+    # In another terminal, run this client:
+    rosrun ros_examples countdown_client.py
+"""
 
 import time
 import rospy

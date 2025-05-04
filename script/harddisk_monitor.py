@@ -1,10 +1,38 @@
 #!/usr/bin/env python3
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Description: Hard disk read/write Speed.
-Example: rosrun ros_examples harddisk_monitor
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    ROS node to measure and publish hard‐disk read/write performance metrics
+    by parsing /proc/diskstats for a specified block device.
+
+Features:
+  • Per‐second throughput:
+      – Read throughput (KB/s)
+      – Write throughput (KB/s)
+  • Per‐second latency:
+      – Average read time (ms)
+      – Average write time (ms)
+      – Total IO time (ms)
+      – Waiting IO time (ms)
+  • Publishes both:
+      – A human‐readable printout to console
+      – A Float64MultiArray on `/hard_disk_monitor`
+        * data layout: [read_KB_s, write_KB_s, read_ms, write_ms, io_ms, wio_ms]
+  • Configurable via ROS parameters:
+      – `~device_name` (default: 'nvme0n1')
+      – `~update_rate` (Hz, default: 1.0)
+  • Linux‐only: requires `/proc/diskstats`
+
+Dependencies:
+  • ROS: rospy, std_msgs
+  • Linux kernel procfs (/proc/diskstats)
+
+Example:
+    rosrun ros_examples harddisk_monitor \
+        _device_name:=sda _update_rate:=2.0
 """
 
 import rospy

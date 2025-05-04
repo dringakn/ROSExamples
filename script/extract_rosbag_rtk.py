@@ -1,11 +1,36 @@
 #!/usr/bin/env python3
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Date: 14 Feb 2023
-Description: Extract gps messages from a rosbag on specified topic into a pcd file.
-Example: ./extract_rosbag_rtx.py /home/ahmad/records_2022-11-29-13-03-50.bag --gps_topic /dji_osdk_ros/rtk_position
+Author:      Dr. Ing. Ahmad Kamal Nasir
+Email:       dringakn@gmail.com
+Date:        14 Feb 2023
+
+Description:
+    Command‐line utility to extract GPS (NavSatFix) messages from a ROS bag
+    and write them into a normalized PCD (Point Cloud Data) file.
+
+Features:
+  • Reads all NavSatFix messages from the specified bag on the given topic  
+  • Converts latitude/longitude into UTM coordinates via the `utm` library  
+  • Translates all points so that the first GPS fix becomes the origin (0,0,0)  
+  • Saves the resulting point cloud in binary PCD format using `pcl`  
+  • Prints summary of how many points were written  
+
+Usage:
+    ./extract_rosbag_rtx.py <bag_file> [--gps_topic <topic>]
+
+Arguments:
+    bag_file      Path to the input ROS bag (e.g. `/path/to/data.bag`)
+    --gps_topic   Name of the GPS topic inside the bag (default: `/dji_osdk_ros/rtk_position`)
+
+Example:
+    ./extract_rosbag_rtx.py \
+        /home/ahmad/records_2022-11-29-13-03-50.bag \
+        --gps_topic /dji_osdk_ros/rtk_position
+
+Dependencies:
+    • Python packages: pcl, numpy, utm, argparse, rosbag  
+    • ROS sensor_msgs (NavSatFix)  
 """
 
 import os # filename, extension extraction

@@ -1,4 +1,34 @@
 #!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    A simple RadioTap packet injector that puts a given Wi‑Fi interface into monitor mode,
+    crafts a raw 802.11 frame with Radiotap header, and injects it at a configurable rate.
+
+Features:
+  • Automatically discovers all “wl*” interfaces and their MAC addresses  
+  • Switches your chosen interface into monitor mode  
+  • Builds a Radiotap header with Flags, Rate, Channel, Antenna signal, etc.  
+  • Crafts a Dot11 data frame (type 2/subtype 0), with configurable source, destination, BSSID  
+  • Sends arbitrary‑length payloads (default 1440 bytes of “F”)  
+  • Adjustable packet count and inter‑packet interval  
+  • Console output of scan/change commands for debugging  
+
+Dependencies:
+  – Python packages: scapy, netifaces, argparse  
+  – System tools: ifconfig, iwconfig, iw, ethtool, ip  
+  – Must run as root (monitor mode + raw injection)  
+
+Usage Example:
+    sudo ./inject_radiotap_packet.py \
+        --iface wlan1 \
+        --dst-mac 11:22:33:44:55:66 \
+        --num-packets 100 \
+        --freq 5
+
+"""
 
 import os
 import netifaces

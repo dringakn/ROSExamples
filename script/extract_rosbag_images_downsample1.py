@@ -2,17 +2,48 @@
 # -*- coding: utf-8 -*-
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Modified: 14 Feb 2023
-Description: Extract images from a rosbag on specified topic to the output folder (Downsapmled version).
-             Create also a video. 
-Usuage: ./extract_rosbag_images_downsampled.py bag_files.bag topic_name save_every_n_image
-Example: ./extract_rosbag_images_downsample.py ~/records_2022-12-05-13-30-08.bag /dji_fpv_camera_downsampled 1
+Author:      Dr. Ing. Ahmad Kamal Nasir
+Email:       dringakn@gmail.com
+Modified:    14 Feb 2023
 
-Notes: 
-    ffmpeg -framerate 25 -i frame%06d.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4
-    sudo apt install mjpegtools
+Description:
+    Extracts images from a ROS bag on a specified image topic, downsampling
+    by saving every Nth frame, and then assembles them into a video.
+
+Features:
+  • Reads any ROS bag (.bag) file and extracts sensor_msgs/Image messages.
+  • Downsampling – only saves every Nth frame as PNG, to reduce disk usage.
+  • Automatic video creation via ffmpeg, using H.264 encoding and yuv420p pixel format.
+  • Prints progress to console for both image extraction and video encoding.
+
+Requirements:
+  • ROS (noetic/melodic) with python3 support
+  • cv_bridge, rosbag, rospy
+  • OpenCV (cv2)
+  • ffmpeg (for video encoding)
+  • Permissions to read the bag file and write to its directory
+
+Usage:
+    ./extract_rosbag_images_downsampled.py <bag_file> [--image_topic TOPIC] [--save_frames N]
+
+Arguments:
+  bag_file         Path to input .bag file
+  --image_topic    ROS image topic to extract (default: /dji_fpv_camera_downsampled)
+  --save_frames    Save every Nth frame (default: 1, i.e. every frame)
+
+Example:
+    ./extract_rosbag_images_downsampled.py \
+      ~/records_2022-12-05-13-30-08.bag \
+      --image_topic /dji_fpv_camera_downsampled \
+      --save_frames 5
+
+Notes:
+  • After extraction, run:
+        ffmpeg -framerate 25 -i frame%06d.png \
+               -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4
+  • Install dependencies:
+        sudo apt update && sudo apt install ros-noetic-cv-bridge \
+            ros-noetic-rosbag python3-opencv ffmpeg
 """
 
 import os

@@ -1,3 +1,64 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Utility for constructing a surface mesh from gridded (X, Y, Z) data,
+    sampling points at random UV locations, interpolating via barycentric
+    weights, filtering by distance from origin, and visualizing in 3D.
+
+Features:
+  • Mesh setup:
+      – Stores vertex coordinates and corresponding UV coords.
+      – Fast lookup of mesh cell via binary search on UV grid.
+  • Interpolation:
+      – Computes barycentric weights for any UV in a cell.
+      – Maps UV → 3D point on surface.
+  • Sampling:
+      – Generates N random UV samples.
+      – Interpolates each sample to XYZ.
+      – Filters points by Euclidean distance threshold.
+  • Visualization:
+      – Uses Plotly to render surface and overlay sampled points.
+      – Interactive 3D plot with axis labels.
+  • Dependencies:
+      – numpy
+      – plotly
+
+Example:
+    # create a radial “sinc” surface and sample around the origin
+    import numpy as np
+    from surface_mesh import SurfaceMesh
+    import plotly.graph_objs as go
+
+    x = np.linspace(-5, 5, 50)
+    y = np.linspace(-5, 5, 50)
+    X, Y = np.meshgrid(x, y)
+    Z = np.sin(np.sqrt(X**2 + Y**2))
+
+    mesh = SurfaceMesh(X, Y, Z)
+    pts = mesh.sample_points(distance=0.5, num_points=100)
+
+    surface = go.Surface(x=x, y=y, z=Z, colorscale='Viridis')
+    scatter = go.Scatter3d(
+        x=[p[0] for p in pts],
+        y=[p[1] for p in pts],
+        z=[p[2] for p in pts],
+        mode='markers',
+        marker=dict(size=3, color='red')
+    )
+    fig = go.Figure(data=[surface, scatter],
+                    layout=go.Layout(
+                        scene=dict(
+                            xaxis=dict(title='x'),
+                            yaxis=dict(title='y'),
+                            zaxis=dict(title='z')
+                        )
+                    ))
+    fig.show()
+"""
+
 import numpy as np
 import plotly.graph_objs as go
 

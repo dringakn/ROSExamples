@@ -2,14 +2,43 @@
 # -*- coding: utf-8 -*-
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Description: Extract images from a rosbag on specified topic to the output folder (Downsapmled version).
-Usuage: ./extract_rosbag_images_downsampled.py bag_files.bag ./output/images/folder/path topic_name save_every_n_image
-Example: ./extract_rosbag_images_downsampled.py bag_files.bag ./output /cam0 1
-Notes: 
-    ffmpeg -framerate 25 -i frame%06d.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4
-    sudo apt install mjpegtools
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Extract and downsample images from a ROS bag file for a specified image topic.
+
+Features:
+    - Reads sensor_msgs/Image messages from a ROS bag.
+    - Converts each Image to OpenCV BGR8 format via cv_bridge.
+    - Saves every N‑th frame as a zero‑padded PNG (frame000001.png, frame000002.png, …).
+    - Optionally invokes ffmpeg to assemble saved frames into an MP4 video.
+    - Minimal dependencies and POSIX‑style CLI.
+
+Usage:
+    ./extract_rosbag_images_downsampled.py <bag_file> <output_dir> <image_topic> <save_every_n>
+
+Positional arguments:
+    bag_file      Path to the input ROS bag (e.g. `data.bag`).
+    output_dir    Directory into which frames will be written.
+    image_topic   ROS image topic (e.g. `/cam0/image_raw`).
+    save_every_n  Integer N: save one frame every N messages (use 1 for every frame).
+
+Example:
+    ./extract_rosbag_images_downsampled.py mydata.bag ./frames /cam0/image_raw 5
+
+Dependencies:
+    • ROS packages: rosbag, cv_bridge, sensor_msgs.msg.Image  
+    • OpenCV Python bindings (cv2)  
+    • ffmpeg (for optional video encoding)  
+    • mjpegtools (optional, for alternative encodings)
+
+Notes:
+    - Ensure `output_dir` exists (e.g. `mkdir -p ./frames`) before running.  
+    - To build a video after extraction:
+        ffmpeg -framerate 25 -i frame%06d.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p output.mp4  
+    - Install required tools:
+        sudo apt update && sudo apt install ffmpeg mjpegtools
 """
 
 import os

@@ -1,3 +1,27 @@
+#!/usr/bin/env python3
+"""
+Author:    Dr. Ing. Ahmad Kamal Nasir
+Email:     dringakn@gmail.com
+
+Description:
+    Simulates and animates a simple cruise control system (mass-damper) driven by a piecewise-constant force.
+
+Features:
+  • Second-order ODE model: M·dv/dt + B·v = Force  
+  • Numerical integration via scipy.integrate.odeint  
+  • Real-time animation of position vs. time with matplotlib FuncAnimation  
+  • Force profile: +100 N for t∈[0,2 s), –100 N for t∈[2,4 s), then 0 N  
+  • Configurable mass (M), damping (B), and initial state  
+
+Dependencies:
+  • numpy  
+  • scipy (integrate.odeint)  
+  • matplotlib  
+
+Usage:
+    python3 cruise_control.py
+"""
+
 import numpy as np
 from scipy.integrate import odeint, solve_ivp
 import matplotlib.pyplot as plt

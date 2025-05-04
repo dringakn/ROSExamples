@@ -1,3 +1,31 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Simulation and real‐time animation of an inverted pendulum on a cart.
+    Models the full nonlinear dynamics, integrates with scipy, and displays
+    the cart position over time with matplotlib FuncAnimation.
+
+Features:
+  • Equations of motion for a cart (mass M) with a pendulum (mass m, length l, inertia Jp).
+  • Friction on the cart (coefficient b) and gravitational torque on the pendulum.
+  • Integration via scipy.integrate.odeint.
+  • Simple bang–bang force control sequence as a demonstration.
+  • Live plotting of cart position, velocity, pendulum angle, angular velocity, and applied force.
+  • Adjustable parameters (M, m, b, l, Jp) and initial state.
+
+Dependencies:
+  • numpy
+  • scipy
+  • matplotlib
+
+Usage:
+    python inverted_pendulum_on_cart.py
+    (Requires a display for plotting; close the window or press Ctrl+C to exit.)
+
+"""
 import numpy as np
 from scipy.integrate import odeint, solve_ivp
 import matplotlib.pyplot as plt

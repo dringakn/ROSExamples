@@ -1,15 +1,35 @@
 #!/usr/bin/env python3
-
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Date: 14 Feb 2023
-Description: Run VEVID on a video. 
-    All steps (load_img -> init_kernel -> apply_kernel) are performed seperately.
-    For fixed kernel, we only need to initialize the kernel once for the first frame 
+Author:    Dr. Ing. Ahmad Kamal Nasir
+Email:     dringakn@gmail.com
+Date:      14 Feb 2023
 
-Example: ./adjust_video_brightness.py ~/video.mp4
+Description:
+    Adjust video brightness frame‑by‑frame using the VEVID GPU algorithm,
+    outputting a side‑by‑side comparison of original vs. processed frames.
+
+Features:
+  • Per‑frame VEVID processing in “lite” mode for speed.
+  • Configurable brightness (b) and gain (G) knobs.
+  • Automatic device selection (CUDA if available, else CPU).
+  • Concatenates original and VEVID output horizontally.
+  • Writes result at 20 fps to “<input>_processed.mp4”.
+
+Dependencies:
+  • Python 3.x
+  • numpy
+  • torch
+  • torchvision
+  • imageio.v3
+  • phycv (install via `pip install phycv`)
+
+Usage:
+    ./adjust_video_brightness.py <input_video.mp4>
+
+Example:
+    ./adjust_video_brightness.py ~/sample_video.mp4
 """
+
 
 import os # filename, extension extraction
 import argparse

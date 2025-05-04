@@ -1,4 +1,36 @@
 #!/bin/bash
+# Author:        Dr. Ing. Ahmad Kamal Nasir
+# Email:         dringakn@gmail.com
+#
+# Description:
+#   Embed GPS and IMU metadata into an image file using ExifTool.
+#
+# Features:
+#   • GPS tags: latitude, longitude, altitude
+#   • IMU tags: pitch, roll, yaw
+#   • Automatically writes to “output.png” in same directory
+#   • Cleans up any existing output before writing
+#
+# Requirements:
+#   • exiftool (install via: sudo apt update && sudo apt install libimage-exiftool-perl)
+#   • bash shell
+#
+# Usage:
+#   ./add_metadata.sh <input_image>
+#
+# Example:
+#   ./add_metadata.sh /home/user/photo.jpg
+#
+# Notes:
+#   • Coordinates must be in “DD.dddd N/S” and “DDD.dddd E/W” format
+#   • Altitude in meters (“10 m”)
+#   • IMU angles in degrees
+#
+# Exit codes:
+#   0 – success
+#   1 – missing input file
+#   2 – exiftool error
+#
 
 # Set the GPS coordinates
 lat="40.7128 N"

@@ -1,3 +1,45 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    A reusable plotting utility class for embedding Matplotlib figures
+    in a Tkinter application and easily rendering geometric shapes
+    and GeoPandas geometries.
+
+Features:
+  • Figure setup:
+      – Configurable title, grid style, and figure size
+      – Automatic tight layout and subplot margins
+  • Basic plotting primitives:
+      – plot_xy: scatter/line plots with customizable markers and styles
+      – plot_circle: filled circle patches
+      – plot_shp_circle / plot_shp_box: buffered point and rectangular shapes
+      – plot_shp_point / plot_shp_points: Shapely Point(s) rendering
+  • GeoPandas support:
+      – plot_gdf_df: render an entire GeoDataFrame
+      – plot_shp_pg_ext / plot_shp_pg: exterior boundary or arbitrary Polygon
+  • Canvas handling:
+      – Automatic clearing, axis equalization, and redraw/update
+
+Usage Example:
+    import tkinter as tk
+    from myplot import MyPlot  # this file
+
+    root = tk.Tk()
+    plot = MyPlot(root, title="Map View", grid='both', figsize=(10, 6))
+    # draw a circle at (2,3) radius 1
+    plot.plot_circle(2, 3, 1.0, color='blue', alpha=0.5)
+    root.mainloop()
+
+Dependencies:
+  • matplotlib
+  • geopandas
+  • shapely
+  • tkinter
+"""
+
 from matplotlib.figure import Figure
 import matplotlib.backends.backend_tkagg as tkagg  # FigureCanvasTkAgg, NavigationToolbar2Tk
 import geopandas as gpd

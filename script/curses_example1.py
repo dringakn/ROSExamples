@@ -1,7 +1,38 @@
 #!/usr/bin/env python3
 
-import curses
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
 
+Description:
+    Curses-based window management module providing a lightweight wrapper
+    around curses.newwin() plus higher-level windows for messages and input.
+
+Features:
+  • Window: safe addstr, automatic border and refresh
+  • MessageListWindow: scrollable history of text messages
+  • InputWindow: blocking text entry with prompt and backspace support
+  • NonBlockingInputWindow: instant, non-blocking key reads with keypad/echo control
+  • Utility methods: scroll, timeout, keypad, echo, cbreak
+
+Usage:
+    import curses
+    from this_module import Window, MessageListWindow, InputWindow, NonBlockingInputWindow
+
+    def main(stdscr):
+        curses.curs_set(0)
+        # create and use windows, then curses.wrapper(main)
+
+
+Example:
+
+    rosrun ros_examples curses_example1.py
+
+    Press 'a' or 's' to update status windows, type any key to log it in the message list,
+    and press 'q' to quit.
+"""
+
+import curses
 
 class Window:
     def __init__(self, height, width, start_y, start_x):

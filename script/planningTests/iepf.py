@@ -1,3 +1,33 @@
+#!/usr/bin/env python3
+"""
+Author:    Dr. Ing. Ahmad Kamal Nasir
+Email:     dringakn@gmail.com
+
+Description:
+    This script implements the Improved Euler Path Filter (IEPF) algorithm
+    to smooth a 2D polyline.  Starting from an initial zig‑zag “path” of
+    integer grid points, it iteratively adjusts each interior vertex to
+    balance fidelity to the original data (controlled by α) against overall
+    smoothness (controlled by β), until the total adjustment falls below
+    a user‑specified tolerance.
+
+Features:
+  • iepf(path, alpha, beta, tol):
+      – path: list of [x, y] coordinates (must have at least 3 points)
+      – alpha (0 ≤ α ≤ 1): data‑fidelity weight (higher → stays closer to input)
+      – beta  (0 ≤ β ≤ 1): smoothness weight (higher → smoother result)
+      – tol: convergence tolerance on total coordinate change
+      – returns a new list of [x, y] coordinates (same length as input)
+  • Example usage and matplotlib plot at the bottom.
+
+Usage:
+    ./smooth_path.py
+    (adjust α, β, tol in the call to iepf() as desired)
+
+Dependencies:
+    • Python 3.x
+    • matplotlib
+"""
 import matplotlib.pyplot as plt
 import copy
 

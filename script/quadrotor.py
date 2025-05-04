@@ -1,3 +1,51 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    A physics‐based simulation of a quadrotor including multiple dynamic models,
+    a cascaded controller for position and attitude, and a real‐time 3D animation.
+
+Models:
+  • model(state, t)
+      – “Toy” dynamics: applies four equal (but alternating‐sign) thrusts F, –F, F, –F
+      – No rotor‐speed mapping, no drag; purely demonstrates coordinate transforms
+      – u = constant thrust → acceleration along body axes via φ/θ/ψ
+
+  • model1(state, t, inputs)
+      – Inputs = four rotor speeds (ω₁…ω₄)
+      – Computes total thrust u₁ = Kf·∑ωᵢ², roll/pitch torques u₂/u₃ from opposing pairs
+      – Includes aerodynamic drag (Kt on linear velocities, Kr on angular rates)
+      – Also models rotor inertial coupling via Ir·ω differences
+
+  • model2(state, t, inputs)
+      – Inputs = generic control vector [u₁,u₂,u₃,u₄] = (thrust, roll, pitch, yaw torques)
+      – No explicit rotor‐speed or drag terms—pure rigid‐body equations
+      – Useful when you already have computed total forces/torques
+
+Controller:
+    Cascaded PID‐style loops:
+      1) Position loop: Kp/Kd → desired thrust & φ𝚛/θ𝚛
+      2) Attitude loop: Kp/Kd → roll/pitch/yaw torques
+
+Visualization:
+    Real‐time 3D animation via Matplotlib FuncAnimation, showing position “o–” trace
+    and numeric state readout in the title.
+
+Parameters:
+    • Mass, inertias (Ix, Iy, Iz, Ir), arm length L
+    • Thrust/moment coefficients (Kf, Km), drag (Kt, Kr)
+    • Initial state x0 = [x,y,z, vx,vy,vz, φ,θ,ψ, p,q,r]
+
+Dependencies:
+    numpy, scipy, matplotlib (mpl_toolkits.mplot3d)
+    Install with: pip install numpy scipy matplotlib
+
+Usage:
+    python quadrotor.py
+"""
+
 import numpy as np
 from scipy.integrate import odeint
 import matplotlib.pyplot as plt

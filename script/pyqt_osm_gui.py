@@ -1,7 +1,31 @@
 #!/usr/bin/env python3
-# Ensure it runs as a python script!
-# Install PyQt or PySide using: pip install pyqt5
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
 
+Description:
+    Simple Qt5 GUI that lets you enter lat/lon, fetches nearby OSM highway data
+    via Overpass, computes a bounding box, retrieves a static map tile, and
+    displays it in a window.
+
+Features:
+  • Coordinate input: paste “lat, lon” into a line edit  
+  • Overpass query: grabs all “highway” ways in a 0.01° box around your point  
+  • Bounding‐box calculation: finds min/max lat/lon from the returned nodes  
+  • Static map fetch: requests a square map image centered on your bbox via Yandex  
+  • Display: shows the resulting map in a QLabel inside a 640×480 window  
+  • Easily extendable: swap out Yandex URL or draw OSM vector data yourself  
+
+Dependencies:
+  • PyQt5 (or PySide2) – `pip install pyqt5`  
+  • requests – HTTP fetching  
+  • overpy – Overpass API client (`pip install overpy`)  
+  • pillow – image handling (`pip install pillow`)
+
+Example:
+    $ python3 map_display.py
+    – enter “49.78759, 9.96962” and hit “Get Map”  
+"""
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
 from PyQt5.QtGui import QPixmap

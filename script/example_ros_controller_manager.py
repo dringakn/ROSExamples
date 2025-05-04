@@ -1,4 +1,39 @@
 #!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    A ROS node that wraps the standard controller_manager services, providing
+    an easy-to-use Python interface to reload libraries, list, load, unload,
+    switch, start, stop, and query the status of ros_control controllers at runtime.
+
+Features:
+  • Reload controller libraries (`reload_controller_libraries`)
+  • List available controller types (`list_controller_types`)
+  • List currently loaded controllers (`list_controllers`)
+  • Load / Unload controllers (`load_controller`, `unload_controller`)
+  • Start / Stop / Switch controllers with strictness options
+  • Query individual controller status (`controller_status`)
+  • Convenience methods: `start_controller`, `stop_controller`
+  • Safe waiting for service availability with timeouts
+
+Dependencies:
+  – ROS package: `controller_manager_msgs`
+  – ROS core and parameter server
+
+Usage:
+  $ rosrun <your_package> controller_manager_client.py
+
+Example:
+  rosrun your_pkg controller_manager_client.py
+Parameters:
+– None required at node launch (all topics/services are hardcoded under /controller_manager)
+
+Notes:
+– Waits up to 5 s for each controller_manager service to appear
+– Logs informative messages on success/failure of each operation
+"""
 
 import rospy
 from controller_manager_msgs.srv import ReloadControllerLibraries, ListControllerTypes

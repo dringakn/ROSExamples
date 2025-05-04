@@ -1,13 +1,36 @@
 #!/usr/bin/env python3
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Created: 22 Mar 2023
-Modified: 14 Mar 2023
-Description: Extract libsensors_monitor messages from a rosbag on specified topics into a pickle file.
-Example: ./extract_rosbag_sensors.py ~/filename.bag cpu_monitor_topics
-Notes: Possible level of operations: OK=0, WARN=1, ERROR=2, STALE=3
+Author:      Dr. Ing. Ahmad Kamal Nasir
+Email:       dringakn@gmail.com
+Created:     22 Mar 2023
+Modified:    14 Mar 2023
+
+Description:
+    Extracts all DiagnosticArray messages published by a libsensors_monitor node
+    from a ROS bag and aggregates their KeyValue fields into a time‑indexed
+    pandas DataFrame. Outputs both a pickle file and a rolling‑mean temperature plot.
+
+Features:
+  • Reads `/diagnostics` (or user‑specified) DiagnosticArray topics from a bag
+  • Unpacks each DiagnosticStatus → KeyValue entry into rows:
+      – time, level, name, message, hardware_id, key, value
+  • Pivots into a wide DataFrame indexed by timestamp, with columns per sensor metric
+  • Forward‑fills missing data, drops initial NaNs, and serializes to pickle
+  • Automatically plots rolling‑mean (window=100) of Temperature (C) and saves PNG
+
+Usage:
+    ./extract_rosbag_sensors.py /path/to/filename.bag [--topic /diagnostics]
+
+Example:
+    ./extract_rosbag_sensors.py ~/robot_run.bag --topic /diagnostics
+
+Notes:
+  – DiagnosticStatus levels: OK=0, WARN=1, ERROR=2, STALE=3
+  – Requires: rospy, rosbag (ROS), pandas, numpy, argparse
+  – Output files placed alongside input bag:
+      * `<basename>_diagnostics.pickle`
+      * `<basename>_TEMP.png`
 """
 
 import os # filename, extension extraction

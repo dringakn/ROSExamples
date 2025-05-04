@@ -1,10 +1,41 @@
 #!/usr/bin/env python3
-
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Description: Extract gps messages from a rosbag on specified topic into a gpx file.
-Example: ./extract_rosbag_gpx.py bagfile.bag gps_track.gpx /gps_position
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    This script extracts all NavSatFix (GPS) messages from a ROS bag file
+    on a user-specified topic and writes them out as waypoints in a GPX file.
+
+Features:
+  • Reads a ROS bag (“.bag”) and iterates over every message on the GPS topic.
+  • Converts each NavSatFix message into a GPX waypoint (latitude, longitude, elevation).
+  • Auto‑numbers waypoints (“P0”, “P1”, …) and uses them as name/symbol/description.
+  • Outputs a standards‑compliant GPX (“.gpx”) file that can be loaded into any GPS/GIS tool.
+
+Usage:
+    ./extract_rosbag_gpx.py <input_bag.bag> <output_track.gpx> <gps_topic>
+  e.g.
+    ./extract_rosbag_gpx.py flight.bag flight_track.gpx /drone/gps
+
+Dependencies:
+  • Python packages:
+      – gpxpy (`pip install gpxpy`)
+      – rospy/rosbag (ROS Python libraries)
+  • ROS message:
+      – sensor_msgs/NavSatFix
+
+Arguments:
+  1) bag_file    – Path to the input ROS bag file.
+  2) output_file – Desired GPX output filename (must end in “.gpx”).
+  3) gps_topic   – ROS topic on which GPS messages were recorded.
+
+Example:
+    ./extract_rosbag_gpx.py mylog.bag mytrack.gpx /gps/fix
+
+Returns:
+  • Exits with status 0 on success; prints progress and final confirmation.
+
 """
 
 import gpxpy  # pip install pgxpy

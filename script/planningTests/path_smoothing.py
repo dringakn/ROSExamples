@@ -1,3 +1,29 @@
+#!/usr/bin/env python3
+"""
+Author:      Dr. Ing. Ahmad Kamal Nasir
+Email:       dringakn@gmail.com
+
+Description:
+    Smooths a given 2D path using an iterative gradient-descent algorithm
+    and visualizes the result with matplotlib.
+
+Features:
+  • `smooth(path, alpha, beta, tol)`:
+      – alpha: weight of fitting to original path
+      – beta:  weight of smoothing between neighbors
+      – tol:   convergence threshold  
+  • Deep‐copies input to preserve original coordinates  
+  • Plots smoothed path over markers for each waypoint  
+  • Easy to tweak parameters for different smoothing behaviors  
+
+Dependencies:
+  • Python 3  
+  • matplotlib (`pip install matplotlib`)  
+
+Usage:
+    Simply run the script. Tweak `path`, `alpha`, `beta`, and `tol` as needed.
+"""
+
 import matplotlib.pyplot as plt
 import copy
 

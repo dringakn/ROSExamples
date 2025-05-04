@@ -1,3 +1,34 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    This script defines and animates a planar quadrotor (2D) dynamics model,
+    including thrust and moment control, state integration, and real-time plotting.
+
+Features:
+  • Rigid‐body dynamics:
+      – 6‐state model [y, z, φ, ẏ, ż, φ̇]
+      – Gravity, rotor thrust limits, moment of inertia
+  • Control:
+      – PD controller for vertical (z), lateral (y), and attitude (φ)
+      – Computes total thrust F and moment M to track desired trajectories
+  • Simulation:
+      – Integrates equations of motion via SciPy’s `odeint`
+      – Timestep configurable (default 1/20 s for 20 Hz update)
+  • Visualization:
+      – 2D real‐time animation of (y, z) position with Matplotlib FuncAnimation
+      – Displays current time, position, attitude (ψ), and velocities
+  • Usage:
+      – Simply run: `python3 planar_quadrotor.py`
+      – Edit `desired` trajectory or controller gains as needed
+  • Dependencies:
+      – numpy, scipy, matplotlib
+      – mpl_toolkits.mplot3d (for future 3D extensions)
+
+"""
+
 import numpy as np
 from scipy.integrate import odeint, solve_ivp
 import matplotlib.pyplot as plt

@@ -1,3 +1,48 @@
+#!/usr/bin/env python3
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Module:         PolygonSweep
+Description:
+    Implements a sweep‑line based coverage path planner for simple polygons
+    using CGAL for robust geometric primitives and pyvisgraph for visibility‑
+    graph based shortest‑path planning.
+
+Features:
+  • Polygon handling
+      – Normalizes input to CCW, removes collinear/duplicate edges  
+      – Computes unique edge orientations and selects the one minimizing
+        polygon “altitude” for sweep efficiency  
+  • Geometry operations
+      – Affine translations for points & segments  
+      – Precise segment–polygon intersections & ordering  
+      – Direction consistency checks, vertex filtering between sweep lines  
+      – Projection of arbitrary points onto polygon hull, with inward offset  
+      – Traversal‑time calculator given max speed/accel  
+  • Camera parameters
+      – Lateral sweep offset from FOV & overlap  
+      – Max flight height for target GSD  
+  • Coverage path planning
+      – Builds parallel sweep segments across the polygon  
+      – Connects sweeps via VisGraph shortest paths  
+      – Samples/upsamples waypoints for dense coverage  
+      – Single‐call `plan_path()` returning waypoints + length + time  
+
+Dependencies:
+    • CGAL Python bindings (kernel + predicates)  
+    • numpy  
+    • pyvisgraph  
+
+Example:
+    from polygon_sweep import PolygonSweep
+    vertices = [(0,0),(10,0),(10,5),(0,5),(0,0)]
+    planner = PolygonSweep(vertices)
+    ok, wps, length, t = planner.plan_path(
+        reverse=False, height=2.0, v_max=1.0, a_max=0.5
+    )
+"""
+
 import CGAL
 from CGAL.CGAL_Kernel import Polygon_2, Line_2, Segment_2, Point_2, Direction_2, Vector_2, Ray_2, Weighted_point_2
 from CGAL.CGAL_Kernel import do_intersect, intersection, squared_distance, orientation, determinant, area, bisector, bounded_side_2, cross_product, left_turn, centroid

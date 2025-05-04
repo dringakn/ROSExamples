@@ -1,12 +1,45 @@
 #!/usr/bin/env python3
 
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Created: 14 Feb 2023
-Modified: 14 Feb 2023
-Description: Extract cpu_monitor messages from a rosbag on specified topics into a pickle file.
-Example: ./extract_rosbag_gresource_monitor.py ~/filename.bag cpu_monitor_topics_prefix
+Author:      Dr. Ing. Ahmad Kamal Nasir
+Email:       dringakn@gmail.com
+Created:     14 Feb 2023
+Modified:    04 May 2025
+
+Description:
+    Extract CPU and memory usage messages from a ROS bag on specified
+    /cpu_monitor/ topics into a Pandas DataFrame, save as a pickle file,
+    and generate summary bar charts.
+
+Features:
+  • Reads all topics under a given prefix (default: /cpu_monitor/).
+  • Builds a time-indexed DataFrame of resource usage by topic.
+  • Saves raw time series data as a .pickle for later analysis.
+  • Computes average CPU and memory usage and plots horizontal bar charts.
+  • Outputs two PNG files: one for CPU, one for memory.
+
+Parameters:
+  bag_file                 Path to input ROS bag (e.g. /path/to/file.bag)
+  --cpu_monitor_topic_prefix
+                            Prefix for cpu_monitor topics (default: /cpu_monitor/)
+
+Outputs:
+  {basename}.pickle        Pickled Pandas DataFrame of raw metrics
+  {basename}_CPU.png       Bar chart of average CPU usage per topic
+  {basename}_MEM.png       Bar chart of average memory usage per topic
+
+Dependencies:
+  • ROS Python API: rosbag, std_msgs
+  • pandas, numpy, matplotlib
+  • Python ≥ 3.6
+
+Usage:
+    ./extract_rosbag_gresource_monitor.py <bag_file> [--cpu_monitor_topic_prefix PREFIX]
+
+Example:
+    ./extract_rosbag_gresource_monitor.py \
+        ~/data/my_run.bag \
+        --cpu_monitor_topic_prefix /cpu_monitor/
 """
 
 import os # filename, extension extraction
