@@ -1,11 +1,37 @@
 #!/usr/bin/env python3
 """
-Author: Dr. Ing. Ahmad Kamal Nasir
-Email: dringakn@gmail.com
-Description: ROS Node to measure and monitor quality of WiFi link.
-Example: rosrun ros_examples wireless_quality.py
-Note: To install iw command (sudo apt update && sudo apt install wireless-tools)
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    ROS node that continuously measures and monitors the quality of a WiFi link
+    on a given network interface and publishes detailed diagnostics.
+
+Features:
+  • Link statistics:
+      – TX/RX byte counters and per-second throughput (TXRate, RXRate)
+      – TotalTX and TotalRX counters
+      – Connected time delta (DT)
+  • Wireless info:
+      – SSID, MAC address, interface type, channel, txpower
+      – Instantaneous signal strength and running average
+      – TX/RX bitrates
+  • Scanning:
+      – Passive scan of nearby BSSs (SSID, BSSID, frequency, signal, last seen)
+      – Prints scan results to console
+  • ROS integration:
+      – Publishes a DiagnosticArray to `/wireless_connection_info`
+      – Configurable via ROS params:
+          * `~interface_name` (default: wlp0s20f3)
+          * `~update_rate_wireless_quality` (Hz, default: 1)
+  • Dependencies:
+      – `iw` (install via `sudo apt update && sudo apt install wireless-tools iw`)
+      – ROS packages: `rospy`, `diagnostic_msgs`, `std_msgs`
+
+Example:
+    rosrun ros_examples wireless_quality.py _interface_name:=wlx30689304de2a
 """
+
 
 import os
 import rospy
