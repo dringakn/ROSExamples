@@ -1,0 +1,45 @@
+<launch>
+
+    <!-- 
+        Author: Dr.-Ing. Ahmad Kamal Nasir
+        Email: dringakn@gmail.com
+        Description:  
+          Combines a latched GPS reference publisher, a static map→base_link transform, 
+          and a preconfigured RViz satellite view with the example_rviz_satellite node 
+          to enable interactive click-to-GPS conversion, GeoJSON feature publishing, 
+          and on-map marker visualization.
+        Note:
+            RViz shortcut key (C) for PublishPoint
+    -->
+
+    <!-- Publish a static latched GPS reference (GPS frame is set to base_link). -->
+    <node pkg="rostopic" type="rostopic" name="fake_gps" args="pub --latch /gps_ref sensor_msgs/NavSatFix '{header: {stamp: now, frame_id: base_link}, latitude: 49.78708556978402, longitude: 9.968040175507682, altitude: 0.0, position_covariance: [0.5,0,0,0,0.5,0,0,0,1.0], position_covariance_type: 2}'" />
+
+    <!-- Static fake TF transform between map and base_link -->
+    <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_fake" args="0 0 0 0 0 0 map base_link" />
+
+    <!-- Install = sudo apt install ros-noetic-rviz-satellite -->
+    <!-- Start rviz with a pre-configured AerialMap instance and TF. It will use the fake GPS to display osm tiles and TF. -->
+    <!-- ObjectURI = https://tile.openstreetmap.org/{z}/{x}/{y}.png -->
+    <!-- Zoom = 18 -->
+    <!-- Blocks = 8 -->
+    <!-- Z-Offset = 0 -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find ros_examples)/rviz/example_rviz_satellite.rviz"/>
+
+    <!-- Script to publish clicked gps point and display a geojson  -->
+    <node name="example_rviz_satellite" pkg="ros_examples" type="example_rviz_satellite.py" output="screen">
+        <!-- input from RViz’s “Publish Point” -->
+        <remap from="clicked_point"           to="/clicked_point"/>
+        <!-- publishes GPS fix of the click -->
+        <remap from="clicked_point_gps"       to="/clicked_point_gps"/>
+        <!-- publishes GeoJSON Feature of the click -->
+        <remap from="geojson_out"   to="/geojson_out"/>
+        <!-- publishes a sphere marker at each click -->
+        <remap from="clicked_point_marker"    to="/clicked_point_marker"/>
+        <!-- subscribes to your incoming GeoJSON stream (Loopback for testing) -->
+        <remap from="geojson_in"                 to="/geojson_out"/>
+        <!-- publishes markers for that GeoJSON -->
+        <remap from="geojson_markers"         to="/geojson_markers"/>
+    </node>
+    
+</launch>
