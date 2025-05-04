@@ -1,3 +1,40 @@
+"""
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
+Description:
+    Utility module for geospatial sampling and analysis using OSMnx, Shapely, GeoPandas, NumPy, and SciPy.
+
+Features:
+  • Export: save Shapely Points/MultiPoint to ESRI Shapefile.  
+  • Scaling: linear remapping of a value between arbitrary ranges.  
+  • Overlap-based sampling distance: compute the spacing needed so two circles of radius r overlap by a given fraction.  
+  • Polygon inflation: buffer a polygon or its interior holes, with optional merging.  
+  • Random interior sampling: generate uniformly random points inside any polygon.  
+  • Grid sampling: uniformly sample a regular grid of points inside a polygon at specified resolution.  
+  • Linear sampling: sample points along LineString or polygon boundary/interior at fixed intervals.  
+  • OSM Building extraction: fetch building footprints around a lat/lng via OSMnx, project to metric CRS, compute bounding box with holes.
+
+Dependencies:
+    osmnx
+    shapely
+    geopandas
+    numpy
+    scipy
+
+Example:
+    from geo_utils import (
+        save_points_to_shapefile,
+        sample_points_in_polygon,
+        get_holes_and_bbox
+    )
+    # uniform grid at 10 m resolution
+    multi_pt, pts = sample_points_in_polygon(my_polygon, res=10)
+    save_points_to_shapefile(multi_pt, file_name='grid.shp')
+    # extract buildings around a point
+    gdf, bbox, pgx = get_holes_and_bbox((49.79, 9.95), roi_size=200, roi_offset=20)
+"""
+
 import osmnx as ox
 from shapely.geometry import *
 from shapely.ops import *
@@ -130,7 +167,7 @@ def sample_points_on_polygon_boundary(pg, dist=1.0, simplify=True):
     :param simplify: boolean to filter nearest neighbours
     :return: Multipoint object
     """
-    if pg.boundary.type == 'MultiLineString':
+    if pg.boundary.geom_type == 'MultiLineString':
         pts = []
         for ln in pg.boundary.geoms:
             # pts.extend([ln.interpolate(d) for d in np.arange(0, ln.length, dist)])
@@ -160,7 +197,13 @@ def get_holes_and_bbox(roi, roi_size=100, roi_offset=10, crs='epsg:3857'):
     pgx = shapely bounding-box polygon with holes
     """
 
-    gdf = ox.geometries_from_point(roi, dist=roi_size, tags={'building': True})
+    try:
+        # new API in OSMnx v2+
+        gdf = ox.features_from_point(roi, dist=roi_size, tags={'building': True})
+    except AttributeError:
+        # fallback for older OSMnx
+        gdf = ox.geometries_from_point(roi, dist=roi_size, tags={'building': True})
+
     gdf = ox.projection.project_gdf(gdf, to_crs=crs)
     gdf.reset_index(drop=True, inplace=True)
     bbox = gdf.bounds.agg({'minx': 'min', 'miny': 'min', 'maxx': 'max', 'maxy': 'max'}).values
