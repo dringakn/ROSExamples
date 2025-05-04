@@ -1,14 +1,30 @@
 #!/usr/bin/env python3
 
 '''
+Author:        Dr. Ing. Ahmad Kamal Nasir
+Email:         dringakn@gmail.com
+
 Description:
-This ROS node monitors CPU and memory usage of other ROS nodes.
-Two topics are added for each node:
-- /cpu_monitor/node_name/cpu
-- /cpu_monitor/node_name/mem
+    This ROS node monitors CPU and memory usage of other ROS nodes.
+    For each discovered node it publishes:
+      • /cpu_monitor/<node_name>/cpu   — CPU usage (%)
+      • /cpu_monitor/<node_name>/mem   — RSS memory (bytes)
+    It also publishes total system stats:
+      • /cpu_monitor/total_cpu          — overall CPU usage (%)
+      • /cpu_monitor/total_<field>_mem  — memory fields (from psutil.virtual_memory)
+
+Features:
+  • Automatic discovery of local ROS nodes via rosnode & XMLRPC
+  • Per-node polling of cpu_percent() and memory_info().rss
+  • Configurable poll period via ROS param `~poll_period` (default: 1.0 s)
 
 Note:
-Polling time can be configured by parameter: poll_period [1]
+    Requires `psutil`, `rosnode`, `rospy`, `xmlrpc.client`
+    Install psutil with `pip install psutil`
+    
+Example:
+    rosrun ros_examples cpu_monitor.py
+    rostopic echo /cpu_monitor/total_cpu 
 '''
 
 import os
