@@ -171,6 +171,13 @@ class WaypointsProcessor:
         self.odometry = Waypoint(x, y, z, yaw)
         self._update_current_segment(x, y, z)
 
+    def set_odometry_gps(self, lat: float, lon: float, alt: float, yaw: float):
+        """
+        Set odometry from a GPS fix (lat, lon, alt relative to reference).
+        """
+        x, y, z = self.gps_to_enu(lat, lon, alt)
+        self.set_odometry(x, y, z, yaw)
+
     def get_odometry(self) -> Waypoint:
         return self.odometry
 
@@ -288,6 +295,19 @@ class WaypointsProcessor:
         self.waypoints = out
 
     # ─ Primitives ──────────────────────────────────────────────────────
+
+    def enu_to_gps(self, x: float, y: float, z: float) -> Tuple[float, float, float]:
+        """
+        Convert local ENU (x,y,z) to GPS (lat, lon, alt relative to reference).
+        """
+        wp = self._from_local(x, y, z, "gps")
+        return wp.x, wp.y, wp.z
+
+    def gps_to_enu(self, lat: float, lon: float, alt: float) -> Tuple[float, float, float]:
+        """
+        Convert GPS (lat, lon, alt relative to reference) to local ENU (x,y,z).
+        """
+        return self._to_local(Waypoint(lat, lon, alt), "gps")
 
     def _build_path(self,
                     enu_pts: List[Tuple[float,float,float]],
